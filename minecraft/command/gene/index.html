@@ -3,123 +3,88 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>MC Gen - White</title>
+    <title>MC Command Studio</title>
     <style>
-        :root {
-            --primary: #4a90e2;
-            --bg: #f5f7fa;
-            --card: #ffffff;
-            --text: #333;
-            --border: #e1e4e8;
-        }
-        body { font-family: 'Segoe UI', Tahoma, sans-serif; background: var(--bg); color: var(--text); padding: 15px; margin: 0; }
+        :root { --p: #007aff; --bg: #f2f2f7; --card: #ffffff; --text: #1c1c1e; --border: #d1d1d6; }
+        body { font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif; background: var(--bg); color: var(--text); padding: 20px; margin: 0; line-height: 1.5; }
+        .wrapper { max-width: 600px; margin: 0 auto; }
+        h1 { font-size: 1.5rem; font-weight: 800; text-align: center; margin-bottom: 25px; letter-spacing: -0.5px; }
         
-        .container { max-width: 500px; margin: 0 auto; }
-        h1 { font-size: 1.2rem; text-align: center; color: var(--primary); margin-bottom: 20px; }
-
-        .card { 
-            background: var(--card); 
-            padding: 20px; 
-            border-radius: 12px; 
-            margin-bottom: 15px; 
-            box-shadow: 0 4px 12px rgba(0,0,0,0.05); 
-            border: 1px solid var(--border);
-        }
+        .card { background: var(--card); padding: 20px; border-radius: 16px; margin-bottom: 16px; box-shadow: 0 2px 8px rgba(0,0,0,0.04); border: 1px solid var(--border); }
+        label { font-size: 0.75rem; font-weight: 700; color: #8e8e93; text-transform: uppercase; margin-bottom: 8px; display: block; }
         
-        label { font-size: 0.85rem; font-weight: bold; color: #666; display: block; margin-bottom: 5px; }
-        select, input { 
-            width: 100%; padding: 12px; margin-bottom: 15px; 
-            border-radius: 8px; border: 1px solid var(--border); 
-            background: #fff; font-size: 1rem; box-sizing: border-box;
+        select, input, textarea { 
+            width: 100%; padding: 12px; margin-bottom: 16px; border-radius: 10px; 
+            border: 1px solid var(--border); background: #f9f9f9; font-size: 1rem; box-sizing: border-box; outline: none;
         }
+        select:focus, input:focus { border-color: var(--p); background: #fff; }
 
-        /* 出力エリア */
-        .output-box {
-            background: #282c34; color: #abb2bf;
-            padding: 15px; border-radius: 8px;
-            font-family: 'Consolas', monospace; font-size: 0.9rem;
-            word-break: break-all; min-height: 40px; margin-top: 10px;
-        }
-
-        .btn {
-            background: var(--primary); color: white; border: none;
-            padding: 12px; width: 100%; border-radius: 8px;
-            font-weight: bold; cursor: pointer; transition: 0.2s;
-        }
-        .btn:active { transform: scale(0.98); background: #357abd; }
-
-        .tag { display: inline-block; padding: 2px 8px; background: #eee; border-radius: 4px; font-size: 0.7rem; margin-right: 5px; }
+        .output-section { background: #1c1c1e; color: #32d74b; padding: 20px; border-radius: 14px; font-family: 'SF Mono', Menlo, monospace; font-size: 0.9rem; position: relative; margin-top: 10px; box-shadow: inset 0 2px 4px rgba(0,0,0,0.2); }
+        .btn { background: var(--p); color: white; border: none; padding: 16px; width: 100%; border-radius: 12px; font-weight: 600; font-size: 1rem; cursor: pointer; transition: 0.3s; }
+        .btn:hover { opacity: 0.9; }
+        .flex { display: flex; gap: 10px; }
     </style>
 </head>
 <body>
 
-<div class="container">
-    <h1>Minecraft Command Generator</h1>
+<div class="wrapper">
+    <h1>Command Studio</h1>
 
     <div class="card">
-        <label>コマンドの種類</label>
+        <label>Edition (エディション)</label>
+        <select id="edition" onchange="updateForm()">
+            <option value="BE">統合版 (BE / Switch / iOS / Win10)</option>
+            <option value="JAVA">Java版 (PC)</option>
+        </select>
+
+        <label>Command Category</label>
         <select id="cmdType" onchange="updateForm()">
-            <option value="give">/give (アイテム付与)</option>
-            <option value="effect">/effect (エフェクト)</option>
-            <option value="tp">/tp (テレポート)</option>
-            <option value="playsound">/playsound (音)</option>
+            <option value="execute">/execute (条件実行)</option>
+            <option value="title">/title (画面メッセージ)</option>
+            <option value="particle">/particle (演出)</option>
+            <option value="summon">/summon (モブ召喚)</option>
+            <option value="give_pro">/give (詳細設定)</option>
         </select>
     </div>
 
-    <div id="dynamicForm" class="card">
-        <!-- JSで生成 -->
-    </div>
+    <div id="dynamicForm" class="card"></div>
 
     <div class="card">
-        <label>生成されたコマンド</label>
-        <div id="output" class="output-box"></div>
-        <button class="btn" style="margin-top:15px;" onclick="copyCmd()">コピーして完了</button>
+        <label>Generated Command</label>
+        <div id="output" class="output-section">/command...</div>
+        <button class="btn" style="margin-top:20px;" onclick="copyCmd()">コピーする</button>
     </div>
 </div>
 
 <script>
     const forms = {
-        give: `
-            <label>対象</label>
-            <input type="text" id="target" value="@s" oninput="gen()">
-            <label>アイテム名</label>
-            <input type="text" id="item" placeholder="diamond_sword" oninput="gen()">
-            <label>数量</label>
-            <input type="number" id="count" value="1" oninput="gen()">
-            <label>エンチャント (Java版簡易)</label>
-            <select id="nbt" onchange="gen()">
-                <option value="">なし</option>
-                <option value='{Enchantments:[{id:"sharpness",lvl:5}]}'>鋭さ V</option>
-                <option value='{Enchantments:[{id:"unbreaking",lvl:3}]}'>耐久力 III</option>
+        execute: `
+            <label>実行者</label><input type="text" id="exe_target" value="@a" oninput="gen()">
+            <label>条件 (if entityなど)</label><input type="text" id="exe_cond" placeholder="e.g. @e[type=zombie,r=10]" oninput="gen()">
+            <label>実行するコマンド</label><input type="text" id="exe_run" placeholder="say hello" oninput="gen()">
+        `,
+        title: `
+            <label>対象</label><input type="text" id="title_target" value="@a" oninput="gen()">
+            <label>場所</label>
+            <select id="title_pos" onchange="gen()">
+                <option value="title">メインタイトル</option>
+                <option value="subtitle">サブタイトル</option>
+                <option value="actionbar">アクションバー</option>
             </select>
+            <label>表示テキスト</label><input type="text" id="title_text" placeholder="Hello World!" oninput="gen()">
         `,
-        effect: `
-            <label>対象</label>
-            <input type="text" id="target" value="@p" oninput="gen()">
-            <label>効果</label>
-            <select id="effName" onchange="gen()">
-                <option value="speed">移動速度上昇</option>
-                <option value="strength">攻撃力上昇</option>
-                <option value="invisibility">透明化</option>
-                <option value="night_vision">暗視</option>
-            </select>
-            <label>秒数 / 増幅値</label>
-            <div style="display:flex; gap:10px;">
-                <input type="number" id="sec" value="30" oninput="gen()">
-                <input type="number" id="amp" value="1" oninput="gen()">
-            </div>
+        particle: `
+            <label>種類</label><input type="text" id="part_id" value="minecraft:basic_flame_particle" oninput="gen()">
+            <label>座標</label><input type="text" id="part_coords" value="~ ~1 ~" oninput="gen()">
         `,
-        tp: `
-            <label>誰を</label>
-            <input type="text" id="target" value="@s" oninput="gen()">
-            <label>どこへ (x y z)</label>
-            <input type="text" id="coords" value="~ ~ ~" oninput="gen()">
+        summon: `
+            <label>モブID</label><input type="text" id="sum_id" placeholder="zombie" oninput="gen()">
+            <label>名前 (BEのみ対応)</label><input type="text" id="sum_name" placeholder="My Guard" oninput="gen()">
+            <label>座標</label><input type="text" id="sum_pos" value="~ ~ ~" oninput="gen()">
         `,
-        playsound: `
-            <label>音の名前</label>
-            <input type="text" id="sound" value="ambient.weather.thunder" oninput="gen()">
-            <label>対象</label>
-            <input type="text" id="target" value="@a" oninput="gen()">
+        give_pro: `
+            <label>アイテム</label><input type="text" id="g_id" placeholder="netherite_sword" oninput="gen()">
+            <label>特殊タグ(Java用)</label><input type="text" id="g_nbt" placeholder='{Unbreakable:1b}' oninput="gen()">
         `
     };
 
@@ -130,29 +95,35 @@
     }
 
     function gen() {
+        const ed = document.getElementById('edition').value;
         const type = document.getElementById('cmdType').value;
         let cmd = "";
 
-        if(type === 'give') {
-            const t = document.getElementById('target').value;
-            const i = document.getElementById('item').value || "air";
-            const c = document.getElementById('count').value;
-            const n = document.getElementById('nbt').value;
-            cmd = `/give ${t} ${i}${n} ${c}`;
-        } else if(type === 'effect') {
-            const t = document.getElementById('target').value;
-            const e = document.getElementById('effName').value;
-            const s = document.getElementById('sec').value;
-            const a = document.getElementById('amp').value;
-            cmd = `/effect give ${t} ${e} ${s} ${a}`;
-        } else if(type === 'tp') {
-            const t = document.getElementById('target').value;
-            const c = document.getElementById('coords').value;
-            cmd = `/tp ${t} ${c}`;
-        } else if(type === 'playsound') {
-            const s = document.getElementById('sound').value;
-            const t = document.getElementById('target').value;
-            cmd = `/playsound ${s} master ${t}`;
+        if(type === 'execute') {
+            const t = document.getElementById('exe_target').value;
+            const c = document.getElementById('exe_cond').value;
+            const r = document.getElementById('exe_run').value;
+            cmd = (ed === 'JAVA') 
+                ? `/execute as ${t} if entity ${c} run ${r}` 
+                : `/execute ${t} ~ ~ ~ detect ${c} ${r}`; // BEは旧式/新式あるが汎用的に
+        } else if(type === 'title') {
+            const t = document.getElementById('title_target').value;
+            const p = document.getElementById('title_pos').value;
+            const txt = document.getElementById('title_text').value;
+            cmd = `/title ${t} ${p} ${txt}`;
+        } else if(type === 'particle') {
+            const p = document.getElementById('part_id').value;
+            const c = document.getElementById('part_coords').value;
+            cmd = `/particle ${p} ${c}`;
+        } else if(type === 'summon') {
+            const id = document.getElementById('sum_id').value || "zombie";
+            const pos = document.getElementById('sum_pos').value;
+            const name = document.getElementById('sum_name').value;
+            cmd = (ed === 'BE' && name) ? `/summon ${id} ${name} ${pos}` : `/summon ${id} ${pos}`;
+        } else if(type === 'give_pro') {
+            const id = document.getElementById('g_id').value || "air";
+            const nbt = document.getElementById('g_nbt').value;
+            cmd = (ed === 'JAVA') ? `/give @s ${id}${nbt}` : `/give @s ${id}`;
         }
 
         document.getElementById('output').innerText = cmd;
@@ -160,17 +131,10 @@
 
     function copyCmd() {
         const text = document.getElementById('output').innerText;
-        if(!text) return;
         navigator.clipboard.writeText(text);
-        
-        const btn = document.querySelector('.btn');
-        const originalText = btn.innerText;
-        btn.innerText = "コピーしました！";
-        btn.style.background = "#2ecc71";
-        setTimeout(() => {
-            btn.innerText = originalText;
-            btn.style.background = "var(--primary)";
-        }, 1500);
+        const b = document.querySelector('.btn');
+        b.innerText = "COPIED!";
+        setTimeout(() => b.innerText = "コピーする", 1000);
     }
 
     updateForm();
