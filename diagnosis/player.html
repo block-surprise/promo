@@ -34,39 +34,52 @@
     let currentIdx = 0;
     let totalScore = 0;
 
-    async function loadData() {
-        const id = new URLSearchParams(window.location.search).get('id');
-        if (!id) {
-            document.getElementById('title').innerText = "IDが指定されていません";
-            return;
-        }
+  async function loadData() {
+    const id = new URLSearchParams(window.location.search).get('id');
+    if (!id) return;
 
-        try {
-            const res = await fetch(`https://docs.google.com/spreadsheets/d/${SHEET_ID}/gviz/tq?tqx=out:json`);
-            const text = await res.text();
-            const json = JSON.parse(text.substring(text.indexOf("(") + 1, text.lastIndexOf(")")));
+    try {
+        const res = await fetch(`https://docs.google.com/spreadsheets/d/${SHEET_ID}/gviz/tq?tqx=out:json`);
+        const text = await res.text();
+        const json = JSON.parse(text.substring(text.indexOf("(") + 1, text.lastIndexOf(")")));
+        const rows = json.table.rows;
+
+        let foundData = null;
+
+
+        for (let row of rows) {
+      
+            if (row.c && row.c[2] && row.c[2].v) {
+                const cellContent = String(row.c[2].v);
+                
             
-            // スプレッドシートの全行をループしてIDを探す
-            for (let row of json.table.rows) {
-                if (row.c && row.c[2] && row.c[2].v) {
-                    const d = JSON.parse(row.c[2].v);
-                    if (String(d.id) === String(id)) {
-                        currentDiagnostic = d;
-                        break;
+                if (cellContent.startsWith('{')) {
+                    try {
+                        const d = JSON.parse(cellContent);
+                     
+                        if (String(d.id) === String(id)) {
+                            foundData = d;
+                            break; 
+                        }
+                    } catch (e) {
+                        continue;
                     }
                 }
             }
-
-            if (currentDiagnostic) {
-                start();
-            } else {
-                document.getElementById('title').innerText = "診断が見つかりません";
-            }
-        } catch (e) {
-            document.getElementById('title').innerText = "読み込みエラー";
-            console.error(e);
         }
+
+        if (foundData) {
+            currentDiagnostic = foundData;
+            start();
+        } else {
+            document.getElementById('title').innerText = "診断が見つかりません。";
+            console.log("探したID:", id, "データの中に一致するものなし");
+        }
+    } catch (e) {
+        document.getElementById('title').innerText = "読み込み失敗";
+        console.error("エラー詳細:", e);
     }
+}
 
     function start() {
         document.getElementById('title').innerText = currentDiagnostic.title;
