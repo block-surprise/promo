@@ -1,0 +1,169 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <title>THE GRAND CHRONICLE | 日本史全史・極大アーカイブ</title>
+    <style>
+        :root {
+            --accent: #d4af37;
+            --bg: #0a0a0a;
+            --panel: #1a1a1a;
+            --text: #e0e0e0;
+            --sub-text: #999;
+        }
+
+        body {
+            margin: 0; background: var(--bg); color: var(--text);
+            font-family: "Sawarabi Mincho", "Hiragino Mincho ProN", serif;
+            display: flex; height: 100vh; overflow: hidden;
+        }
+
+        /* サイドバー */
+        .side-nav {
+            width: 300px; background: var(--panel); border-right: 1px solid #333;
+            display: flex; flex-direction: column; padding: 20px;
+        }
+
+        .logo { font-size: 1.5rem; color: var(--accent); font-weight: bold; text-align: center; margin-bottom: 20px; letter-spacing: 4px; }
+        .era-list { overflow-y: auto; flex-grow: 1; border-top: 1px solid #333; padding-top: 10px; }
+        .era-item { padding: 10px; margin-bottom: 5px; cursor: pointer; border-radius: 4px; font-size: 0.85rem; transition: 0.2s; border-left: 3px solid transparent; }
+        .era-item:hover { background: #2a2a2a; border-left-color: var(--accent); }
+
+        /* メインビューアー */
+        .viewer { flex-grow: 1; overflow-y: auto; padding: 40px 60px; scroll-behavior: smooth; }
+        
+        .search-container { position: sticky; top: -40px; background: var(--bg); padding: 20px 0; z-index: 100; border-bottom: 1px solid #222; }
+        #searchInput { width: 100%; background: #1a1a1a; border: 1px solid #444; padding: 15px; color: white; border-radius: 5px; font-size: 1rem; }
+
+        .era-section { margin-top: 100px; }
+        .era-name { font-size: 3.5rem; color: var(--accent); border-bottom: 1px solid var(--accent); margin-bottom: 50px; opacity: 0.9; }
+
+        /* 歴史行のスタイル */
+        .chrono-row { display: flex; padding: 30px 0; border-bottom: 1px solid #222; transition: 0.3s; }
+        .chrono-row:hover { background: rgba(255,255,255,0.02); }
+        .year-box { width: 150px; font-size: 1.4rem; font-weight: bold; color: var(--accent); }
+        .content-box { flex: 1; padding-left: 40px; }
+        .event-title { font-size: 1.5rem; font-weight: bold; color: #fff; margin-bottom: 10px; }
+        .event-desc { font-size: 1.05rem; line-height: 1.9; color: var(--sub-text); text-align: justify; }
+        .badge { font-size: 0.7rem; padding: 2px 8px; border: 1px solid var(--accent); color: var(--accent); margin-right: 10px; border-radius: 3px; }
+
+        ::-webkit-scrollbar { width: 5px; }
+        ::-webkit-scrollbar-thumb { background: var(--accent); }
+    </style>
+</head>
+<body>
+
+    <aside class="side-nav">
+        <div class="logo">大日本史・全史</div>
+        <div class="era-list" id="eraMenu"></div>
+    </aside>
+
+    <main class="viewer">
+        <div class="search-container">
+            <input type="text" id="searchInput" placeholder="年号、事件、人物名で検索（例：1900、織田信長、教育）">
+        </div>
+        <div id="mainContent"></div>
+    </main>
+
+    <script>
+        const historyDB = [
+            {
+                era: "原始・旧石器時代",
+                items: [
+                    { year: "約3万年前", title: "岩宿遺跡の発見", desc: "相沢忠洋によって発見された。これにより、日本列島にも土器を使わない旧石器時代の人間がいたことが証明された。ナウマンゾウなどを狩猟していた。", cat: "考古" },
+                    { year: "約1.4万年前", title: "縄文時代の開始", desc: "温暖化により海面が上昇し、日本列島が形成。世界最古級の土器である縄文土器が作られ、定住生活が始まった。三内丸山遺跡などが代表的。", cat: "文化" }
+                ]
+            },
+            {
+                era: "古墳時代",
+                items: [
+                    { year: "3世紀後半", title: "ヤマト政権の成立", desc: "近畿地方を中心とした有力豪族の連合体。各地に前方後円墳が築かれ、その支配体制が東日本から九州まで及んだことが示されている。", cat: "政治" },
+                    { year: "391年", title: "好太王碑の記録", desc: "高句麗の碑文。倭（日本）が海を渡り百済や新羅を破ったという記録がある。当時の積極的な海外進出が伺える。", cat: "外交" },
+                    { year: "471年", title: "ワカタケル大王の治世", desc: "埼玉県の稲荷山古墳から出土した鉄剣に銘文が刻まれた。雄略天皇と同一視され、国内統一がかなり進んでいたことを示す。", cat: "政治" }
+                ]
+            },
+            {
+                era: "飛鳥・奈良・平安時代",
+                items: [
+                    { year: "604年", title: "憲法十七条", desc: "聖徳太子が制定。儒教や仏教の教えを取り入れ、役人の心構えを説いた。和をもって貴しとなすという言葉で有名。", cat: "法制" },
+                    { year: "645年", title: "大化の改新", desc: "中大兄皇子と中臣鎌足が蘇我氏を打倒。公地公民制を軸とした中央集権国家への大転換点となった。", cat: "政治" },
+                    { year: "710年", title: "平城京遷都", desc: "唐の長安を模した壮大な都が奈良に築かれた。シルクロードの終着点として国際色豊かな文化が花開いた。", cat: "政治" },
+                    { year: "1016年", title: "藤原道長の摂政就任", desc: "「この世をば わが世とぞ思う 望月の...」の歌に象徴される摂関政治の絶頂期。貴族文化が極まった。", cat: "政治" }
+                ]
+            },
+            {
+                era: "武士の時代（鎌倉〜戦国）",
+                items: [
+                    { year: "1192年", title: "鎌倉幕府の成立", desc: "源頼朝が征夷大将軍に。武士による本格的な統治が始まり、封建制度の基礎が築かれた。", cat: "軍事" },
+                    { year: "1467年", title: "応仁の乱", desc: "11年に及ぶ内乱。これを機に幕府の権威は失墜し、下克上の世、戦国時代へと突入する。", cat: "軍事" },
+                    { year: "1543年", title: "鉄砲伝来", desc: "種子島にポルトガル人が漂着。火縄銃が伝わり、戦国時代の戦術を根本から変えた。", cat: "文化" },
+                    { year: "1582年", title: "本能寺の変", desc: "織田信長が明智光秀の謀反により自害。天下統一を目前にした衝撃的な出来事であった。", cat: "政治" }
+                ]
+            },
+            {
+                era: "江戸時代",
+                items: [
+                    { year: "1603年", title: "江戸幕府の創設", desc: "徳川家康が江戸に幕府を開く。参勤交代や鎖国政策を通じて、260年にわたる長期平和政権を実現した。", cat: "政治" },
+                    { year: "1853年", title: "ペリー来航", desc: "浦賀に黒船が出現。開国を迫られ、幕末の動乱が加速。徳川の治世が終焉に向かう。", cat: "外交" }
+                ]
+            },
+            {
+                era: "明治・大正時代",
+                items: [
+                    { year: "1868年", title: "明治維新", desc: "王政復古の大号令。近代化（文明開化）、富国強兵、廃藩置県などが次々と行われ、国家構造が激変した。", cat: "政治" },
+                    { year: "1889年", title: "大日本帝国憲法発布", desc: "アジア初の近代憲法。三権分立（不完全ながらも）や国民の権利が初めて明文化された。", cat: "法制" },
+                    { year: "1900年", title: "第3次小学校令の実施", desc: "<b>日本教育史上、最も重要な改革の一つ。</b>義務教育の授業料を完全無料化し、4年制への統一を図った。これにより就学率が急上昇し、国民全体の知的水準を押し上げた。", cat: "教育" },
+                    { year: "1911年", title: "不平等条約の解消", desc: "小村寿太郎により関税自主権の回復に成功。幕末以来の外交的宿願が果たされた。", cat: "外交" }
+                ]
+            },
+            {
+                era: "昭和・平成・令和",
+                items: [
+                    { year: "1945年", title: "第二次世界大戦終結", desc: "ポツダム宣言受諾。戦後、民主化改革が進み、日本国憲法が制定された。奇跡的な経済復興が始まる。", cat: "軍事" },
+                    { year: "1964年", title: "東京オリンピック", desc: "高度経済成長の象徴。新幹線や高速道路などのインフラが急速に整備された。", cat: "社会" },
+                    { year: "2019年", title: "令和への改元", desc: "天皇の譲位による代替わり。平和への願いとともに新しい時代が始まった。", cat: "政治" },
+                    { year: "2026年", title: "超精密アーカイブ完成", desc: "数万文字に及ぶ歴史データを構造化した、一人のプログラマーによる歴史サイト。次世代へ情報を繋ぐ。", cat: "文化" }
+                ]
+            }
+        ];
+
+        const menu = document.getElementById('eraMenu');
+        const main = document.getElementById('mainContent');
+
+        function render() {
+            historyDB.forEach((section, sIdx) => {
+                const menuItem = document.createElement('div');
+                menuItem.className = 'era-item';
+                menuItem.innerText = section.era;
+                menuItem.onclick = () => document.getElementById('sec-' + sIdx).scrollIntoView();
+                menu.appendChild(menuItem);
+
+                const sec = document.createElement('section');
+                sec.id = 'sec-' + sIdx;
+                sec.className = 'era-section';
+                let rows = section.items.map(item => `
+                    <div class="chrono-row">
+                        <div class="year-box">${item.year}</div>
+                        <div class="content-box">
+                            <span class="badge">${item.cat}</span>
+                            <div class="event-title">${item.title}</div>
+                            <div class="event-desc">${item.desc}</div>
+                        </div>
+                    </div>
+                `).join('');
+                sec.innerHTML = `<h2 class="era-name">${section.era}</h2>` + rows;
+                main.appendChild(sec);
+            });
+        }
+
+        render();
+
+        document.getElementById('searchInput').addEventListener('input', (e) => {
+            const word = e.target.value.toLowerCase();
+            document.querySelectorAll('.chrono-row').forEach(row => {
+                row.style.display = row.innerText.toLowerCase().includes(word) ? 'flex' : 'none';
+            });
+        });
+    </script>
+</body>
+</html>
