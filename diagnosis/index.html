@@ -3,87 +3,173 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>D-MAKE | フォーム連携版</title>
+    <title>D-MAKE Pro | 診断作成＆共有ツール</title>
     <style>
-        :root { --primary: #6366f1; --bg: #f8fafc; --card: #ffffff; }
-        body { font-family: sans-serif; background: var(--bg); margin: 0; padding: 20px; }
+        :root { --primary: #6366f1; --bg: #f8fafc; --card: #ffffff; --text: #1e293b; }
+        body { font-family: 'Helvetica Neue', Arial, sans-serif; background: var(--bg); margin: 0; padding: 20px; color: var(--text); line-height: 1.6; }
         .container { max-width: 500px; margin: 0 auto; }
-        .card { background: var(--card); border-radius: 20px; padding: 24px; box-shadow: 0 10px 25px rgba(0,0,0,0.05); margin-bottom: 20px; }
-        h1 { font-size: 1.5rem; text-align: center; color: var(--primary); }
-        label { font-size: 0.9rem; font-weight: bold; display: block; margin-top: 15px; }
-        input { width: 100%; padding: 12px; margin-top: 5px; border-radius: 10px; border: 1px solid #e2e8f0; box-sizing: border-box; }
-        button { width: 100%; padding: 14px; margin-top: 15px; border-radius: 12px; border: none; font-weight: bold; cursor: pointer; }
+        .card { background: var(--card); border-radius: 20px; padding: 24px; box-shadow: 0 10px 25px rgba(0,0,0,0.05); margin-bottom: 20px; animation: fadeIn 0.5s ease; }
+        h1 { font-size: 1.5rem; text-align: center; color: var(--primary); margin-bottom: 20px; }
+        label { font-size: 0.85rem; font-weight: bold; display: block; margin-top: 15px; color: #64748b; }
+        input { width: 100%; padding: 12px; margin-top: 5px; border-radius: 10px; border: 1px solid #e2e8f0; box-sizing: border-box; font-size: 16px; }
+        button { width: 100%; padding: 14px; margin-top: 15px; border-radius: 12px; border: none; font-weight: bold; cursor: pointer; transition: 0.2s; font-size: 16px; }
         .btn-primary { background: var(--primary); color: white; }
         .btn-save { background: #10b981; color: white; }
-        .q-block { border-left: 4px solid var(--primary); padding-left: 15px; margin-top: 15px; }
+        .btn-add { background: #f1f5f9; color: #475569; border: 1px dashed #cbd5e1; }
+        .btn-answer { background: #f1f5f9; color: var(--text); border: 2px solid #e2e8f0; text-align: left; }
+        .btn-answer:active { background: var(--primary); color: white; }
+        .q-block { border-left: 4px solid var(--primary); padding-left: 15px; margin-top: 20px; background: #fafbff; padding-bottom: 10px; border-radius: 0 10px 10px 0; }
+        .progress-container { width: 100%; height: 6px; background: #e2e8f0; border-radius: 3px; margin-bottom: 20px; }
+        .progress-bar { height: 100%; background: var(--primary); width: 0%; transition: 0.3s; }
+        @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
+        #share-area { display: none; background: #ecfdf5; border: 1px solid #10b981; padding: 15px; border-radius: 10px; margin-top: 15px; word-break: break-all; }
     </style>
 </head>
 <body>
 
-<div class="container" id="editor">
-    <div class="card">
-        <h1>診断エディタ</h1>
+<div class="container">
+    <!-- 作成モード -->
+    <div id="editor" class="card">
+        <h1>D-MAKE エディタ</h1>
         <label>診断タイトル</label>
-        <input type="text" id="title" placeholder="例：マイクラ適性診断">
+        <input type="text" id="title" placeholder="例：あなたの性格をシャー芯に例えると？">
         
         <div id="questions-list"></div>
-        <button onclick="addQuestionField()" style="background:#eee;">＋ 質問を追加</button>
+        <button class="btn-add" onclick="addQuestionField()">＋ 質問を追加</button>
 
-        <label>結果A</label><input type="text" id="typeA" placeholder="結果1">
-        <label>結果B</label><input type="text" id="typeB" placeholder="結果2">
+        <hr style="margin:25px 0; border:0; border-top:1px solid #eee;">
+        <label>結果A（ポイントが多い時）</label>
+        <input type="text" id="typeA" placeholder="例：しっかり者のHB">
+        <label>結果B（ポイントが少ない時）</label>
+        <input type="text" id="typeB" placeholder="例：情熱的な4B">
         
-        <button class="btn-save" onclick="saveToForm()">サーバーに保存して公開</button>
+        <button class="btn-save" onclick="saveToForm()">サーバーに保存してURL発行</button>
+        <div id="share-area">
+            <p style="margin:0; font-size:12px; font-weight:bold;">共有URLが発行されました！</p>
+            <input type="text" id="share-url" readonly onclick="this.select()">
+        </div>
+    </div>
+
+    <!-- プレイモード -->
+    <div id="player" class="card" style="display:none;">
+        <div class="progress-container"><div class="progress-bar" id="p-bar"></div></div>
+        <h1 id="p-title" style="font-size: 1.1rem; color: #64748b;"></h1>
+        <div id="game-area">
+            <p id="p-q-text" style="font-size: 1.2rem; font-weight: bold; min-height: 60px;"></p>
+            <div id="p-options"></div>
+        </div>
+        <div id="result-area" style="display:none; text-align:center;">
+            <p>診断結果は...</p>
+            <h2 id="p-result-name" style="font-size: 2rem; color: var(--primary);"></h2>
+            <button class="btn-primary" onclick="location.href=location.pathname">自分も診断を作る</button>
+        </div>
     </div>
 </div>
 
 <script>
+    // --- 設定 ---
+    const FORM_ID = "1FAIpQLSdSKCj3z-x-krRzGS5Ux2xCnnnOa4b57tNIYbdiqJsORkenpQ";
+    const SHEET_ID = "1vSCC4P-0DUC4osb7lmP2ncQHYrAUGDED9snXe_YEsGqZj2u0QEs9K7osEC_lXQqG_WpyLKwKz-Gq-GP";
+    const ENTRY_TITLE = "entry.353362422";
+    const ENTRY_DATA = "entry.673959864";
+
     let qCount = 0;
-    addQuestionField();
+    let currentQuestions = [];
+    let currentIdx = 0;
+    let totalScore = 0;
+    let currentDiagnostic = null;
+
+    addQuestionField(); // 最初の一つ
 
     function addQuestionField() {
         qCount++;
-        const list = document.getElementById('questions-list');
-        list.insertAdjacentHTML('beforeend', `
+        document.getElementById('questions-list').insertAdjacentHTML('beforeend', `
             <div class="q-block">
                 <label>質問 ${qCount}</label>
-                <input type="text" class="q-text" placeholder="質問文">
-                <input type="text" class="a1-text" placeholder="選択肢1(A点)">
-                <input type="text" class="a2-text" placeholder="選択肢2(B点)">
+                <input type="text" class="q-text" placeholder="質問文を入力">
+                <input type="text" class="a1-text" placeholder="選択肢1（Aタイプ寄り）">
+                <input type="text" class="a2-text" placeholder="選択肢2（Bタイプ寄り）">
             </div>
         `);
     }
 
+    // 保存機能
     async function saveToForm() {
         const title = document.getElementById('title').value;
-        const qTexts = document.querySelectorAll('.q-text');
-        const a1Texts = document.querySelectorAll('.a1-text');
-        const a2Texts = document.querySelectorAll('.a2-text');
-
-        // データをまとめる
-        const diagnosticData = {
+        const data = {
             title: title,
             typeA: document.getElementById('typeA').value,
             typeB: document.getElementById('typeB').value,
-            questions: []
+            questions: Array.from(document.querySelectorAll('.q-block')).map(b => ({
+                q: b.querySelector('.q-text').value,
+                a1: b.querySelector('.a1-text').value,
+                a2: b.querySelector('.a2-text').value
+            }))
         };
 
-        qTexts.forEach((q, i) => {
-            diagnosticData.questions.push({
-                q: q.value, a1: a1Texts[i].value, a2: a2Texts[i].value
-            });
+        const postUrl = `https://docs.google.com/forms/d/e/${FORM_ID}/formResponse?${ENTRY_TITLE}=${encodeURIComponent(title)}&${ENTRY_DATA}=${encodeURIComponent(JSON.stringify(data))}&submit=Submit`;
+        
+        fetch(postUrl, { mode: 'no-cors' }).then(async () => {
+            // 保存直後、スプレッドシートの「最新行数」を取得してIDにする（簡易）
+            const res = await fetch(`https://docs.google.com/spreadsheets/d/${SHEET_ID}/gviz/tq?tqx=out:json`);
+            const text = await res.text();
+            const json = JSON.parse(text.substring(text.indexOf("(") + 1, text.lastIndexOf(")")));
+            const nextID = json.table.rows.length + 1; // フォーム送信直後なので+1が自分
+
+            const finalUrl = window.location.origin + window.location.pathname + "?id=" + nextID;
+            document.getElementById('share-area').style.display = 'block';
+            document.getElementById('share-url').value = finalUrl;
+            alert("保存しました！URLをコピーして共有してね。");
         });
+    }
 
-        // GoogleフォームのURLとID
-        const formID = "1FAIpQLSdSKCj3z-x-krRzGS5Ux2xCnnnOa4b57tNIYbdiqJsORkenpQ";
-        const titleEntry = "entry.353362422";
-        const dataEntry = "entry.673959864";
+    // 読み込み機能
+    window.onload = async () => {
+        const id = new URLSearchParams(window.location.search).get('id');
+        if (!id) return;
 
-        const postUrl = `https://docs.google.com/forms/d/e/${formID}/formResponse?${titleEntry}=${encodeURIComponent(title)}&${dataEntry}=${encodeURIComponent(JSON.stringify(diagnosticData))}&submit=Submit`;
+        document.getElementById('editor').style.display = 'none';
+        document.getElementById('player').style.display = 'block';
 
-        // 送信（no-corsモードで警告を回避）
-        fetch(postUrl, { mode: 'no-cors' }).then(() => {
-            alert("診断を保存しました！\nGoogleフォームに紐付いたスプレッドシートを確認してください。");
-        }).catch(e => alert("エラーが発生しました"));
+        const res = await fetch(`https://docs.google.com/spreadsheets/d/${SHEET_ID}/gviz/tq?tqx=out:json`);
+        const text = await res.text();
+        const json = JSON.parse(text.substring(text.indexOf("(") + 1, text.lastIndexOf(")")));
+        const row = json.table.rows[parseInt(id) - 1];
+
+        if (row) {
+            currentDiagnostic = JSON.parse(row.c[2].v);
+            document.getElementById('p-title').innerText = currentDiagnostic.title;
+            renderQuestion();
+        }
+    };
+
+    function renderQuestion() {
+        const qData = currentDiagnostic.questions[currentIdx];
+        const progress = (currentIdx / currentDiagnostic.questions.length) * 100;
+        document.getElementById('p-bar').style.width = progress + "%";
+
+        if (currentIdx < currentDiagnostic.questions.length) {
+            document.getElementById('p-q-text').innerText = qData.q;
+            document.getElementById('p-options').innerHTML = `
+                <button class="btn-answer" onclick="answer(1)">${qData.a1}</button>
+                <button class="btn-answer" onclick="answer(-1)">${qData.a2}</button>
+            `;
+        } else {
+            showResult();
+        }
+    }
+
+    function answer(pts) {
+        totalScore += pts;
+        currentIdx++;
+        renderQuestion();
+    }
+
+    function showResult() {
+        document.getElementById('p-bar').style.width = "100%";
+        document.getElementById('game-area').style.display = 'none';
+        document.getElementById('result-area').style.display = 'block';
+        document.getElementById('p-result-name').innerText = (totalScore >= 0) ? currentDiagnostic.typeA : currentDiagnostic.typeB;
     }
 </script>
 
