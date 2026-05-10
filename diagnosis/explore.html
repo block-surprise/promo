@@ -75,23 +75,26 @@
             document.body.appendChild(script);
         }
 
-        window.myDataLoader = function(response) {
-            document.getElementById('loading').style.display = 'none';
-            const rows = response.table.rows;
+window.myDataLoader = function(response) {
+    document.getElementById('loading').style.display = 'none';
+    const rows = response.table.rows;
 
-            for (let row of rows) {
-                if (row.c && row.c[2] && row.c[2].v) {
-                    try {
-                        const data = JSON.parse(row.c[2].v);
-                        // 公開設定が public のものだけをリストに追加
-                        if (data.visibility === 'public') {
-                            allDiagnostics.push(data);
-                        }
-                    } catch (e) {}
+    for (let row of rows) {
+        if (row.c && row.c[2] && row.c[2].v) {
+            try {
+                const data = JSON.parse(row.c[2].v);
+                if (data.visibility === 'public') {
+                    allDiagnostics.push(data);
                 }
-            }
-            renderList(allDiagnostics);
-        };
+            } catch (e) {}
+        }
+    }
+
+    allDiagnostics.reverse(); 
+    // ------------------
+
+    renderList(allDiagnostics);
+};
 
         function renderList(list) {
             const grid = document.getElementById('diag-grid');
