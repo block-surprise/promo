@@ -1,0 +1,97 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>MC Command Gen</title>
+    <style>
+        :root { --bg: #1e1e1e; --text: #e0e0e0; --accent: #4caf50; }
+        body { font-family: sans-serif; background: var(--bg); color: var(--text); padding: 20px; }
+        .card { background: #2d2d2d; padding: 15px; border-radius: 8px; margin-bottom: 20px; box-shadow: 0 4px 6px rgba(0,0,0,0.3); }
+        h2 { margin-top: 0; font-size: 1.2rem; color: var(--accent); }
+        select, input { width: 100%; padding: 10px; margin: 10px 0; border-radius: 4px; border: none; background: #3d3d3d; color: white; box-sizing: border-box; }
+        #output { background: #000; padding: 15px; border-radius: 4px; font-family: monospace; word-break: break-all; color: #00ff00; border: 1px solid var(--accent); position: relative; }
+        .copy-btn { margin-top: 10px; padding: 10px; width: 100%; background: var(--accent); border: none; border-radius: 4px; color: white; font-weight: bold; cursor: pointer; }
+    </style>
+</head>
+<body>
+
+    <div class="card">
+        <h2>Command Type</h2>
+        <select id="cmdType" onchange="updateForm()">
+            <option value="playsound">/playsound (音を鳴らす)</option>
+            <option value="give">/give (アイテム付与)</option>
+            <option value="testfor">/testfor (検知)</option>
+        </select>
+    </div>
+
+    <div id="dynamicForm" class="card">
+        <!-- ここに選択したコマンドごとの入力欄が出る -->
+    </div>
+
+    <div class="card">
+        <h2>Generated Command</h2>
+        <div id="output">/playsound ambient.weather.thunder master @a</div>
+        <button class="copy-btn" onclick="copyCmd()">コピーする</button>
+    </div>
+
+    <script>
+        const forms = {
+            playsound: `
+                <input type="text" id="sound" placeholder="音の名前 (例: ambient.weather.thunder)" oninput="gen()">
+                <select id="source" onchange="gen()">
+                    <option value="master">master (主音量)</option>
+                    <option value="music">music (音楽)</option>
+                    <option value="player">player (プレイヤー)</option>
+                </select>
+                <input type="text" id="target" placeholder="対象 (例: @a)" value="@r" oninput="gen()">
+            `,
+            give: `
+                <input type="text" id="item" placeholder="アイテム名 (例: diamond_sword)" oninput="gen()">
+                <input type="number" id="count" value="1" oninput="gen()">
+                <input type="text" id="target_g" value="@s" oninput="gen()">
+            `,
+            testfor: `
+                <input type="text" id="selector" placeholder="対象セレクター (例: @a[r=5])" oninput="gen()">
+            `
+        };
+
+        function updateForm() {
+            const type = document.getElementById('cmdType').value;
+            document.getElementById('dynamicForm').innerHTML = forms[type];
+            gen();
+        }
+
+        function gen() {
+            const type = document.getElementById('cmdType').value;
+            let cmd = "";
+
+            if(type === 'playsound') {
+                const s = document.getElementById('sound').value || "ambient.weather.thunder";
+                const src = document.getElementById('source').value;
+                const t = document.getElementById('target').value || "@a";
+                cmd = `/playsound ${s} ${src} ${t}`;
+            } else if(type === 'give') {
+                const i = document.getElementById('item').value || "air";
+                const c = document.getElementById('count').value;
+                const tg = document.getElementById('target_g').value;
+                cmd = `/give ${tg} ${i} ${c}`;
+            } else if(type === 'testfor') {
+                const sel = document.getElementById('selector').value || "@a";
+                cmd = `/testfor ${sel}`;
+            }
+
+            document.getElementById('output').innerText = cmd;
+        }
+
+        function copyCmd() {
+            const text = document.getElementById('output').innerText;
+            navigator.clipboard.writeText(text);
+            alert("コピーしたよ！");
+        }
+
+        // 初期化
+        updateForm();
+    </script>
+</body>
+</html>
