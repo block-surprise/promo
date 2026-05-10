@@ -28,94 +28,94 @@
 
 <script>
 
+// --- あなたの設定 ---
 const SHEET_ID = '1EYXz3Preu5Xf0OKVXomovvzHJP4MtRQDgaQC0rWney0';
 
-    let currentDiagnostic = null;
-    let currentIdx = 0;
-    let totalScore = 0;
+let currentDiagnostic = null;
+let currentIdx = 0;
+let totalScore = 0;
 
-async function loadData() {
+// 1. 最初に呼ばれる関数
+function loadData() {
     const id = new URLSearchParams(window.location.search).get('id');
-    if (!id) return;
+    if (!id) {
+        document.getElementById('title').innerText = "IDを入力してください";
+        return;
+    }
 
-  
-    const url = `https://docs.google.com/spreadsheets/d/${SHEET_ID}/pub?output=csv`;
+    // Googleスプレッドシートから「スクリプト」としてデータを取得（CORS回避）
+    const script = document.createElement('script');
+    // responseHandlerに「myDataLoader」を指定するのがコツ
+    script.src = `https://docs.google.com/spreadsheets/d/${SHEET_ID}/gviz/tq?tqx=responseHandler:myDataLoader`;
+    document.body.appendChild(script);
+}
 
-    try {
-        const res = await fetch(url);
-        const csvText = await res.text();
-        
+// 2. データが届いたらGoogleが勝手に実行してくれる関数
+window.myDataLoader = function(response) {
+    const id = new URLSearchParams(window.location.search).get('id');
+    const rows = response.table.rows;
+    let foundData = null;
 
-        console.log("届いた全データ:", csvText);
-
-        const rows = csvText.split('\n');
-        let foundData = null;
-
-        for (let rowText of rows) {
-
-            if (rowText.includes(id)) {
-
-                const cleanRow = rowText.replace(/""/g, '"');
-                const jsonMatch = cleanRow.match(/\{.*\}/); 
-                
-                if (jsonMatch) {
-                    try {
-                        const d = JSON.parse(jsonMatch[0]);
-                        if (String(d.id) === String(id)) {
-                            foundData = d;
-                            break;
-                        }
-                    } catch (e) {
-                        console.warn("JSON解析に失敗した行があります:", e);
+    for (let row of rows) {
+        // C列（index 2）の中身を確認
+        if (row.c && row.c[2] && row.c[2].v) {
+            const cellValue = String(row.c[2].v);
+            if (cellValue.includes('{')) {
+                try {
+                    // CSVと違って、gviz経由なら "" の置換は不要
+                    const d = JSON.parse(cellValue);
+                    if (String(d.id) === String(id)) {
+                        foundData = d;
+                        break;
                     }
+                } catch (e) {
+                    console.error("JSONパース失敗:", e);
                 }
             }
         }
+    }
 
-        if (foundData) {
-            currentDiagnostic = foundData;
-            start();
-        } else {
-            document.getElementById('title').innerText = "診断データが見つかりません。";
-            document.getElementById('question-text').innerText = `ID [${id}] はスプレッドシートに届いていますが、形式が合わないようです。`;
-        }
-    } catch (e) {
-        document.getElementById('title').innerText = "データ取得エラー";
-        console.error(e);
+    if (foundData) {
+        currentDiagnostic = foundData;
+        start();
+    } else {
+        document.getElementById('title').innerText = "診断が見つかりませんでした";
+        console.log("探したID:", id);
+    }
+};
+
+function start() {
+    document.getElementById('title').innerText = currentDiagnostic.title;
+    render();
+}
+
+function render() {
+    if (currentIdx < currentDiagnostic.questions.length) {
+        const q = currentDiagnostic.questions[currentIdx];
+        document.getElementById('question-text').innerText = q.q;
+        document.getElementById('options').innerHTML = `
+            <button class="btn-answer" onclick="answer(1)">${q.a1}</button>
+            <button class="btn-answer" onclick="answer(-1)">${q.a2}</button>
+        `;
+    } else {
+        showResult();
     }
 }
 
-    function start() {
-        document.getElementById('title').innerText = currentDiagnostic.title;
-        render();
-    }
+function answer(pts) {
+    totalScore += pts;
+    currentIdx++;
+    render();
+}
 
-    function render() {
-        if (currentIdx < currentDiagnostic.questions.length) {
-            const q = currentDiagnostic.questions[currentIdx];
-            document.getElementById('question-text').innerText = q.q;
-            document.getElementById('options').innerHTML = `
-                <button class="btn-answer" onclick="answer(1)">${q.a1}</button>
-                <button class="btn-answer" onclick="answer(-1)">${q.a2}</button>
-            `;
-        } else {
-            showResult();
-        }
-    }
+function showResult() {
+    document.getElementById('game-area').style.display = 'none';
+    document.getElementById('result-area').style.display = 'block';
+    document.getElementById('result-name').innerText = (totalScore >= 0) ? currentDiagnostic.typeA : currentDiagnostic.typeB;
+}
 
-    function answer(pts) {
-        totalScore += pts;
-        currentIdx++;
-        render();
-    }
-
-    function showResult() {
-        document.getElementById('game-area').style.display = 'none';
-        document.getElementById('result-area').style.display = 'block';
-        document.getElementById('result-name').innerText = (totalScore >= 0) ? currentDiagnostic.typeA : currentDiagnostic.typeB;
-    }
-
-    loadData();
+// 実行！
+loadData();
 </script>
 </body>
 </html>
