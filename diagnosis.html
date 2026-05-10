@@ -1,0 +1,97 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <title>D-MAKE | 診断作成ツール</title>
+    <style>
+        body { font-family: sans-serif; background: #f0f2f5; padding: 20px; }
+        .container { max-width: 600px; margin: 0 auto; background: white; padding: 30px; border-radius: 15px; shadow: 0 4px 15px rgba(0,0,0,0.1); }
+        h1 { text-align: center; color: #333; }
+        .section { margin-bottom: 20px; border-bottom: 1px solid #eee; padding-bottom: 20px; }
+        input, button { width: 100%; padding: 10px; margin-top: 5px; border-radius: 5px; border: 1px solid #ddd; box-sizing: border-box; }
+        button { background: #007bff; color: white; border: none; cursor: pointer; font-weight: bold; }
+        button:hover { background: #0056b3; }
+        .result-box { display: none; margin-top: 20px; padding: 15px; background: #e9f5ff; border-radius: 10px; }
+    </style>
+</head>
+<body>
+
+<div class="container" id="editor">
+    <h1>D-MAKE 診断作成</h1>
+    
+    <div class="section">
+        <label>診断タイトル</label>
+        <input type="text" id="title" placeholder="例：あなたをシャー芯に例えると？">
+    </div>
+
+    <div class="section">
+        <label>質問</label>
+        <input type="text" id="q1" placeholder="例：テスト勉強はいつから始める？">
+        <br><br>
+        <label>選択肢1 (タイプAに+1)</label>
+        <input type="text" id="q1_a1" placeholder="例：1週間前からコツコツ">
+        <label>選択肢2 (タイプBに+1)</label>
+        <input type="text" id="q1_a2" placeholder="例：前日に徹夜！">
+    </div>
+
+    <div class="section">
+        <label>タイプAの名前</label>
+        <input type="text" id="typeA" placeholder="例：しっかり者のHB">
+        <label>タイプBの名前</label>
+        <input type="text" id="typeB" placeholder="例：情熱の4B">
+    </div>
+
+    <button onclick="generateDiagnostic()">診断を作成する</button>
+</div>
+
+<div class="container" id="player" style="display:none;">
+    <h1 id="p-title"></h1>
+    <div id="question-area">
+        <p id="p-q1"></p>
+        <button id="btn-a1" onclick="answer(1)"></button>
+        <button id="btn-a2" onclick="answer(2)"></button>
+    </div>
+    <div id="result-area" class="result-box">
+        <h2>診断結果</h2>
+        <p id="p-result" style="font-size: 24px; font-weight: bold; text-align: center;"></p>
+        <button onclick="location.reload()">もう一度作る</button>
+    </div>
+</div>
+
+<script>
+    let diagnosticData = {};
+    let score = 0; // 1ならタイプA、2ならタイプB寄りとする簡易的な仕組み
+
+    function generateDiagnostic() {
+        // 入力値を取得
+        diagnosticData = {
+            title: document.getElementById('title').value,
+            q1: document.getElementById('q1').value,
+            q1_a1: document.getElementById('q1_a1').value,
+            q1_a2: document.getElementById('q1_a2').value,
+            typeA: document.getElementById('typeA').value,
+            typeB: document.getElementById('typeB').value
+        };
+
+        // プレイヤー画面を表示
+        document.getElementById('editor').style.display = 'none';
+        document.getElementById('player').style.display = 'block';
+
+        // プレイヤーに反映
+        document.getElementById('p-title').innerText = diagnosticData.title;
+        document.getElementById('p-q1').innerText = diagnosticData.q1;
+        document.getElementById('btn-a1').innerText = diagnosticData.q1_a1;
+        document.getElementById('btn-a2').innerText = diagnosticData.q1_a2;
+    }
+
+    function answer(choice) {
+        document.getElementById('question-area').style.display = 'none';
+        document.getElementById('result-area').style.display = 'block';
+
+        const resultText = (choice === 1) ? diagnosticData.typeA : diagnosticData.typeB;
+        document.getElementById('p-result').innerText = resultText;
+    }
+</script>
+
+</body>
+</html>
