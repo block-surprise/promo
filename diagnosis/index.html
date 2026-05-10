@@ -93,24 +93,16 @@
         `);
     }
 
-    // 保存機能
 async function saveToForm() {
     const title = document.getElementById('title').value;
     if(!title) { alert("タイトルを入力してください"); return; }
 
-    // 1. まず現在のスプレッドシートの行数を取得して「次」のIDを予測する
-    let nextID = "???";
-    try {
-        const res = await fetch(`https://docs.google.com/spreadsheets/d/${SHEET_ID}/gviz/tq?tqx=out:json`);
-        const text = await res.text();
-        const json = JSON.parse(text.substring(text.indexOf("(") + 1, text.lastIndexOf(")")));
-        // フォーム送信前なので、現在の行数 + 1 が自分のIDになる
-        nextID = json.table.rows.length + 1;
-    } catch(e) {
-        console.log("ID予測に失敗しましたが、送信を続行します");
-    }
+    // 【修正ポイント】行数を数えるのをやめて、ランダムなIDを作る
+    // これなら「???」になる心配はありません！
+    const randomID = Math.floor(Math.random() * 90000) + 10000;
 
     const data = {
+        id: randomID, // IDもデータの中に入れておく
         title: title,
         typeA: document.getElementById('typeA').value,
         typeB: document.getElementById('typeB').value,
@@ -121,39 +113,52 @@ async function saveToForm() {
         }))
     };
 
-    // 2. フォームへ送信
+    // Googleフォームの項目ID（あなたのものに合わせてください）
     const postUrl = `https://docs.google.com/forms/d/e/${FORM_ID}/formResponse?${ENTRY_TITLE}=${encodeURIComponent(title)}&${ENTRY_DATA}=${encodeURIComponent(JSON.stringify(data))}&submit=Submit`;
     
-    // 送信実行（mode: 'no-cors' でエラーを無視して完遂させる）
+    // 送信
     fetch(postUrl, { mode: 'no-cors' });
 
-    // 3. 即座にURLを表示する（送信完了を待たずに表示させるのがコツ）
-    const finalUrl = window.location.origin + window.location.pathname + "?id=" + nextID;
+    // URLを表示（?id=数字 の形にする）
+    const finalUrl = window.location.origin + window.location.pathname + "?id=" + randomID;
     document.getElementById('share-area').style.display = 'block';
     document.getElementById('share-url').value = finalUrl;
     
-    alert("診断を送信しました！下のURLをコピーしてください。\n（反映まで数秒かかる場合があります）");
+    alert("診断を保存しました！\n下のURLをコピーして友達に送ってね。");
 }
+window.onload = async () => {
+    const urlParams = new URLSearchParams(window.location.search);
+    const targetID = urlParams.get('id');
+    if (!targetID) return;
 
-    // 読み込み機能
-    window.onload = async () => {
-        const id = new URLSearchParams(window.location.search).get('id');
-        if (!id) return;
+    document.getElementById('editor').style.display = 'none';
+    document.getElementById('player').style.display = 'block';
 
-        document.getElementById('editor').style.display = 'none';
-        document.getElementById('player').style.display = 'block';
+    const res = await fetch(`https://docs.google.com/spreadsheets/d/${SHEET_ID}/gviz/tq?tqx=out:json`);
+    const text = await res.text();
+    const json = JSON.parse(text.substring(text.indexOf("(") + 1, text.lastIndexOf(")")));
+    const rows = json.table.rows;
 
-        const res = await fetch(`https://docs.google.com/spreadsheets/d/${SHEET_ID}/gviz/tq?tqx=out:json`);
-        const text = await res.text();
-        const json = JSON.parse(text.substring(text.indexOf("(") + 1, text.lastIndexOf(")")));
-        const row = json.table.rows[parseInt(id) - 1];
-
-        if (row) {
-            currentDiagnostic = JSON.parse(row.c[2].v);
-            document.getElementById('p-title').innerText = currentDiagnostic.title;
-            renderQuestion();
+    // スプレッドシートの中から、IDが一致するデータを探す
+    let foundData = null;
+    for (let row of rows) {
+        if (row.c[2]) {
+            const d = JSON.parse(row.c[2].v);
+            if (String(d.id) === String(targetID)) {
+                foundData = d;
+                break;
+            }
         }
-    };
+    }
+
+    if (foundData) {
+        currentDiagnostic = foundData;
+        document.getElementById('p-title').innerText = currentDiagnostic.title;
+        renderQuestion();
+    } else {
+        alert("診断が見つかりませんでした。反映まで数十秒かかることがあります。");
+    }
+};
 
     function renderQuestion() {
         const qData = currentDiagnostic.questions[currentIdx];
