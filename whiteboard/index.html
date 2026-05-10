@@ -1,0 +1,103 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>オンラインウェブホワイトボード | 無料で登録不要の描画ツール</title>
+    <meta name="description" content="ブラウザで今すぐ使える無料のウェブホワイトボードです。インストール不要、スマホ・タブレット対応。手書きメモや図解、画像の保存が可能です。">
+    <meta name="keywords" content="ホワイトボード, オンライン, 無料, 手書き, ツール, ブラウザ">
+    <link rel="icon" href="https://blocksurprise.f5.si/favicon2.png">
+    <link rel="apple-touch-icon" href="https://blocksurprise.f5.si/favicon2.png">
+   
+    <script type="application/ld+json">
+    {
+      "@context": "https://schema.org",
+      "@type": "SoftwareApplication",
+      "name": "ウェブホワイトボード",
+      "operatingSystem": "Any",
+      "applicationCategory": "MultimediaApplication",
+      "offers": {
+        "@type": "Offer",
+        "price": "0",
+        "priceCurrency": "JPY"
+      }
+    }
+    </script>
+
+    <style>
+        :root {
+            --primary-bg: #f8f9fa;
+            --toolbar-bg: #212529;
+            --accent-color: #0d6efd;
+        }
+        body {
+            margin: 0; padding: 0;
+            display: flex; flex-direction: column;
+            height: 100vh; font-family: 'Helvetica Neue', Arial, sans-serif;
+            background-color: var(--primary-bg);
+            overflow: hidden;
+        }
+
+        header {
+            background-color: var(--toolbar-bg);
+            color: white;
+            padding: 8px 16px;
+            display: flex;
+            flex-wrap: wrap;
+            gap: 12px;
+            align-items: center;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.2);
+        }
+        .control-group { display: flex; align-items: center; gap: 8px; }
+        canvas {
+            background-color: white;
+            touch-action: none; 
+        }
+        button {
+            padding: 6px 12px;
+            border-radius: 4px;
+            border: none;
+            background: #495057;
+            color: white;
+            transition: 0.2s;
+        }
+        button:hover { background: var(--accent-color); }
+        .sr-only { position: absolute; width: 1px; height: 1px; padding: 0; margin: -1px; overflow: hidden; clip: rect(0,0,0,0); border: 0; }
+    </style>
+</head>
+<body>
+
+<header>
+    <h1 class="sr-only">ウェブホワイトボード</h1>
+    <div class="control-group">
+        <label for="colorPicker">色</label>
+        <input type="color" id="colorPicker" value="#000000">
+    </div>
+    <div class="control-group">
+        <label for="lineWidth">太さ</label>
+        <input type="range" id="lineWidth" min="1" max="20" value="5">
+    </div>
+    <button id="clearBtn">クリア</button>
+    <button id="downloadBtn" style="background: var(--accent-color);">画像を保存</button>
+</header>
+
+<main id="canvas-container" style="flex: 1;">
+    <canvas id="whiteboard"></canvas>
+</main>
+
+
+<article style="display:none;">
+    <h2>このツールの使い方</h2>
+    <p>インストール不要で、PCやスマホのブラウザから直接書き込めるホワイトボードです。描いた内容はPNG形式で保存できます。</p>
+</article>
+
+<script>
+
+    window.addEventListener('DOMContentLoaded', () => {
+        const canvas = document.getElementById('whiteboard');
+        const ctx = canvas.getContext('2d', { alpha: false }); 
+
+    });
+</script>
+</body>
+</html>
