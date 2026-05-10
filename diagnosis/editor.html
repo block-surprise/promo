@@ -26,6 +26,11 @@
         
         <label>診断タイトル</label>
         <input type="text" id="title" placeholder="例：マイクラ建築士診断">
+        <label>公開設定</label>
+<select id="visibility" style="width:100%; padding:12px; border-radius:10px; border:1px solid #e2e8f0;">
+    <option value="public">全体に公開（新着・ランキングに載る）</option>
+    <option value="private">リンクを知っている人のみ</option>
+</select>
         
         <div id="questions-list">
             <!-- ここに質問が追加される -->
@@ -81,6 +86,7 @@
         const data = {
             id: randomID,
             title: title,
+            visibility: document.getElementById('visibility').value,
             typeA: document.getElementById('typeA').value,
             typeB: document.getElementById('typeB').value,
             questions: Array.from(document.querySelectorAll('.q-block')).map(b => ({
