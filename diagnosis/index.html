@@ -126,37 +126,58 @@ const randomID = Date.now().toString(36) + Math.random().toString(36).substring(
     
     alert("診断を保存しました！\n下のURLをコピーして友達に送ってね。");
 }
-window.onload = async () => {
+
+    window.onload = async () => {
     const urlParams = new URLSearchParams(window.location.search);
     const targetID = urlParams.get('id');
+
+    // URLに ?id= がなければ作成モード（エディタ）のまま
     if (!targetID) return;
 
+    // 画面を切り替え（読み込み中...と出してもいいですね）
     document.getElementById('editor').style.display = 'none';
     document.getElementById('player').style.display = 'block';
+    document.getElementById('p-q-text').innerText = "データを読み込み中...";
 
-    const res = await fetch(`https://docs.google.com/spreadsheets/d/${SHEET_ID}/gviz/tq?tqx=out:json`);
-    const text = await res.text();
-    const json = JSON.parse(text.substring(text.indexOf("(") + 1, text.lastIndexOf(")")));
-    const rows = json.table.rows;
+    try {
+        // スプレッドシートからデータを取得
+        const res = await fetch(`https://docs.google.com/spreadsheets/d/${SHEET_ID}/gviz/tq?tqx=out:json`);
+        const text = await res.text();
+        
+        // Googleの特殊なJSON形式をパース
+        const jsonText = text.substring(text.indexOf("(") + 1, text.lastIndexOf(")"));
+        const json = JSON.parse(jsonText);
+        const rows = json.table.rows;
 
-    // スプレッドシートの中から、IDが一致するデータを探す
-    let foundData = null;
-    for (let row of rows) {
-        if (row.c[2]) {
-            const d = JSON.parse(row.c[2].v);
-            if (String(d.id) === String(targetID)) {
-                foundData = d;
-                break;
+        let foundData = null;
+
+
+        for (let row of rows) {
+            if (row.c && row.c[2] && row.c[2].v) {
+                try {
+                    const d = JSON.parse(row.c[2].v);
+                    if (String(d.id) === String(targetID)) {
+                        foundData = d;
+                        break; 
+                    }
+                } catch (e) {
+                    continue;
+                }
             }
         }
-    }
 
-    if (foundData) {
-        currentDiagnostic = foundData;
-        document.getElementById('p-title').innerText = currentDiagnostic.title;
-        renderQuestion();
-    } else {
-        alert("診断が見つかりませんでした。反映まで数十秒かかることがあります。");
+        if (foundData) {
+            currentDiagnostic = foundData;
+            document.getElementById('p-title').innerText = currentDiagnostic.title;
+            currentIdx = 0;
+            totalScore = 0;
+            renderQuestion();
+        } else {
+            document.getElementById('p-q-text').innerText = "診断が見つかりませんでした。\n保存直後の場合は、数秒待ってから再読み込みしてください。";
+        }
+    } catch (e) {
+        console.error("読み込みエラー:", e);
+        document.getElementById('p-q-text').innerText = "データの取得に失敗しました。";
     }
 };
 
