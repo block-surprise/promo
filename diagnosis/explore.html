@@ -1,0 +1,129 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>MAKE DI | 診断を探す</title>
+    <style>
+        :root { --primary: #6366f1; --bg: #f8fafc; --text: #1e293b; }
+        body { font-family: 'Helvetica Neue', Arial, sans-serif; background: var(--bg); margin: 0; color: var(--text); }
+        
+        .container { max-width: 1000px; margin: 40px auto; padding: 0 20px; }
+        
+        /* 検索ボックス */
+        .search-box {
+            width: 100%; padding: 15px 20px; border-radius: 15px;
+            border: 1px solid #e2e8f0; font-size: 1rem; margin-bottom: 30px;
+            box-sizing: border-box; outline: none; transition: border-color 0.2s;
+        }
+        .search-box:focus { border-color: var(--primary); }
+
+        /* グリッドレイアウト */
+        .grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+            gap: 20px;
+        }
+
+        /* 診断カード */
+        .diag-card {
+            background: white; border-radius: 20px; padding: 25px;
+            text-decoration: none; color: inherit; border: 1px solid #e2e8f0;
+            transition: all 0.2s; display: flex; flex-direction: column; justify-content: space-between;
+        }
+        .diag-card:hover { transform: translateY(-5px); box-shadow: 0 10px 20px rgba(0,0,0,0.05); border-color: var(--primary); }
+        
+        .diag-title { font-size: 1.1rem; font-weight: bold; margin-bottom: 10px; line-height: 1.4; }
+        .diag-id { font-size: 0.8rem; color: #94a3b8; }
+        .badge { 
+            display: inline-block; padding: 4px 10px; border-radius: 20px; 
+            font-size: 0.7rem; background: #e0e7ff; color: #4338ca; font-weight: bold; margin-bottom: 10px;
+        }
+
+        .loading { text-align: center; color: #94a3b8; padding: 50px; }
+    </style>
+</head>
+<body>
+
+    <!-- ナビバー（共通） -->
+    <nav style="display: flex; justify-content: space-between; align-items: center; padding: 15px 5%; background: white; border-bottom: 1px solid #e2e8f0; position: sticky; top: 0; z-index: 100;">
+        <div style="font-weight: 900; font-size: 1.4rem; color: #6366f1; letter-spacing: -1px;">MAKE DI</div>
+        <div style="display: flex; gap: 20px; font-size: 0.9rem; font-weight: bold;">
+            <a href="index.html" style="text-decoration: none; color: #64748b;">ホーム</a>
+            <a href="editor.html" style="text-decoration: none; color: #64748b;">作る</a>
+            <a href="explore.html" style="text-decoration: none; color: var(--primary);">探す</a>
+        </div>
+    </nav>
+
+    <div class="container">
+        <h1 style="font-size: 2rem; margin-bottom: 10px;">診断を探す</h1>
+        <p style="color: #64748b; margin-bottom: 30px;">みんなが作成した公開診断をチェックしよう</p>
+
+        <input type="text" id="search-input" class="search-box" placeholder="診断タイトルで検索..." oninput="filterList()">
+
+        <div id="loading" class="loading">診断データを読み込んでいます...</div>
+        <div id="diag-grid" class="grid"></div>
+    </div>
+
+    <script>
+        const SHEET_ID = '1EYXz3Preu5Xf0OKVXomovvzHJP4MtRQDgaQC0rWney0';
+        let allDiagnostics = [];
+
+        function init() {
+            const script = document.createElement('script');
+            script.src = `https://docs.google.com/spreadsheets/d/${SHEET_ID}/gviz/tq?tqx=responseHandler:myDataLoader`;
+            document.body.appendChild(script);
+        }
+
+        window.myDataLoader = function(response) {
+            document.getElementById('loading').style.display = 'none';
+            const rows = response.table.rows;
+
+            for (let row of rows) {
+                if (row.c && row.c[2] && row.c[2].v) {
+                    try {
+                        const data = JSON.parse(row.c[2].v);
+                        // 公開設定が public のものだけをリストに追加
+                        if (data.visibility === 'public') {
+                            allDiagnostics.push(data);
+                        }
+                    } catch (e) {}
+                }
+            }
+            renderList(allDiagnostics);
+        };
+
+        function renderList(list) {
+            const grid = document.getElementById('diag-grid');
+            grid.innerHTML = '';
+            
+            list.forEach(diag => {
+                grid.innerHTML += `
+                    <a href="player.html?id=${diag.id}" class="diag-card">
+                        <div>
+                            <span class="badge">診断</span>
+                            <div class="diag-title">${diag.title}</div>
+                        </div>
+                        <div class="diag-id">ID: ${diag.id}</div>
+                    </a>
+                `;
+            });
+
+            if (list.length === 0) {
+                grid.innerHTML = '<p style="color:#94a3b8;">該当する診断が見つかりませんでした。</p>';
+            }
+        }
+
+        // 検索フィルター機能
+        function filterList() {
+            const keyword = document.getElementById('search-input').value.toLowerCase();
+            const filtered = allDiagnostics.filter(d => 
+                d.title.toLowerCase().includes(keyword)
+            );
+            renderList(filtered);
+        }
+
+        init();
+    </script>
+</body>
+</html>
