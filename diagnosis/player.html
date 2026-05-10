@@ -3,7 +3,20 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Make DI | 診断を遊ぶ</title>
+    <title>診断を読み込み中... | MAKE DI</title>
+    
+    <meta name="description" content="MAKE DIで作成されたオリジナル診断です。質問に答えて結果をチェックしよう！">
+    <meta name="keywords" content="診断作成, 診断メーカー, MAKE DI, 無料, オリジナル診断">
+    
+    <!-- SNSシェア用（OGP） -->
+    <meta property="og:title" id="og-title" content="診断を遊ぶ | MAKE DI">
+    <meta property="og:description" content="MAKE DIで作成されたオリジナル診断です。質問に答えて結果をチェックしよう！">
+    <meta property="og:type" content="article">
+    <meta property="og:url" id="og-url" content="">
+    
+    <!-- ファビコン（SURGEのものを指定） -->
+    <link rel="icon" href="https://blocksurprise.f5.si/favicon2.png">
+    <link rel="apple-touch-icon" href="https://blocksurprise.f5.si/favicon2.png">
 <style>
     :root { --primary: #6366f1; --bg: #ffffff; --text: #1e293b; }
     body { font-family: 'Helvetica Neue', Arial, sans-serif; background: var(--bg); margin: 0; color: var(--text); }
@@ -137,6 +150,10 @@ window.myDataLoader = function(response) {
 
     if (foundData) {
         currentDiagnostic = foundData;
+        const pageTitle = `${currentDiagnostic.title} | MAKE DI`;
+        document.title = pageTitle; 
+        document.getElementById('og-title').setAttribute('content', pageTitle);
+        document.getElementById('og-url').setAttribute('content', window.location.href);
         start();
     } else {
         document.getElementById('title').innerText = "診断が見つかりませんでした";
