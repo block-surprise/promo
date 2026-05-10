@@ -2,73 +2,140 @@
 <html lang="ja">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>D-MAKE | 診断を作る</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>MAKE DI | 診断を作る</title>
     <style>
-        :root { --primary: #6366f1; --bg: #f8fafc; }
-        body { font-family: sans-serif; background: var(--bg); padding: 20px; color: #1e293b; }
-        .container { max-width: 500px; margin: 0 auto; }
-        .card { background: white; border-radius: 20px; padding: 24px; box-shadow: 0 10px 25px rgba(0,0,0,0.05); margin-bottom: 20px; }
-        h1 { font-size: 1.5rem; text-align: center; color: var(--primary); }
-        label { font-size: 0.85rem; font-weight: bold; display: block; margin-top: 15px; color: #64748b; }
-        input { width: 100%; padding: 12px; margin-top: 5px; border-radius: 10px; border: 1px solid #e2e8f0; box-sizing: border-box; }
-        button { width: 100%; padding: 14px; margin-top: 15px; border-radius: 12px; border: none; font-weight: bold; cursor: pointer; }
-        .btn-save { background: #10b981; color: white; }
-        .q-block { border-left: 4px solid var(--primary); padding-left: 15px; margin-top: 15px; background: #fcfcff; padding-bottom: 10px; }
-        #share-area { display: none; background: #ecfdf5; border: 1px solid #10b981; padding: 15px; border-radius: 10px; margin-top: 20px; }
-        .header { width: 100%; padding: 40px 0; text-align: center; background: white; border-bottom: 1px solid #e2e8f0; }
+        :root { --primary: #6366f1; --bg: #f1f5f9; --text: #1e293b; }
+        
+        /* スマホ向けにフォントサイズを自動調整させない */
+        body { 
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif; 
+            background: var(--bg); 
+            margin: 0; 
+            color: var(--text); 
+            -webkit-text-size-adjust: 100%;
+        }
+
+        /* コンテナを画面幅いっぱいに近くする */
+        .container { max-width: 600px; margin: 0 auto; padding: 20px 15px; }
+        
+        .card { 
+            background: white; 
+            border-radius: 24px; 
+            padding: 20px; 
+            box-shadow: 0 4px 6px -1px rgba(0,0,0,0.05); 
+            margin-bottom: 20px; 
+        }
+
+        h1 { font-size: 1.4rem; font-weight: 900; margin-bottom: 25px; color: var(--primary); text-align: center; }
+        
+        /* 入力エリアのラベルを見やすく */
+        label { font-size: 0.8rem; font-weight: bold; display: block; margin-top: 20px; color: #64748b; margin-left: 5px; }
+
+        /* 入力欄をスマホで押しやすく（高さ44px以上） */
+        input, select { 
+            width: 100%; 
+            padding: 14px; 
+            margin-top: 8px; 
+            border-radius: 12px; 
+            border: 1px solid #e2e8f0; 
+            box-sizing: border-box; 
+            font-size: 16px; /* iPhoneでズームされないための16px */
+            background: #f8fafc;
+        }
+        input:focus { border-color: var(--primary); outline: none; background: white; }
+
+        /* ボタンのデザインを強化 */
+        button { 
+            width: 100%; 
+            padding: 16px; 
+            margin-top: 15px; 
+            border-radius: 16px; 
+            border: none; 
+            font-weight: bold; 
+            font-size: 1rem;
+            cursor: pointer; 
+            transition: transform 0.1s, opacity 0.2s;
+        }
+        button:active { transform: scale(0.98); opacity: 0.9; }
+
+        .btn-add { background: #e0e7ff; color: var(--primary); }
+        .btn-save { background: var(--primary); color: white; margin-top: 30px; box-shadow: 0 10px 15px -3px rgba(99, 102, 241, 0.3); }
+
+        /* 質問ブロックを整理 */
+        .q-block { 
+            border: 1px solid #e2e8f0; 
+            border-left: 6px solid var(--primary); 
+            padding: 15px; 
+            border-radius: 16px; 
+            margin-top: 20px; 
+            background: white;
+        }
+
+        /* 共有エリアをより目立たせる */
+        #share-area { 
+            display: none; 
+            background: #f0fdf4; 
+            border: 2px dashed #22c55e; 
+            padding: 20px; 
+            border-radius: 20px; 
+            margin-top: 30px; 
+            text-align: center;
+        }
+        #share-url { background: white; border: 1px solid #dcfce7; text-align: center; color: #15803d; font-weight: bold; }
     </style>
 </head>
 <body>
-<header>
-<nav style="display: flex; justify-content: space-between; align-items: center; padding: 15px 5%; background: white; border-bottom: 1px solid #e2e8f0; position: sticky; top: 0; z-index: 100;">
-    <div style="font-weight: 900; font-size: 1.4rem; color: #6366f1; letter-spacing: -1px;">MAKE DI</div>
+
+<nav style="display: flex; justify-content: space-between; align-items: center; padding: 15px 5%; background: #ff7800; position: sticky; top: 0; z-index: 100; box-shadow: 0 4px 12px rgba(255, 120, 0, 0.2);">
+    <div style="font-weight: 900; font-size: 1.4rem; color: white; letter-spacing: -1px;">MAKE DI</div>
     <div style="display: flex; gap: 20px; font-size: 0.9rem; font-weight: bold;">
-        <a href="index.html" style="text-decoration: none; color: #64748b;">ホーム</a>
-        <a href="editor.html" style="text-decoration: none; color: #64748b;">作る</a>
-        <a href="explore.html" style="text-decoration: none; color: #64748b;">探す</a>
+        <a href="index.html" style="text-decoration: none; color: white;">ホーム</a>
+        <a href="editor.html" style="text-decoration: none; color: rgba(255,255,255,0.8);">作る</a>
+        <a href="explore.html" style="text-decoration: none; color: rgba(255,255,255,0.8);">探す</a>
     </div>
 </nav>
-    </header>
+
 <div class="container">
     <div class="card">
         <h1>診断エディタ</h1>
         
         <label>診断タイトル</label>
         <input type="text" id="title" placeholder="例：マイクラ建築士診断">
+
         <label>公開設定</label>
-<select id="visibility" style="width:100%; padding:12px; border-radius:10px; border:1px solid #e2e8f0;">
-    <option value="public">全体に公開（新着・ランキングに載る）</option>
-    <option value="private">リンクを知っている人のみ</option>
-</select>
+        <select id="visibility">
+            <option value="public">全体に公開（探すページに載る）</option>
+            <option value="private">リンクを知っている人のみ</option>
+        </select>
         
-        <div id="questions-list">
-            <!-- ここに質問が追加される -->
+        <div id="questions-list"></div>
+        
+        <button class="btn-add" onclick="addQuestion()">＋ 質問を追加</button>
+
+        <div style="margin-top: 20px; padding-top: 20px; border-top: 1px solid #f1f5f9;">
+            <label>結果A（ポイントが多い時）</label>
+            <input type="text" id="typeA" placeholder="例：プロ建築士級">
+            
+            <label>結果B（ポイントが少ない時）</label>
+            <input type="text" id="typeB" placeholder="例：初心者ビルダー級">
         </div>
         
-        <button onclick="addQuestion()" style="background:#eee;">＋ 質問を追加</button>
-
-        <label>結果A（ポイント正）</label>
-        <input type="text" id="typeA" placeholder="結果1">
-        <label>結果B（ポイント負）</label>
-        <input type="text" id="typeB" placeholder="結果2">
-        
-        <button class="btn-save" onclick="save()">診断を保存して公開</button>
+        <button class="btn-save" onclick="save()">診断を保存してURL発行</button>
 
         <div id="share-area">
-            <p style="margin:0; font-size:12px; font-weight:bold; color:#065f46;">公開用URL：</p>
+            <p style="margin:0 0 10px 0; font-size:14px; font-weight:bold; color:#166534;">🎉 診断が完成しました！</p>
             <input type="text" id="share-url" readonly onclick="this.select()">
-            <p style="font-size:11px; color:#065f46; margin-top:5px;">※URLをコピーして友達に送ってね！</p>
+            <p style="font-size:12px; color:#166534; margin-top:10px;">URLをコピーしてSNSや友達にシェアしてね</p>
         </div>
     </div>
 </div>
 
 <script>
-    // --- あなたの設定 ---
+    // --- あなたのGoogleフォーム設定 ---
     const FORM_ID = "1FAIpQLSdSKCj3z-x-krRzGS5Ux2xCnnnOa4b57tNIYbdiqJsORkenpQ";
     const ENTRY_TITLE = "entry.353362422";
     const ENTRY_DATA = "entry.673959864";
-    // プレイヤーページのファイル名（同じフォルダにある想定）
     const PLAYER_PAGE = "player.html"; 
 
     let qCount = 0;
@@ -78,19 +145,20 @@
         qCount++;
         document.getElementById('questions-list').insertAdjacentHTML('beforeend', `
             <div class="q-block">
-                <label>質問 ${qCount}</label>
-                <input type="text" class="q-text" placeholder="質問文">
-                <input type="text" class="a1-text" placeholder="選択肢1">
-                <input type="text" class="a2-text" placeholder="選択肢2">
+                <div style="font-weight:bold; font-size:0.9rem; color:var(--primary); margin-bottom:10px;">質問 ${qCount}</div>
+                <input type="text" class="q-text" placeholder="質問文を入力">
+                <div style="display:grid; grid-template-columns: 1fr 1fr; gap: 10px;">
+                    <input type="text" class="a1-text" placeholder="選択肢1 (+)">
+                    <input type="text" class="a2-text" placeholder="選択肢2 (-)">
+                </div>
             </div>
         `);
     }
 
     function save() {
         const title = document.getElementById('title').value;
-        if(!title) return alert("タイトルを入れてね");
+        if(!title) return alert("タイトルを入力してください");
 
-        // 最強ID生成：時刻(36進数) + ランダム3文字
         const randomID = Date.now().toString(36) + Math.random().toString(36).substring(2, 5);
 
         const data = {
@@ -106,18 +174,16 @@
             }))
         };
 
-        // Googleフォームに送信
         const postUrl = `https://docs.google.com/forms/d/e/${FORM_ID}/formResponse?${ENTRY_TITLE}=${encodeURIComponent(title)}&${ENTRY_DATA}=${encodeURIComponent(JSON.stringify(data))}&submit=Submit`;
         
         fetch(postUrl, { mode: 'no-cors' }).then(() => {
-            // 保存が終わったらURLを表示
-            // 現在のページのURLからplayer.htmlへのパスを作る
             const currentPath = window.location.href.substring(0, window.location.href.lastIndexOf('/') + 1);
             const finalUrl = currentPath + PLAYER_PAGE + "?id=" + randomID;
 
             document.getElementById('share-area').style.display = 'block';
             document.getElementById('share-url').value = finalUrl;
-            alert("保存しました！");
+            // 発行されたURLの場所までスムーズにスクロール
+            document.getElementById('share-area').scrollIntoView({ behavior: 'smooth' });
         }).catch(() => alert("送信エラーが発生しました"));
     }
 </script>
