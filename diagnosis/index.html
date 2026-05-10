@@ -34,6 +34,15 @@
     <header class="header">
         <h1 class="logo">D-MAKE</h1>
         <p class="tagline">自分専用の診断メーカーを作ろう</p>
+        <!-- ナビゲーションバー -->
+<nav style="display: flex; justify-content: space-between; align-items: center; padding: 15px 5%; background: white; border-bottom: 1px solid #e2e8f0; position: sticky; top: 0; z-index: 100;">
+    <div style="font-weight: 900; font-size: 1.4rem; color: #6366f1; letter-spacing: -1px;">D-MAKE</div>
+    <div style="display: flex; gap: 20px; font-size: 0.9rem; font-weight: bold;">
+        <a href="index.html" style="text-decoration: none; color: #64748b;">ホーム</a>
+        <a href="editor.html" style="text-decoration: none; color: #64748b;">作る</a>
+        <a href="explore.html" style="text-decoration: none; color: #64748b;">探す</a>
+    </div>
+</nav>
     </header>
 
     <div class="container">
@@ -48,7 +57,82 @@
             <p class="menu-title" style="color: var(--primary);">Play / 遊ぶ</p>
             <p class="menu-desc">発行されたURLにアクセスして診断を開始します。友達にURLをシェアして遊んでもらおう。</p>
         </a>
+<!-- index.html の中身 -->
+<div class="container" style="max-width: 800px; margin: 30px auto; padding: 0 20px;">
+    
+    <!-- メインビジュアル -->
+    <div style="background: linear-gradient(135deg, #6366f1 0%, #a855f7 100%); padding: 40px; border-radius: 30px; color: white; text-align: center; margin-bottom: 40px;">
+        <h2 style="font-size: 2rem; margin: 0;">アイディアを、診断に。</h2>
+        <p style="opacity: 0.9;">世界に一つだけのオリジナル診断を作ってシェアしよう</p>
+        <button onclick="location.href='editor.html'" style="background: white; color: #6366f1; border: none; padding: 12px 30px; border-radius: 50px; font-weight: bold; margin-top: 20px; cursor: pointer;">今すぐ作る</button>
+    </div>
 
+    <div style="display: grid; grid-template-columns: 2fr 1fr; gap: 30px;">
+        
+        <!-- 左側：新着診断 -->
+        <section>
+            <h3 style="display: flex; align-items: center; gap: 8px;">
+                <span style="background: #10b981; width: 4px; height: 1.2em; display: inline-block; border-radius: 2px;"></span>
+                新着の診断
+            </h3>
+            <div id="recent-list" style="display: flex; flex-direction: column; gap: 15px;">
+                <p style="color: #94a3b8;">読み込み中...</p>
+            </div>
+        </section>
+
+        <!-- 右側：ランキング -->
+        <section>
+            <h3 style="display: flex; align-items: center; gap: 8px;">
+                <span style="background: #f59e0b; width: 4px; height: 1.2em; display: inline-block; border-radius: 2px;"></span>
+                人気TOP5
+            </h3>
+            <div id="ranking-list" style="background: white; border-radius: 20px; padding: 20px; box-shadow: 0 4px 6px -1px rgba(0,0,0,0.1);">
+                <!-- ここにランキングが入る -->
+            </div>
+        </section>
+
+    </div>
+</div>
+
+<script>
+    const SHEET_ID = '1EYXz3Preu5Xf0OKVXomovvzHJP4MtRQDgaQC0rWney0';
+
+    async function loadPublicList() {
+        const url = `https://docs.google.com/spreadsheets/d/${SHEET_ID}/gviz/tq?tqx=out:csv`;
+        try {
+            const res = await fetch(url);
+            const csv = await res.text();
+            const rows = csv.split('\n').reverse(); // 新しい順にする
+            
+            const recentList = document.getElementById('recent-list');
+            recentList.innerHTML = '';
+
+            let count = 0;
+            for (let row of rows) {
+                const match = row.match(/\{.*\}/);
+                if (!match) continue;
+                
+                const data = JSON.parse(match[0].replace(/""/g, '"'));
+                
+                // 「全体公開」のものだけを表示
+                if (data.visibility === 'public' && count < 10) {
+                    recentList.innerHTML += `
+                        <a href="player.html?id=${data.id}" style="text-decoration:none; color:inherit;">
+                            <div class="menu-card" style="padding:20px; background:white; border-radius:15px; border:1px solid #e2e8f0;">
+                                <div style="font-weight:bold;">${data.title}</div>
+                                <div style="font-size:0.75rem; color:#94a3b8; margin-top:5px;">ID: ${data.id}</div>
+                            </div>
+                        </a>
+                    `;
+                    count++;
+                }
+            }
+        } catch (e) {
+            console.error(e);
+        }
+    }
+    loadPublicList();
+</script>
         <!-- 開発者メモ的なエリア -->
         <div style="padding: 10px 20px;">
             <p style="font-size: 0.8rem; font-weight: bold; color: #64748b; margin-bottom: 5px;">SYSTEM STATUS</p>
