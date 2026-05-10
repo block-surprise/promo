@@ -97,9 +97,9 @@ async function saveToForm() {
     const title = document.getElementById('title').value;
     if(!title) { alert("タイトルを入力してください"); return; }
 
-    // 【修正ポイント】行数を数えるのをやめて、ランダムなIDを作る
-    // これなら「???」になる心配はありません！
-    const randomID = Math.floor(Math.random() * 90000) + 10000;
+const randomID = Date.now().toString(36) + Math.random().toString(36).substring(2, 5);
+
+// 生成されるIDの例: "lo9v2z8w12x"
 
     const data = {
         id: randomID, // IDもデータの中に入れておく
