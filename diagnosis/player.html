@@ -38,23 +38,36 @@ async function loadData() {
     const id = new URLSearchParams(window.location.search).get('id');
     if (!id) return;
 
-
-    const url = `https://docs.google.com/spreadsheets/d/${SHEET_ID}/gviz/tq?tqx=out:csv`;
+  
+    const url = `https://docs.google.com/spreadsheets/d/${SHEET_ID}/pub?output=csv`;
 
     try {
         const res = await fetch(url);
         const csvText = await res.text();
         
+
+        console.log("届いた全データ:", csvText);
+
         const rows = csvText.split('\n');
         let foundData = null;
 
         for (let rowText of rows) {
 
-            if (rowText.includes(`"id":"${id}"`)) {
-                const jsonMatch = rowText.match(/\{.*\}/); 
+            if (rowText.includes(id)) {
+
+                const cleanRow = rowText.replace(/""/g, '"');
+                const jsonMatch = cleanRow.match(/\{.*\}/); 
+                
                 if (jsonMatch) {
-                    foundData = JSON.parse(jsonMatch[0].replace(/""/g, '"'));
-                    break;
+                    try {
+                        const d = JSON.parse(jsonMatch[0]);
+                        if (String(d.id) === String(id)) {
+                            foundData = d;
+                            break;
+                        }
+                    } catch (e) {
+                        console.warn("JSON解析に失敗した行があります:", e);
+                    }
                 }
             }
         }
@@ -63,11 +76,12 @@ async function loadData() {
             currentDiagnostic = foundData;
             start();
         } else {
-            document.getElementById('title').innerText = "診断データがまだ届いていないか、IDが違います。";
+            document.getElementById('title').innerText = "診断データが見つかりません。";
+            document.getElementById('question-text').innerText = `ID [${id}] はスプレッドシートに届いていますが、形式が合わないようです。`;
         }
     } catch (e) {
-        document.getElementById('title').innerText = "読み込みエラーが発生しました。";
-        console.error("詳細:", e);
+        document.getElementById('title').innerText = "データ取得エラー";
+        console.error(e);
     }
 }
 
