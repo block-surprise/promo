@@ -94,34 +94,46 @@
     }
 
     // 保存機能
-    async function saveToForm() {
-        const title = document.getElementById('title').value;
-        const data = {
-            title: title,
-            typeA: document.getElementById('typeA').value,
-            typeB: document.getElementById('typeB').value,
-            questions: Array.from(document.querySelectorAll('.q-block')).map(b => ({
-                q: b.querySelector('.q-text').value,
-                a1: b.querySelector('.a1-text').value,
-                a2: b.querySelector('.a2-text').value
-            }))
-        };
+async function saveToForm() {
+    const title = document.getElementById('title').value;
+    if(!title) { alert("タイトルを入力してください"); return; }
 
-        const postUrl = `https://docs.google.com/forms/d/e/${FORM_ID}/formResponse?${ENTRY_TITLE}=${encodeURIComponent(title)}&${ENTRY_DATA}=${encodeURIComponent(JSON.stringify(data))}&submit=Submit`;
-        
-        fetch(postUrl, { mode: 'no-cors' }).then(async () => {
-            // 保存直後、スプレッドシートの「最新行数」を取得してIDにする（簡易）
-            const res = await fetch(`https://docs.google.com/spreadsheets/d/${SHEET_ID}/gviz/tq?tqx=out:json`);
-            const text = await res.text();
-            const json = JSON.parse(text.substring(text.indexOf("(") + 1, text.lastIndexOf(")")));
-            const nextID = json.table.rows.length + 1; // フォーム送信直後なので+1が自分
-
-            const finalUrl = window.location.origin + window.location.pathname + "?id=" + nextID;
-            document.getElementById('share-area').style.display = 'block';
-            document.getElementById('share-url').value = finalUrl;
-            alert("保存しました！URLをコピーして共有してね。");
-        });
+    // 1. まず現在のスプレッドシートの行数を取得して「次」のIDを予測する
+    let nextID = "???";
+    try {
+        const res = await fetch(`https://docs.google.com/spreadsheets/d/${SHEET_ID}/gviz/tq?tqx=out:json`);
+        const text = await res.text();
+        const json = JSON.parse(text.substring(text.indexOf("(") + 1, text.lastIndexOf(")")));
+        // フォーム送信前なので、現在の行数 + 1 が自分のIDになる
+        nextID = json.table.rows.length + 1;
+    } catch(e) {
+        console.log("ID予測に失敗しましたが、送信を続行します");
     }
+
+    const data = {
+        title: title,
+        typeA: document.getElementById('typeA').value,
+        typeB: document.getElementById('typeB').value,
+        questions: Array.from(document.querySelectorAll('.q-block')).map(b => ({
+            q: b.querySelector('.q-text').value,
+            a1: b.querySelector('.a1-text').value,
+            a2: b.querySelector('.a2-text').value
+        }))
+    };
+
+    // 2. フォームへ送信
+    const postUrl = `https://docs.google.com/forms/d/e/${FORM_ID}/formResponse?${ENTRY_TITLE}=${encodeURIComponent(title)}&${ENTRY_DATA}=${encodeURIComponent(JSON.stringify(data))}&submit=Submit`;
+    
+    // 送信実行（mode: 'no-cors' でエラーを無視して完遂させる）
+    fetch(postUrl, { mode: 'no-cors' });
+
+    // 3. 即座にURLを表示する（送信完了を待たずに表示させるのがコツ）
+    const finalUrl = window.location.origin + window.location.pathname + "?id=" + nextID;
+    document.getElementById('share-area').style.display = 'block';
+    document.getElementById('share-url').value = finalUrl;
+    
+    alert("診断を送信しました！下のURLをコピーしてください。\n（反映まで数秒かかる場合があります）");
+}
 
     // 読み込み機能
     window.onload = async () => {
