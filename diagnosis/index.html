@@ -3,214 +3,65 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title> Make a DI|診断作成＆共有ツール</title>
+    <title>D-MAKE | ホーム</title>
     <style>
-        :root { --primary: #6366f1; --bg: #f8fafc; --card: #ffffff; --text: #1e293b; }
-        body { font-family: 'Helvetica Neue', Arial, sans-serif; background: var(--bg); margin: 0; padding: 20px; color: var(--text); line-height: 1.6; }
-        .container { max-width: 500px; margin: 0 auto; }
-        .card { background: var(--card); border-radius: 20px; padding: 24px; box-shadow: 0 10px 25px rgba(0,0,0,0.05); margin-bottom: 20px; animation: fadeIn 0.5s ease; }
-        h1 { font-size: 1.5rem; text-align: center; color: var(--primary); margin-bottom: 20px; }
-        label { font-size: 0.85rem; font-weight: bold; display: block; margin-top: 15px; color: #64748b; }
-        input { width: 100%; padding: 12px; margin-top: 5px; border-radius: 10px; border: 1px solid #e2e8f0; box-sizing: border-box; font-size: 16px; }
-        button { width: 100%; padding: 14px; margin-top: 15px; border-radius: 12px; border: none; font-weight: bold; cursor: pointer; transition: 0.2s; font-size: 16px; }
-        .btn-primary { background: var(--primary); color: white; }
-        .btn-save { background: #10b981; color: white; }
-        .btn-add { background: #f1f5f9; color: #475569; border: 1px dashed #cbd5e1; }
-        .btn-answer { background: #f1f5f9; color: var(--text); border: 2px solid #e2e8f0; text-align: left; }
-        .btn-answer:active { background: var(--primary); color: white; }
-        .q-block { border-left: 4px solid var(--primary); padding-left: 15px; margin-top: 20px; background: #fafbff; padding-bottom: 10px; border-radius: 0 10px 10px 0; }
-        .progress-container { width: 100%; height: 6px; background: #e2e8f0; border-radius: 3px; margin-bottom: 20px; }
-        .progress-bar { height: 100%; background: var(--primary); width: 0%; transition: 0.3s; }
-        @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
-        #share-area { display: none; background: #ecfdf5; border: 1px solid #10b981; padding: 15px; border-radius: 10px; margin-top: 15px; word-break: break-all; }
+        :root { --primary: #6366f1; --bg: #f8fafc; --text: #1e293b; }
+        body { font-family: 'Helvetica Neue', Arial, sans-serif; background: var(--bg); margin: 0; color: var(--text); display: flex; flex-direction: column; align-items: center; min-height: 100vh; }
+        
+        .header { width: 100%; padding: 40px 0; text-align: center; background: white; border-bottom: 1px solid #e2e8f0; }
+        .logo { font-size: 2rem; font-weight: 900; letter-spacing: -1px; color: var(--primary); margin: 0; }
+        .tagline { font-size: 0.9rem; color: #64748b; margin-top: 5px; }
+
+        .container { width: 90%; max-width: 500px; margin-top: 30px; }
+        
+        .menu-card { 
+            background: white; border-radius: 24px; padding: 30px; margin-bottom: 20px;
+            box-shadow: 0 10px 25px rgba(0,0,0,0.05); text-decoration: none; display: block;
+            transition: transform 0.2s, box-shadow 0.2s; border: 1px solid transparent;
+        }
+        .menu-card:active { transform: scale(0.98); }
+        .menu-card.make { border-left: 8px solid #10b981; }
+        .menu-card.play { border-left: 8px solid var(--primary); }
+
+        .menu-title { font-size: 1.2rem; font-weight: bold; margin: 0; color: var(--text); }
+        .menu-desc { font-size: 0.85rem; color: #64748b; margin-top: 8px; line-height: 1.4; }
+
+        .footer { margin-top: auto; padding: 30px; font-size: 0.8rem; color: #94a3b8; }
     </style>
 </head>
 <body>
 
-<div class="container">
-    <!-- 作成モード -->
-    <div id="editor" class="card">
-        <h1>Make DI エディタ</h1>
-        <label>診断タイトル</label>
-        <input type="text" id="title" placeholder="例：あなたの性格をシャー芯に例えると？">
-        
-        <div id="questions-list"></div>
-        <button class="btn-add" onclick="addQuestionField()">＋ 質問を追加</button>
+    <header class="header">
+        <h1 class="logo">D-MAKE</h1>
+        <p class="tagline">自分専用の診断メーカーを作ろう</p>
+    </header>
 
-        <hr style="margin:25px 0; border:0; border-top:1px solid #eee;">
-        <label>結果A（ポイントが多い時）</label>
-        <input type="text" id="typeA" placeholder="例：しっかり者のHB">
-        <label>結果B（ポイントが少ない時）</label>
-        <input type="text" id="typeB" placeholder="例：情熱的な4B">
-        
-        <button class="btn-save" onclick="saveToForm()">サーバーに保存してURL発行</button>
-        <div id="share-area">
-            <p style="margin:0; font-size:12px; font-weight:bold;">共有URLが発行されました！</p>
-            <input type="text" id="share-url" readonly onclick="this.select()">
-        </div>
-    </div>
+    <div class="container">
+        <!-- 作成ページへ -->
+        <a href="editor.html" class="menu-card make">
+            <p class="menu-title" style="color: #10b981;">Create / 作る</p>
+            <p class="menu-desc">オリジナルの診断を作成して、URLを発行します。質問や結果を自由にカスタマイズ可能。</p>
+        </a>
 
-    <!-- プレイモード -->
-    <div id="player" class="card" style="display:none;">
-        <div class="progress-container"><div class="progress-bar" id="p-bar"></div></div>
-        <h1 id="p-title" style="font-size: 1.1rem; color: #64748b;"></h1>
-        <div id="game-area">
-            <p id="p-q-text" style="font-size: 1.2rem; font-weight: bold; min-height: 60px;"></p>
-            <div id="p-options"></div>
-        </div>
-        <div id="result-area" style="display:none; text-align:center;">
-            <p>診断結果は...</p>
-            <h2 id="p-result-name" style="font-size: 2rem; color: var(--primary);"></h2>
-            <button class="btn-primary" onclick="location.href=location.pathname">自分も診断を作る</button>
-        </div>
-    </div>
-</div>
+        <!-- 自分の診断一覧や遊び方（今は説明のみ） -->
+        <a href="#" onclick="alert('発行済みのURLから直接遊べます！')" class="menu-card play">
+            <p class="menu-title" style="color: var(--primary);">Play / 遊ぶ</p>
+            <p class="menu-desc">発行されたURLにアクセスして診断を開始します。友達にURLをシェアして遊んでもらおう。</p>
+        </a>
 
-<script>
-    // --- 設定 ---
-    const FORM_ID = "1FAIpQLSdSKCj3z-x-krRzGS5Ux2xCnnnOa4b57tNIYbdiqJsORkenpQ";
-    const SHEET_ID = "1vSCC4P-0DUC4osb7lmP2ncQHYrAUGDED9snXe_YEsGqZj2u0QEs9K7osEC_lXQqG_WpyLKwKz-Gq-GP";
-    const ENTRY_TITLE = "entry.353362422";
-    const ENTRY_DATA = "entry.673959864";
-
-    let qCount = 0;
-    let currentQuestions = [];
-    let currentIdx = 0;
-    let totalScore = 0;
-    let currentDiagnostic = null;
-
-    addQuestionField(); // 最初の一つ
-
-    function addQuestionField() {
-        qCount++;
-        document.getElementById('questions-list').insertAdjacentHTML('beforeend', `
-            <div class="q-block">
-                <label>質問 ${qCount}</label>
-                <input type="text" class="q-text" placeholder="質問文を入力">
-                <input type="text" class="a1-text" placeholder="選択肢1（Aタイプ寄り）">
-                <input type="text" class="a2-text" placeholder="選択肢2（Bタイプ寄り）">
+        <!-- 開発者メモ的なエリア -->
+        <div style="padding: 10px 20px;">
+            <p style="font-size: 0.8rem; font-weight: bold; color: #64748b; margin-bottom: 5px;">SYSTEM STATUS</p>
+            <div style="display: flex; gap: 10px;">
+                <span style="font-size: 0.7rem; background: #dcfce7; color: #166534; padding: 4px 8px; border-radius: 20px;">Database: Connected</span>
+                <span style="font-size: 0.7rem; background: #e0e7ff; color: #3730a3; padding: 4px 8px; border-radius: 20px;">Version: 1.0.0</span>
             </div>
-        `);
-    }
+        </div>
+    </div>
 
-async function saveToForm() {
-    const title = document.getElementById('title').value;
-    if(!title) { alert("タイトルを入力してください"); return; }
-
-const randomID = Date.now().toString(36) + Math.random().toString(36).substring(2, 5);
-
-// 生成されるIDの例: "lo9v2z8w12x"
-
-    const data = {
-        id: randomID, // IDもデータの中に入れておく
-        title: title,
-        typeA: document.getElementById('typeA').value,
-        typeB: document.getElementById('typeB').value,
-        questions: Array.from(document.querySelectorAll('.q-block')).map(b => ({
-            q: b.querySelector('.q-text').value,
-            a1: b.querySelector('.a1-text').value,
-            a2: b.querySelector('.a2-text').value
-        }))
-    };
-
-    // Googleフォームの項目ID（あなたのものに合わせてください）
-    const postUrl = `https://docs.google.com/forms/d/e/${FORM_ID}/formResponse?${ENTRY_TITLE}=${encodeURIComponent(title)}&${ENTRY_DATA}=${encodeURIComponent(JSON.stringify(data))}&submit=Submit`;
-    
-    // 送信
-    fetch(postUrl, { mode: 'no-cors' });
-
-    // URLを表示（?id=数字 の形にする）
-    const finalUrl = window.location.origin + window.location.pathname + "?id=" + randomID;
-    document.getElementById('share-area').style.display = 'block';
-    document.getElementById('share-url').value = finalUrl;
-    
-    alert("診断を保存しました！\n下のURLをコピーして友達に送ってね。");
-}
-
-window.onload = async () => {
-    const urlParams = new URLSearchParams(window.location.search);
-    const targetID = urlParams.get('id');
-
-    if (!targetID) return;
-
-    document.getElementById('editor').style.display = 'none';
-    document.getElementById('player').style.display = 'block';
-    document.getElementById('p-q-text').innerText = "データを照合中...";
-
-    try {
-        // IDが英数字混じりでも確実に取得するためのURL
-        const res = await fetch(`https://docs.google.com/spreadsheets/d/${SHEET_ID}/gviz/tq?tqx=out:json`);
-        const text = await res.text();
-        const jsonText = text.substring(text.indexOf("(") + 1, text.lastIndexOf(")"));
-        const json = JSON.parse(jsonText);
-        const rows = json.table.rows;
-
-        let foundData = null;
-
-        for (let row of rows) {
-            // row.c[2]（C列）の中身を徹底的にチェック
-            if (row.c && row.c[2]) {
-                // セルの値が文字列(v)か、表示上の値(f)か、どちらにあっても取得できるようにする
-                const cellValue = row.c[2].v || "";
-                
-                // セルの中身がJSON文字列かどうかを確認
-                if (typeof cellValue === 'string' && cellValue.includes('{')) {
-                    try {
-                        const d = JSON.parse(cellValue);
-                        // IDを文字列として比較（ここが大事！）
-                        if (String(d.id).trim() === String(targetID).trim()) {
-                            foundData = d;
-                            break;
-                        }
-                    } catch (e) { continue; }
-                }
-            }
-        }
-
-        if (foundData) {
-            currentDiagnostic = foundData;
-            document.getElementById('p-title').innerText = currentDiagnostic.title;
-            currentIdx = 0;
-            totalScore = 0;
-            renderQuestion();
-        } else {
-            document.getElementById('p-q-text').innerText = `診断(ID: ${targetID})が見つかりません。\nスプレッドシートの反映をお待ちください。`;
-        }
-    } catch (e) {
-        console.error("読み込みエラー:", e);
-        document.getElementById('p-q-text').innerText = "エラー：スプレッドシートにアクセスできません。";
-    }
-};
-
-    function renderQuestion() {
-        const qData = currentDiagnostic.questions[currentIdx];
-        const progress = (currentIdx / currentDiagnostic.questions.length) * 100;
-        document.getElementById('p-bar').style.width = progress + "%";
-
-        if (currentIdx < currentDiagnostic.questions.length) {
-            document.getElementById('p-q-text').innerText = qData.q;
-            document.getElementById('p-options').innerHTML = `
-                <button class="btn-answer" onclick="answer(1)">${qData.a1}</button>
-                <button class="btn-answer" onclick="answer(-1)">${qData.a2}</button>
-            `;
-        } else {
-            showResult();
-        }
-    }
-
-    function answer(pts) {
-        totalScore += pts;
-        currentIdx++;
-        renderQuestion();
-    }
-
-    function showResult() {
-        document.getElementById('p-bar').style.width = "100%";
-        document.getElementById('game-area').style.display = 'none';
-        document.getElementById('result-area').style.display = 'block';
-        document.getElementById('p-result-name').innerText = (totalScore >= 0) ? currentDiagnostic.typeA : currentDiagnostic.typeB;
-    }
-</script>
+    <footer class="footer">
+        &copy; 2026 D-MAKE Project. Developed by 14yo Web Dev.
+    </footer>
 
 </body>
 </html>
