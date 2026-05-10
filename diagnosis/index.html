@@ -2,94 +2,141 @@
 <html lang="ja">
 <head>
     <meta charset="UTF-8">
-    <title>D-MAKE | 診断作成ツール</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>D-MAKE Pro | 診断メーカー</title>
     <style>
-        body { font-family: sans-serif; background: #f0f2f5; padding: 20px; }
-        .container { max-width: 600px; margin: 0 auto; background: white; padding: 30px; border-radius: 15px; shadow: 0 4px 15px rgba(0,0,0,0.1); }
-        h1 { text-align: center; color: #333; }
-        .section { margin-bottom: 20px; border-bottom: 1px solid #eee; padding-bottom: 20px; }
-        input, button { width: 100%; padding: 10px; margin-top: 5px; border-radius: 5px; border: 1px solid #ddd; box-sizing: border-box; }
-        button { background: #007bff; color: white; border: none; cursor: pointer; font-weight: bold; }
-        button:hover { background: #0056b3; }
-        .result-box { display: none; margin-top: 20px; padding: 15px; background: #e9f5ff; border-radius: 10px; }
+        :root { --primary: #6366f1; --bg: #f8fafc; --card: #ffffff; }
+        body { font-family: 'Helvetica Neue', Arial, sans-serif; background: var(--bg); margin: 0; padding: 20px; color: #1e293b; }
+        .container { max-width: 500px; margin: 0 auto; }
+        
+        /* Bento UI Style Card */
+        .card { background: var(--card); border-radius: 20px; padding: 24px; box-shadow: 0 10px 25px -5px rgba(0,0,0,0.1); margin-bottom: 20px; }
+        
+        h1 { font-size: 1.5rem; text-align: center; margin-bottom: 24px; color: var(--primary); }
+        label { font-size: 0.9rem; font-weight: bold; display: block; margin-top: 15px; }
+        
+        input { width: 100%; padding: 12px; margin-top: 5px; border-radius: 10px; border: 1px solid #e2e8f0; font-size: 16px; box-sizing: border-box; }
+        button { width: 100%; padding: 14px; margin-top: 15px; border-radius: 12px; border: none; font-weight: bold; cursor: pointer; transition: 0.2s; font-size: 16px; }
+        
+        .btn-primary { background: var(--primary); color: white; }
+        .btn-add { background: #ec4899; color: white; margin-top: 10px; }
+        .btn-answer { background: #f1f5f9; color: #475569; border: 2px solid #e2e8f0; }
+        .btn-answer:active { background: var(--primary); color: white; }
+
+        .q-block { border-left: 4px solid var(--primary); padding-left: 15px; margin-top: 20px; }
     </style>
 </head>
 <body>
 
 <div class="container" id="editor">
-    <h1>D-MAKE 診断作成</h1>
-    
-    <div class="section">
+    <div class="card">
+        <h1>診断エディタ</h1>
         <label>診断タイトル</label>
-        <input type="text" id="title" placeholder="例：あなたをシャー芯に例えると？">
-    </div>
+        <input type="text" id="title" placeholder="例：あなたのマイクラ適性診断">
+        
+        <div id="questions-list">
+            <!-- ここに質問が追加される -->
+        </div>
+        
+        <button class="btn-add" onclick="addQuestionField()">＋ 質問を追加</button>
 
-    <div class="section">
-        <label>質問</label>
-        <input type="text" id="q1" placeholder="例：テスト勉強はいつから始める？">
-        <br><br>
-        <label>選択肢1 (タイプAに+1)</label>
-        <input type="text" id="q1_a1" placeholder="例：1週間前からコツコツ">
-        <label>選択肢2 (タイプBに+1)</label>
-        <input type="text" id="q1_a2" placeholder="例：前日に徹夜！">
+        <hr style="margin: 30px 0; border: 0; border-top: 1px solid #eee;">
+        
+        <label>結果：タイプAの名前</label>
+        <input type="text" id="typeA" placeholder="例：最強の建築家">
+        <label>結果：タイプBの名前</label>
+        <input type="text" id="typeB" placeholder="例：孤高のサバイバリスト">
+        
+        <button class="btn-primary" onclick="startDiagnostic()">診断を開始する (プレビュー)</button>
     </div>
-
-    <div class="section">
-        <label>タイプAの名前</label>
-        <input type="text" id="typeA" placeholder="例：しっかり者のHB">
-        <label>タイプBの名前</label>
-        <input type="text" id="typeB" placeholder="例：情熱の4B">
-    </div>
-
-    <button onclick="generateDiagnostic()">診断を作成する</button>
 </div>
 
 <div class="container" id="player" style="display:none;">
-    <h1 id="p-title"></h1>
-    <div id="question-area">
-        <p id="p-q1"></p>
-        <button id="btn-a1" onclick="answer(1)"></button>
-        <button id="btn-a2" onclick="answer(2)"></button>
-    </div>
-    <div id="result-area" class="result-box">
-        <h2>診断結果</h2>
-        <p id="p-result" style="font-size: 24px; font-weight: bold; text-align: center;"></p>
-        <button onclick="location.reload()">もう一度作る</button>
+    <div class="card">
+        <h1 id="p-title"></h1>
+        <div id="game-area">
+            <p id="p-q-text" style="font-size: 1.1rem; font-weight: bold;"></p>
+            <div id="p-options"></div>
+        </div>
+        <div id="result-area" style="display:none; text-align:center;">
+            <p style="color: #64748b;">あなたの診断結果は...</p>
+            <h2 id="p-result-name" style="font-size: 2rem; color: var(--primary);"></h2>
+            <button class="btn-primary" onclick="location.reload()">作り直す</button>
+        </div>
     </div>
 </div>
 
 <script>
-    let diagnosticData = {};
-    let score = 0; // 1ならタイプA、2ならタイプB寄りとする簡易的な仕組み
+    let questions = [];
+    let currentQIndex = 0;
+    let score = 0;
+    let qCount = 0;
 
-    function generateDiagnostic() {
-        // 入力値を取得
-        diagnosticData = {
-            title: document.getElementById('title').value,
-            q1: document.getElementById('q1').value,
-            q1_a1: document.getElementById('q1_a1').value,
-            q1_a2: document.getElementById('q1_a2').value,
-            typeA: document.getElementById('typeA').value,
-            typeB: document.getElementById('typeB').value
-        };
+    // 最初に1つ質問フィールドを作っておく
+    addQuestionField();
 
-        // プレイヤー画面を表示
-        document.getElementById('editor').style.display = 'none';
-        document.getElementById('player').style.display = 'block';
-
-        // プレイヤーに反映
-        document.getElementById('p-title').innerText = diagnosticData.title;
-        document.getElementById('p-q1').innerText = diagnosticData.q1;
-        document.getElementById('btn-a1').innerText = diagnosticData.q1_a1;
-        document.getElementById('btn-a2').innerText = diagnosticData.q1_a2;
+    function addQuestionField() {
+        qCount++;
+        const list = document.getElementById('questions-list');
+        const html = `
+            <div class="q-block" id="q-field-${qCount}">
+                <label>質問 ${qCount}</label>
+                <input type="text" class="q-input" placeholder="質問文を入力">
+                <input type="text" class="a1-input" placeholder="選択肢1 (タイプA点)">
+                <input type="text" class="a2-input" placeholder="選択肢2 (タイプB点)">
+            </div>
+        `;
+        list.insertAdjacentHTML('beforeend', html);
     }
 
-    function answer(choice) {
-        document.getElementById('question-area').style.display = 'none';
-        document.getElementById('result-area').style.display = 'block';
+    function startDiagnostic() {
+        // データの収集
+        const qInputs = document.querySelectorAll('.q-input');
+        const a1Inputs = document.querySelectorAll('.a1-input');
+        const a2Inputs = document.querySelectorAll('.a2-input');
+        
+        questions = [];
+        for(let i=0; i<qInputs.length; i++) {
+            questions.push({
+                q: qInputs[i].value,
+                a1: a1Inputs[i].value,
+                a2: a2Inputs[i].value
+            });
+        }
 
-        const resultText = (choice === 1) ? diagnosticData.typeA : diagnosticData.typeB;
-        document.getElementById('p-result').innerText = resultText;
+        // 表示切り替え
+        document.getElementById('editor').style.display = 'none';
+        document.getElementById('player').style.display = 'block';
+        document.getElementById('p-title').innerText = document.getElementById('title').value;
+        
+        showQuestion();
+    }
+
+    function showQuestion() {
+        if(currentQIndex < questions.length) {
+            const qData = questions[currentQIndex];
+            document.getElementById('p-q-text').innerText = qData.q;
+            document.getElementById('p-options').innerHTML = `
+                <button class="btn-answer" onclick="answer(1)">${qData.a1}</button>
+                <button class="btn-answer" onclick="answer(-1)">${qData.a2}</button>
+            `;
+        } else {
+            showResult();
+        }
+    }
+
+    function answer(point) {
+        score += point;
+        currentQIndex++;
+        showQuestion();
+    }
+
+    function showResult() {
+        document.getElementById('game-area').style.display = 'none';
+        document.getElementById('result-area').style.display = 'block';
+        const typeA = document.getElementById('typeA').value;
+        const typeB = document.getElementById('typeB').value;
+        document.getElementById('p-result-name').innerText = (score >= 0) ? typeA : typeB;
     }
 </script>
 
