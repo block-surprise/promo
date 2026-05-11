@@ -4,82 +4,132 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>明治時代覚えられない人に- 明治時代の出来事わかりやすく解説</title>
-    <style>
+  <style>
         :root {
-            --primary: #8b0000;
-            --secondary: #2c3e50;
-            --accent: #d35400;
-            --bg: #fdfaf5;
-            --nav-bg: #ffffff;
+            /* 柔らかい和の配色 */
+            --primary: #a33a3a; /* 落ち着いた茜色 */
+            --secondary: #34495e; /* マットなミッドナイトブルー */
+            --accent: #d35400; /* 柔らかいオレンジ */
+            --bg: #f9f7f2; /* 和紙のようなアイボリー */
+            --card-bg: #ffffff;
+            --text: #444444; /* 少し薄めの黒で目に優しく */
+            --light-blue: #f0f4f8; /* 補足用の薄い青 */
         }
 
         body {
-            font-family: "Hiragino Mincho ProN", serif;
+            font-family: "Helvetica Neue", Arial, "Hiragino Sans", "Hiragino Kaku Gothic ProN", "BIZ UDPGothic", meiryo, sans-serif;
             background-color: var(--bg);
-            color: #333;
-            line-height: 2; 
+            color: var(--text);
+            line-height: 1.8; 
             margin: 0;
         }
 
- 
+        /* サイドバーナビゲーション */
         #side-nav {
             position: fixed;
             left: 0; top: 0; width: 250px; height: 100vh;
             background: var(--secondary);
             color: white;
-            padding: 20px;
+            padding: 30px 20px;
             overflow-y: auto;
-            font-size: 0.85rem;
+            font-size: 0.9rem;
+            box-shadow: 2px 0 10px rgba(0,0,0,0.05);
         }
 
-        #side-nav a { color: #ccc; text-decoration: none; display: block; margin: 10px 0; }
-        #side-nav a:hover { color: white; }
+        #side-nav h3 { 
+            color: #ecf0f1; 
+            font-size: 1.2rem; 
+            border-bottom: 1px solid rgba(255,255,255,0.2);
+            padding-bottom: 10px;
+        }
+        #side-nav a { color: #bdc3c7; text-decoration: none; display: block; margin: 15px 0; transition: 0.3s; }
+        #side-nav a:hover { color: white; transform: translateX(5px); }
 
+        /* メインコンテンツ */
         main {
-            margin-left: 280px;
-            max-width: 900px;
-            padding: 60px 40px;
-            background: white;
-            box-shadow: 0 0 20px rgba(0,0,0,0.05);
+            margin-left: 250px;
+            max-width: 850px;
+            padding: 50px 60px;
+            background: var(--card-bg);
+            min-height: 100vh;
+            box-shadow: 0 0 30px rgba(0,0,0,0.03);
         }
 
-        header { border-bottom: 10px double var(--primary); padding-bottom: 20px; margin-bottom: 50px; }
-        h1 { font-size: 2.5rem; color: var(--primary); }
-        h2 { background: var(--primary); color: white; padding: 15px; margin-top: 80px; border-radius: 5px; }
-        h3 { border-left: 8px solid var(--primary); padding-left: 15px; margin-top: 50px; color: var(--secondary); }
+        header { 
+            border-bottom: 4px solid var(--primary); 
+            padding-bottom: 30px; 
+            margin-bottom: 60px; 
+            text-align: center;
+        }
+        header p { color: var(--primary); font-weight: bold; letter-spacing: 0.1em; }
+        h1 { font-size: 2.2rem; color: var(--text); margin-top: 10px; }
 
+        h2 { 
+            border-bottom: 2px solid var(--primary); 
+            color: var(--primary); 
+            padding-bottom: 8px;
+            margin-top: 70px; 
+            font-size: 1.8rem;
+        }
+        h3 { 
+            background: var(--light-blue);
+            padding: 10px 15px;
+            border-left: 5px solid var(--secondary); 
+            margin-top: 40px; 
+            color: var(--secondary);
+        }
+
+        /* ボックスデザインの改善 */
         .detail-box {
-            background: #f9f9f9;
-            border: 1px solid #ddd;
-            padding: 30px;
-            margin: 30px 0;
-            border-radius: 10px;
+            background: #fdfdfd;
+            border: 1px solid #eef1f5;
+            border-left: 5px solid #d1d8e0;
+            padding: 25px;
+            margin: 25px 0;
+            border-radius: 8px;
         }
 
         .goro-section {
-            background: #fff5f5;
-            border: 2px dashed var(--accent);
-            padding: 20px;
+            background: #fffafa;
+            border: 1px solid #f5e1e1;
+            padding: 15px;
             text-align: center;
             font-weight: bold;
-            color: var(--accent);
+            color: var(--primary);
+            border-radius: 50px; /* 丸みを持たせて柔らかく */
+            margin: 20px 0;
         }
 
- 
+        /* まとめセクション */
+        .summary {
+            background-color: var(--light-blue);
+            padding: 25px;
+            border-radius: 12px;
+            margin-top: 50px;
+            border: 1px solid #d0dbe5;
+        }
+        .summary strong { color: var(--secondary); font-size: 1.1rem; }
+
+        /* 進捗バー */
         #progress-container {
             position: fixed; top: 0; left: 250px; width: calc(100% - 250px);
-            height: 5px; background: #eee; z-index: 100;
+            height: 4px; background: #eee; z-index: 100;
         }
-        #progress-bar { height: 100%; background: var(--primary); width: 0%; }
-.summary {
-            background-color: #f1f4f6;
-            padding: 20px;
-            border-radius: 5px;
-            margin-top: 40px;
+        #progress-bar { height: 100%; background: var(--primary); width: 0%; transition: width 0.1s; }
+
+        footer {
+            margin-top: 100px;
+            padding: 40px;
+            text-align: center;
+            font-size: 0.8rem;
+            color: #999;
+            border-top: 1px solid #eee;
         }
+
         @media (max-width: 1000px) {
             #side-nav { display: none; }
-            main { margin-left: 0; padding: 20px; }
+            main { margin-left: 0; padding: 30px 20px; }
+            #progress-container { left: 0; width: 100%; }
         }
     </style>
 </head>
