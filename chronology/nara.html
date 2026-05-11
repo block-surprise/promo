@@ -1,0 +1,130 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>奈良時代・詳細年表アーカイブ</title>
+    <style>
+        :root {
+            --primary: #8b0000; 
+            --bg: #ffffff;
+            --text: #222;
+            --sub-text: #666;
+            --border: #ececec;
+        }
+        body { font-family: "serif"; background: var(--bg); color: var(--text); margin: 0; padding: 0; line-height: 1.6; }
+        
+        header { 
+            padding: 40px 20px; text-align: center; border-bottom: 3px double var(--primary);
+            background: #fdfdfd;
+        }
+        h1 { margin: 0; font-size: 1.8rem; letter-spacing: 0.2rem; color: var(--primary); }
+        .subtitle { font-size: 0.9rem; color: var(--sub-text); margin-top: 10px; }
+
+        .container { max-width: 800px; margin: 0 auto; padding: 20px; }
+
+        /* 年表のスタイル */
+        .timeline { position: relative; }
+        .event {
+            display: flex; margin-bottom: 30px; border-bottom: 1px solid var(--border);
+            padding-bottom: 20px; transition: 0.3s;
+        }
+        .year {
+            min-width: 80px; font-weight: bold; font-size: 1.2rem;
+            color: var(--primary); padding-top: 2px;
+        }
+        .content { flex: 1; padding-left: 20px; }
+        .title { font-weight: bold; font-size: 1.1rem; margin-bottom: 8px; }
+        .desc { font-size: 0.95rem; color: var(--text); text-align: justify; }
+        
+        /* スマホ対応 */
+        @media (max-width: 600px) {
+            .event { flex-direction: column; }
+            .year { margin-bottom: 5px; font-size: 1.4rem; }
+            .content { padding-left: 0; }
+        }
+
+        .footer { text-align: center; padding: 40px; color: #999; font-size: 0.8rem; }
+    </style>
+</head>
+<body>
+
+<header>
+    <h1>奈良時代 詳細年表</h1>
+<div class="subtitle">710 - 794：なんと（710）立派な平城京、大仏と律令の時代</div>
+</header>
+
+<div class="container">
+    <div class="timeline" id="timeline">
+        <!-- JSで挿入 -->
+    </div>
+</div>
+
+<footer class="footer">
+    &copy; 2026 History Archive Project
+</footer>
+
+<script>
+const naraData = [
+        { 
+            year: "710", 
+            cat: "pol", 
+            title: "平城京への遷都", 
+            desc: "【スタート】元明天皇が、唐（中国）の都である長安をお手本にして、奈良に平城京を作った。碁盤の目のような美しい街並みだったんだ。" 
+        },
+        { 
+            year: "712 / 720", 
+            cat: "cul", 
+            title: "『古事記』『日本書紀』の完成", 
+            desc: "天皇が日本を治める正当性を示すために、歴史書が作られた。この頃、日本最古の和歌集『万葉集』もまとめられたよ。" 
+        },
+        { 
+            year: "723", 
+            cat: "pol", 
+            title: "三世一身の法（さんぜいっしんのほう）", 
+            desc: "【流れ】『公地公民（土地は全部国のもの）』だと農民のやる気が出ず、田んぼが荒れてしまった。そこで『新しく耕したなら3代まで自分の土地にしていいよ』という法律を出したんだ。" 
+        },
+        { 
+            year: "743", 
+            cat: "pol", 
+            title: "墾田永年私財法（こんでんえいねんしざいほう）", 
+            desc: "【最重要】『新しく耕した土地は、永久に自分のものにしていいよ』という法律。これでみんな一生懸命耕したけど、広い土地を持つ『荘園（しょうえん）』が生まれるきっかけにもなったよ。" 
+        },
+        { 
+            year: "752", 
+            cat: "cul", 
+            title: "東大寺の大仏開眼（だいぶつかいげん）", 
+            desc: "【重要】聖武（しょうむ）天皇が、伝染病や反乱を防ぐために、仏教の力で国を守ろうとした。全国に国分寺・国分尼寺を作り、その総本山として東大寺に巨大な大仏を作ったんだ。" 
+        },
+        { 
+            year: "753", 
+            cat: "dip", 
+            title: "鑑真（がんじん）の来日", 
+            desc: "唐から正しい仏教を伝えるために、5回も失敗して失明しながらも日本へやってきた。唐招提寺（とうしょうだいじ）を建てたことで有名だね。" 
+        },
+        { 
+            year: "759頃", 
+            cat: "cul", 
+            title: "正倉院（しょうそういん）の宝物", 
+            desc: "聖武天皇の愛用品などが納められた。シルクロードを通ってペルシャ（イラン）などから来た宝物もあり、『天平（てんぴょう）文化』の国際的な特徴がよくわかるよ。" 
+        }
+    ];
+
+    const timeline = document.getElementById('timeline');
+
+    meijiData.forEach(item => {
+        const eventDiv = document.createElement('div');
+        eventDiv.className = 'event';
+        eventDiv.innerHTML = `
+            <div class="year">${item.year}</div>
+            <div class="content">
+                <div class="title">${item.title}</div>
+                <div class="desc">${item.desc}</div>
+            </div>
+        `;
+        timeline.appendChild(eventDiv);
+    });
+</script>
+
+</body>
+</html>
