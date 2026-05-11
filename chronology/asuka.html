@@ -1,0 +1,130 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>飛鳥時代・詳細年表アーカイブ</title>
+    <style>
+        :root {
+            --primary: #8b0000; 
+            --bg: #ffffff;
+            --text: #222;
+            --sub-text: #666;
+            --border: #ececec;
+        }
+        body { font-family: "serif"; background: var(--bg); color: var(--text); margin: 0; padding: 0; line-height: 1.6; }
+        
+        header { 
+            padding: 40px 20px; text-align: center; border-bottom: 3px double var(--primary);
+            background: #fdfdfd;
+        }
+        h1 { margin: 0; font-size: 1.8rem; letter-spacing: 0.2rem; color: var(--primary); }
+        .subtitle { font-size: 0.9rem; color: var(--sub-text); margin-top: 10px; }
+
+        .container { max-width: 800px; margin: 0 auto; padding: 20px; }
+
+        /* 年表のスタイル */
+        .timeline { position: relative; }
+        .event {
+            display: flex; margin-bottom: 30px; border-bottom: 1px solid var(--border);
+            padding-bottom: 20px; transition: 0.3s;
+        }
+        .year {
+            min-width: 80px; font-weight: bold; font-size: 1.2rem;
+            color: var(--primary); padding-top: 2px;
+        }
+        .content { flex: 1; padding-left: 20px; }
+        .title { font-weight: bold; font-size: 1.1rem; margin-bottom: 8px; }
+        .desc { font-size: 0.95rem; color: var(--text); text-align: justify; }
+        
+        /* スマホ対応 */
+        @media (max-width: 600px) {
+            .event { flex-direction: column; }
+            .year { margin-bottom: 5px; font-size: 1.4rem; }
+            .content { padding-left: 0; }
+        }
+
+        .footer { text-align: center; padding: 40px; color: #999; font-size: 0.8rem; }
+    </style>
+</head>
+<body>
+
+<header>
+    <h1>飛鳥時代 詳細年表</h1>
+<div class="subtitle">593 - 710：冠位十二階から大宝律令の完成まで</div>
+</header>
+
+<div class="container">
+    <div class="timeline" id="timeline">
+        <!-- JSで挿入 -->
+    </div>
+</div>
+
+<footer class="footer">
+    &copy; 2026 History Archive Project
+</footer>
+
+<script>
+const asukaData = [
+        { 
+            year: "593", 
+            cat: "pol", 
+            title: "聖徳太子が摂政に", 
+            desc: "【重要】推古天皇を助け、蘇我馬子と協力して政治を開始。天皇中心の国づくりを目指し、仏教を厚く保護したんだ。法隆寺はこの時期に建てられた世界最古の木造建築だよ。" 
+        },
+        { 
+            year: "603 / 604", 
+            cat: "pol", 
+            title: "冠位十二階と憲法十七条", 
+            desc: "【最重要】<br>①冠位十二階：家柄ではなく『才能』がある人を役人に採用する仕組み。<br>②憲法十七条：役人の心得。『和をもって尊しとなす』という言葉で有名だね。" 
+        },
+        { 
+            year: "607", 
+            cat: "dip", 
+            title: "遣隋使の派遣（小野妹子）", 
+            desc: "中国の『隋』に使いを送り、進んだ文化や制度を学ばせた。中国の皇帝に対して『対等な立場』で手紙を送ったエピソードが有名だよ。" 
+        },
+        { 
+            year: "645", 
+            cat: "pol", 
+            title: "大化の改新（乙巳の変）", 
+            desc: "【テスト頻出】中大兄皇子（なかのおおえのおうじ）と中臣鎌足（なかとみのかまたり）が、威張っていた蘇我氏を倒した。ここから、土地と人民をすべて天皇のものとする『公地公民（こうちこうみん）』へと動き出したんだ。" 
+        },
+        { 
+            year: "663", 
+            cat: "dip", 
+            title: "白村江（はくすきのえ）の戦い", 
+            desc: "百済（くだら）を助けるために朝鮮へ出兵したけど、唐・新羅の連合軍に大敗。これを機に、日本は攻め込まれないよう各地に城や防人（さきもり）を置くようになったよ。" 
+        },
+        { 
+            year: "672", 
+            cat: "pol", 
+            title: "壬申（じんしん）の乱", 
+            desc: "天智天皇（中大兄皇子）の跡継ぎをめぐる争い。勝った大海人皇子が『天武天皇』となり、さらに天皇の力を強めていったんだ。" 
+        },
+        { 
+            year: "701", 
+            cat: "pol", 
+            title: "大宝律令（たいほうりつりょう）の完成", 
+            desc: "【重要】唐の制度をお手本に、法律（律・令）を整備。これでようやく、法律に基づいて国を治める『律令国家』の形ができあがったよ。" 
+        }
+    ];
+
+    const timeline = document.getElementById('timeline');
+
+    meijiData.forEach(item => {
+        const eventDiv = document.createElement('div');
+        eventDiv.className = 'event';
+        eventDiv.innerHTML = `
+            <div class="year">${item.year}</div>
+            <div class="content">
+                <div class="title">${item.title}</div>
+                <div class="desc">${item.desc}</div>
+            </div>
+        `;
+        timeline.appendChild(eventDiv);
+    });
+</script>
+
+</body>
+</html>
