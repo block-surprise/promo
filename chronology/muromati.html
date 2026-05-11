@@ -1,0 +1,142 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>室町時代・詳細年表アーカイブ</title>
+    <style>
+        :root {
+            --primary: #8b0000; 
+            --bg: #ffffff;
+            --text: #222;
+            --sub-text: #666;
+            --border: #ececec;
+        }
+        body { font-family: "serif"; background: var(--bg); color: var(--text); margin: 0; padding: 0; line-height: 1.6; }
+        
+        header { 
+            padding: 40px 20px; text-align: center; border-bottom: 3px double var(--primary);
+            background: #fdfdfd;
+        }
+        h1 { margin: 0; font-size: 1.8rem; letter-spacing: 0.2rem; color: var(--primary); }
+        .subtitle { font-size: 0.9rem; color: var(--sub-text); margin-top: 10px; }
+
+        .container { max-width: 800px; margin: 0 auto; padding: 20px; }
+
+        /* 年表のスタイル */
+        .timeline { position: relative; }
+        .event {
+            display: flex; margin-bottom: 30px; border-bottom: 1px solid var(--border);
+            padding-bottom: 20px; transition: 0.3s;
+        }
+        .year {
+            min-width: 80px; font-weight: bold; font-size: 1.2rem;
+            color: var(--primary); padding-top: 2px;
+        }
+        .content { flex: 1; padding-left: 20px; }
+        .title { font-weight: bold; font-size: 1.1rem; margin-bottom: 8px; }
+        .desc { font-size: 0.95rem; color: var(--text); text-align: justify; }
+        
+        /* スマホ対応 */
+        @media (max-width: 600px) {
+            .event { flex-direction: column; }
+            .year { margin-bottom: 5px; font-size: 1.4rem; }
+            .content { padding-left: 0; }
+        }
+
+        .footer { text-align: center; padding: 40px; color: #999; font-size: 0.8rem; }
+    </style>
+</head>
+<body>
+
+<header>
+    <h1>室町時代 詳細年表</h1>
+<div class="subtitle">1336 - 1573：南北朝の合一と2つの東山・北山文化</div>
+</header>
+
+<div class="container">
+    <div class="timeline" id="timeline">
+        <!-- JSで挿入 -->
+    </div>
+</div>
+
+<footer class="footer">
+    &copy; 2026 History Archive Project
+</footer>
+
+<script>
+const muromachiData = [
+        { 
+            year: "1336", 
+            cat: "pol", 
+            title: "室町幕府の成立と南北朝時代", 
+            desc: "足利尊氏が京都に光明天皇を立て、奈良（吉野）へ逃れた後醍醐天皇と対立。約60年間にわたって天皇が2人いる『南北朝時代』が始まったよ。" 
+        },
+        { 
+            year: "1392", 
+            cat: "pol", 
+            title: "南北朝の合一", 
+            desc: "【重要】3代将軍・足利義満が、南朝と北朝を一つにまとめた。これで幕府の権力が盤石になり、室町時代の黄金期がやってくる。" 
+        },
+        { 
+            year: "1401", 
+            cat: "dip", 
+            title: "日明貿易（勘合貿易）の開始", 
+            desc: "【最重要】義満が中国（明）と貿易を開始。倭寇（海賊）と区別するために『勘合（かんごう）』という札を使ったのがポイント。日本からは銅や刀剣を輸出したよ。" 
+        },
+        { 
+            year: "1404", 
+            cat: "cul", 
+            title: "金閣（北山文化）の建立", 
+            desc: "義満が京都に金閣を建てた。貴族の文化と武士の文化が混ざり合った、豪華な『北山文化』の象徴だね。" 
+        },
+        { 
+            year: "1467", 
+            cat: "pol", 
+            title: "応仁の乱の勃発", 
+            desc: "【流れ】8代将軍・義政の跡継ぎ争いから、京都を舞台に11年も続く大戦争に。京都は焼け野原になり、ここから『下剋上』の戦国時代へ突入していく。" 
+        },
+        { 
+            year: "1489", 
+            cat: "cul", 
+            title: "銀閣（東山文化）の建立", 
+            desc: "義政が建てた。金閣とは対照的に、わび・さびを重んじる落ち着いた『東山文化』。今の和室の原型である『書院造（しょいんづくり）』はこの時誕生したよ。" 
+        },
+        { 
+            year: "1488", 
+            cat: "pol", 
+            title: "加賀の一向一揆", 
+            desc: "【重要】浄土真宗（一向宗）を信じる農民たちが、守護大名を倒して自分たちで約100年も国を治めた。民衆の力が強くなった証拠だね。" 
+        },
+        { 
+            year: "1543", 
+            cat: "dip", 
+            title: "鉄砲の伝来", 
+            desc: "鹿児島県の種子島にポルトガル人が漂着し、鉄砲が伝わった。これによって戦い方が一変し、戦国時代の終わりを早めることになったんだ。" 
+        },
+        { 
+            year: "1549", 
+            cat: "dip", 
+            title: "キリスト教の伝来", 
+            desc: "フランシスコ・ザビエルが鹿児島に上陸。宗教だけでなく、ヨーロッパの新しい知識や文化も日本に入ってくるようになったよ。" 
+        }
+    ];
+
+    const timeline = document.getElementById('timeline');
+
+    meijiData.forEach(item => {
+        const eventDiv = document.createElement('div');
+        eventDiv.className = 'event';
+        eventDiv.innerHTML = `
+            <div class="year">${item.year}</div>
+            <div class="content">
+                <div class="title">${item.title}</div>
+                <div class="desc">${item.desc}</div>
+            </div>
+        `;
+        timeline.appendChild(eventDiv);
+    });
+</script>
+
+</body>
+</html>
