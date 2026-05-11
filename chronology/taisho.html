@@ -6,7 +6,7 @@
     <title>大正時代・詳細年表アーカイブ</title>
     <style>
         :root {
-            --primary: #8b0000; /* 明治の「赤レンガ」をイメージした深い赤 */
+            --primary: #8b0000; 
             --bg: #ffffff;
             --text: #222;
             --sub-text: #666;
@@ -23,7 +23,7 @@
 
         .container { max-width: 800px; margin: 0 auto; padding: 20px; }
 
-        /* 年表のスタイル */
+     
         .timeline { position: relative; }
         .event {
             display: flex; margin-bottom: 30px; border-bottom: 1px solid var(--border);
@@ -65,7 +65,7 @@
 </footer>
 
 <script>
-const taishoData = [
+const aData = [
         { 
             year: "1912", 
             cat: "pol", 
@@ -124,7 +124,7 @@ const taishoData = [
 
     const timeline = document.getElementById('timeline');
 
-    meijiData.forEach(item => {
+    aData.forEach(item => {
         const eventDiv = document.createElement('div');
         eventDiv.className = 'event';
         eventDiv.innerHTML = `
