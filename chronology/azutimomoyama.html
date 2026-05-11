@@ -1,0 +1,136 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>安土桃山時代・詳細年表アーカイブ</title>
+    <style>
+        :root {
+            --primary: #8b0000; 
+            --bg: #ffffff;
+            --text: #222;
+            --sub-text: #666;
+            --border: #ececec;
+        }
+        body { font-family: "serif"; background: var(--bg); color: var(--text); margin: 0; padding: 0; line-height: 1.6; }
+        
+        header { 
+            padding: 40px 20px; text-align: center; border-bottom: 3px double var(--primary);
+            background: #fdfdfd;
+        }
+        h1 { margin: 0; font-size: 1.8rem; letter-spacing: 0.2rem; color: var(--primary); }
+        .subtitle { font-size: 0.9rem; color: var(--sub-text); margin-top: 10px; }
+
+        .container { max-width: 800px; margin: 0 auto; padding: 20px; }
+
+        /* 年表のスタイル */
+        .timeline { position: relative; }
+        .event {
+            display: flex; margin-bottom: 30px; border-bottom: 1px solid var(--border);
+            padding-bottom: 20px; transition: 0.3s;
+        }
+        .year {
+            min-width: 80px; font-weight: bold; font-size: 1.2rem;
+            color: var(--primary); padding-top: 2px;
+        }
+        .content { flex: 1; padding-left: 20px; }
+        .title { font-weight: bold; font-size: 1.1rem; margin-bottom: 8px; }
+        .desc { font-size: 0.95rem; color: var(--text); text-align: justify; }
+        
+        /* スマホ対応 */
+        @media (max-width: 600px) {
+            .event { flex-direction: column; }
+            .year { margin-bottom: 5px; font-size: 1.4rem; }
+            .content { padding-left: 0; }
+        }
+
+        .footer { text-align: center; padding: 40px; color: #999; font-size: 0.8rem; }
+    </style>
+</head>
+<body>
+
+<header>
+    <h1>安土桃山時代 詳細年表</h1>
+<div class="subtitle">1573 - 1603：信長・秀吉による天下統一の歩み</div>
+</header>
+
+<div class="container">
+    <div class="timeline" id="timeline">
+        <!-- JSで挿入 -->
+    </div>
+</div>
+
+<footer class="footer">
+    &copy; 2026 History Archive Project
+</footer>
+
+<script>
+const azuchiMomoyamaData = [
+        { 
+            year: "1573", 
+            cat: "pol", 
+            title: "室町幕府の滅亡", 
+            desc: "織田信長が将軍・足利義昭を京都から追放。これで約240年続いた室町幕府が終わり、新しい時代の幕が開けたんだ。" 
+        },
+        { 
+            year: "1575", 
+            cat: "dip", 
+            title: "長篠（ながしの）の戦い", 
+            desc: "【重要】信長が「鉄砲」を組織的に使って、当時最強と言われた武田の騎馬隊を破った戦い。戦い方がガラリと変わった瞬間だよ。" 
+        },
+        { 
+            year: "1582", 
+            cat: "pol", 
+            title: "本能寺の変", 
+            desc: "天下統一を目前にした信長が、家臣の明智光秀に襲われて自害。「敵は本能寺にあり！」というフレーズは有名だね。" 
+        },
+        { 
+            year: "1582", 
+            cat: "pol", 
+            title: "太閤検地（たいこうけんち）の開始", 
+            desc: "【最重要】豊臣秀吉が全国の土地の広さや質を調査。ものさしや枡（ます）を統一して、収穫量を「石高（こくだか）」で表すようにしたんだ。これで税金（年貢）の計算が正確になったよ。" 
+        },
+        { 
+            year: "1588", 
+            cat: "pol", 
+            title: "刀狩（かたながり）", 
+            desc: "【最重要】秀吉が農民から武器を取り上げた。一揆を防ぐのと、農民と武士の身分をはっきり分ける「兵農分離（へいのうぶんり）」が目的だよ。" 
+        },
+        { 
+            year: "1590", 
+            cat: "pol", 
+            title: "天下統一の完成", 
+            desc: "小田原の北条氏を倒し、秀吉がついに日本全国を統一。応仁の乱から100年以上続いた戦国時代が、ここでようやく終わったんだ。" 
+        },
+        { 
+            year: "1592", 
+            cat: "dip", 
+            title: "文禄・慶長の役（朝鮮侵略）", 
+            desc: "秀吉が2回にわたって朝鮮に大軍を送った。でも、現地の抵抗や秀吉本人が亡くなったことで、失敗に終わったよ。" 
+        },
+        { 
+            year: "1600", 
+            cat: "pol", 
+            title: "関ヶ原の戦い", 
+            desc: "【天下分け目】秀吉の死後、徳川家康（東軍）と石田三成（西軍）が激突。わずか1日で家康が勝利し、次の江戸時代への流れが確定した戦い。" 
+        }
+    ];
+
+    const timeline = document.getElementById('timeline');
+
+    meijiData.forEach(item => {
+        const eventDiv = document.createElement('div');
+        eventDiv.className = 'event';
+        eventDiv.innerHTML = `
+            <div class="year">${item.year}</div>
+            <div class="content">
+                <div class="title">${item.title}</div>
+                <div class="desc">${item.desc}</div>
+            </div>
+        `;
+        timeline.appendChild(eventDiv);
+    });
+</script>
+
+</body>
+</html>
