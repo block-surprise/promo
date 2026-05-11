@@ -1,0 +1,130 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>鎌倉時代・詳細年表アーカイブ</title>
+    <style>
+        :root {
+            --primary: #8b0000; 
+            --bg: #ffffff;
+            --text: #222;
+            --sub-text: #666;
+            --border: #ececec;
+        }
+        body { font-family: "serif"; background: var(--bg); color: var(--text); margin: 0; padding: 0; line-height: 1.6; }
+        
+        header { 
+            padding: 40px 20px; text-align: center; border-bottom: 3px double var(--primary);
+            background: #fdfdfd;
+        }
+        h1 { margin: 0; font-size: 1.8rem; letter-spacing: 0.2rem; color: var(--primary); }
+        .subtitle { font-size: 0.9rem; color: var(--sub-text); margin-top: 10px; }
+
+        .container { max-width: 800px; margin: 0 auto; padding: 20px; }
+
+        /* 年表のスタイル */
+        .timeline { position: relative; }
+        .event {
+            display: flex; margin-bottom: 30px; border-bottom: 1px solid var(--border);
+            padding-bottom: 20px; transition: 0.3s;
+        }
+        .year {
+            min-width: 80px; font-weight: bold; font-size: 1.2rem;
+            color: var(--primary); padding-top: 2px;
+        }
+        .content { flex: 1; padding-left: 20px; }
+        .title { font-weight: bold; font-size: 1.1rem; margin-bottom: 8px; }
+        .desc { font-size: 0.95rem; color: var(--text); text-align: justify; }
+        
+        /* スマホ対応 */
+        @media (max-width: 600px) {
+            .event { flex-direction: column; }
+            .year { margin-bottom: 5px; font-size: 1.4rem; }
+            .content { padding-left: 0; }
+        }
+
+        .footer { text-align: center; padding: 40px; color: #999; font-size: 0.8rem; }
+    </style>
+</head>
+<body>
+
+<header>
+    <h1>鎌倉時代 詳細年表</h1>
+<div class="subtitle">1185 - 1333：御家人との主従関係と「いざ鎌倉」の精神</div>
+</header>
+
+<div class="container">
+    <div class="timeline" id="timeline">
+        <!-- JSで挿入 -->
+    </div>
+</div>
+
+<footer class="footer">
+    &copy; 2026 History Archive Project
+</footer>
+
+<script>
+const kamakuraData = [
+        { 
+            year: "1185", 
+            cat: "pol", 
+            title: "壇ノ浦の戦い・守護地頭の設置", 
+            desc: "【流れ】源義経が平氏を滅ぼした年。源頼朝が全国に『守護（しゅご）』と『地頭（じとう）』を置いて、軍事と警察、税金の管理を武士がやる仕組みを作ったんだ。" 
+        },
+        { 
+            year: "1192", 
+            cat: "pol", 
+            title: "源頼朝が征夷大将軍に", 
+            desc: "【重要】頼朝が鎌倉幕府を開く。将軍と御家人の『御恩（ごおん）』と『奉公（ほうこう）』という主従関係が、武士の政治の基本になったよ。" 
+        },
+        { 
+            year: "1221", 
+            cat: "pol", 
+            title: "承久の乱（じょうきゅうのらん）", 
+            desc: "【最重要】後鳥羽上皇が「幕府を倒そう」と兵を挙げたけど、北条政子の演説で団結した幕府軍に敗北。これ以降、幕府が朝廷を監視する『六波羅探題（ろくはらたんだい）』が置かれたんだ。" 
+        },
+        { 
+            year: "1232", 
+            cat: "pol", 
+            title: "御成敗式目（ごせいばいしきもく）", 
+            desc: "【テスト頻出】北条泰時（やすとき）が作った、武士のための初めての法律。裁判の基準をはっきりさせて、武士同士のトラブルを公平に解決しようとしたよ。" 
+        },
+        { 
+            year: "1274 / 1281", 
+            cat: "dip", 
+            title: "元寇（文永の役・弘安の役）", 
+            desc: "【激震】モンゴル帝国（元）が2回も攻めてきた。暴風雨や武士の奮戦で追い返したけど、恩賞（ご褒美の土地）がもらえなくて、武士たちの不満がたまってしまったんだ。" 
+        },
+        { 
+            year: "1297", 
+            cat: "pol", 
+            title: "徳政令（とくせいれい）の発令", 
+            desc: "生活が苦しくなった武士を救うために、借金を帳消しにする命令を出した。でも、かえって経済が混乱して、幕府の信頼はボロボロに…。" 
+        },
+        { 
+            year: "1333", 
+            cat: "pol", 
+            title: "鎌倉幕府の滅亡", 
+            desc: "足利尊氏や新田義貞らが挙兵し、北条氏を倒して幕府が滅亡。ここから後醍醐天皇の新しい政治（建武の新政）へと移っていくよ。" 
+        }
+    ];
+
+    const timeline = document.getElementById('timeline');
+
+    meijiData.forEach(item => {
+        const eventDiv = document.createElement('div');
+        eventDiv.className = 'event';
+        eventDiv.innerHTML = `
+            <div class="year">${item.year}</div>
+            <div class="content">
+                <div class="title">${item.title}</div>
+                <div class="desc">${item.desc}</div>
+            </div>
+        `;
+        timeline.appendChild(eventDiv);
+    });
+</script>
+
+</body>
+</html>
