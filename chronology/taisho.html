@@ -1,0 +1,142 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>大正時代・詳細年表アーカイブ</title>
+    <style>
+        :root {
+            --primary: #8b0000; /* 明治の「赤レンガ」をイメージした深い赤 */
+            --bg: #ffffff;
+            --text: #222;
+            --sub-text: #666;
+            --border: #ececec;
+        }
+        body { font-family: "serif"; background: var(--bg); color: var(--text); margin: 0; padding: 0; line-height: 1.6; }
+        
+        header { 
+            padding: 40px 20px; text-align: center; border-bottom: 3px double var(--primary);
+            background: #fdfdfd;
+        }
+        h1 { margin: 0; font-size: 1.8rem; letter-spacing: 0.2rem; color: var(--primary); }
+        .subtitle { font-size: 0.9rem; color: var(--sub-text); margin-top: 10px; }
+
+        .container { max-width: 800px; margin: 0 auto; padding: 20px; }
+
+        /* 年表のスタイル */
+        .timeline { position: relative; }
+        .event {
+            display: flex; margin-bottom: 30px; border-bottom: 1px solid var(--border);
+            padding-bottom: 20px; transition: 0.3s;
+        }
+        .year {
+            min-width: 80px; font-weight: bold; font-size: 1.2rem;
+            color: var(--primary); padding-top: 2px;
+        }
+        .content { flex: 1; padding-left: 20px; }
+        .title { font-weight: bold; font-size: 1.1rem; margin-bottom: 8px; }
+        .desc { font-size: 0.95rem; color: var(--text); text-align: justify; }
+        
+        /* スマホ対応 */
+        @media (max-width: 600px) {
+            .event { flex-direction: column; }
+            .year { margin-bottom: 5px; font-size: 1.4rem; }
+            .content { padding-left: 0; }
+        }
+
+        .footer { text-align: center; padding: 40px; color: #999; font-size: 0.8rem; }
+    </style>
+</head>
+<body>
+
+<header>
+    <h1>大正時代 詳細年表</h1>
+  <div class="subtitle">1912 - 1926：大正デモクラシーと激動の世界</div>
+</header>
+
+<div class="container">
+    <div class="timeline" id="timeline">
+        <!-- JSで挿入 -->
+    </div>
+</div>
+
+<footer class="footer">
+    &copy; 2026 History Archive Project
+</footer>
+
+<script>
+const taishoData = [
+        { 
+            year: "1912", 
+            cat: "pol", 
+            title: "大正政変と第一次護憲運動", 
+            desc: "【流れ】明治天皇の崩御で大正時代がスタート。直後に「閥族打破・憲政擁護」を掲げた第一次護憲運動が起き、桂太郎内閣が退陣。国民の力で政治を動かす『大正デモクラシー』の幕開けだよ。" 
+        },
+        { 
+            year: "1914", 
+            cat: "dip", 
+            title: "第一次世界大戦の勃発", 
+            desc: "【世界】ヨーロッパで戦争開始。日本は日英同盟を理由に参戦。これにより、日本は空前の中規の輸出ラッシュ『大戦景気』に沸き、工業国へと急成長したんだ。" 
+        },
+        { 
+            year: "1815", 
+            cat: "dip", 
+            title: "二十一カ条の要求", 
+            desc: "【テスト頻出】大戦中のどさくさに紛れて、中国に対して利権を認めるよう要求。これが後の中国での排日運動や、国際的な不信感に繋がっていく重要な分岐点。" 
+        },
+        { 
+            year: "1918", 
+            cat: "cul", 
+            title: "米騒動と原敬（はらたかし）内閣", 
+            desc: "【重要】シベリア出兵を見越した商人が米を買い占め、価格が暴騰。主婦たちが暴動を起こした。これにより寺内内閣が倒れ、日本初の本格的な政党内閣（平民宰相・原敬）が誕生したよ。" 
+        },
+        { 
+            year: "1919", 
+            cat: "dip", 
+            title: "ベルサイユ条約と三・一独立運動", 
+            desc: "【世界と連動】第一次世界大戦が終結。ウィルソン大統領が掲げた『民族自決』に刺激され、朝鮮では独立運動、中国では『五・四運動』が起きた。日本は国際連盟の常任理事国になったよ。" 
+        },
+        { 
+            year: "1920", 
+            cat: "cul", 
+            title: "戦後不況の開始", 
+            desc: "戦争が終わって需要が減り、経済が冷え込む。ここから昭和初期まで続く長い不況のトンネルの入り口。" 
+        },
+        { 
+            year: "1923", 
+            cat: "cul", 
+            title: "関東大震災", 
+            desc: "【激震】9月1日、首都圏を巨大地震が襲う。政治も経済も大混乱に陥り、復興のために大量の借金（震災手形）を発行。これが後の金融恐慌の火種になる。" 
+        },
+        { 
+            year: "1925", 
+            cat: "pol", 
+            title: "普通選挙法と治安維持法", 
+            desc: "【セットで暗記！】<br>①普通選挙法：25歳以上の『男子』全員に選挙権。納税額の制限がなくなった！<br>②治安維持法：セットで成立。共産主義などを取り締まるため。アメ（選挙権）とムチ（取り締まり）だね。" 
+        },
+        { 
+            year: "1926", 
+            cat: "pol", 
+            title: "大正天皇崩御・昭和へ", 
+            desc: "わずか15年という短い時代だったけど、女性の地位向上や新しい文化（ラジオ放送開始など）が花開いた『モボ・モガ』の時代が終わり、昭和の暗い影が忍び寄る。" 
+        }
+    ];
+
+    const timeline = document.getElementById('timeline');
+
+    meijiData.forEach(item => {
+        const eventDiv = document.createElement('div');
+        eventDiv.className = 'event';
+        eventDiv.innerHTML = `
+            <div class="year">${item.year}</div>
+            <div class="content">
+                <div class="title">${item.title}</div>
+                <div class="desc">${item.desc}</div>
+            </div>
+        `;
+        timeline.appendChild(eventDiv);
+    });
+</script>
+
+</body>
+</html>
