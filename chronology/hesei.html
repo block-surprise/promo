@@ -1,0 +1,141 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>平成・詳細年表アーカイブ</title>
+    <style>
+        :root {
+            --primary: #8b0000; 
+            --bg: #ffffff;
+            --text: #222;
+            --sub-text: #666;
+            --border: #ececec;
+        }
+        body { font-family: "serif"; background: var(--bg); color: var(--text); margin: 0; padding: 0; line-height: 1.6; }
+        
+        header { 
+            padding: 40px 20px; text-align: center; border-bottom: 3px double var(--primary);
+            background: #fdfdfd;
+        }
+        h1 { margin: 0; font-size: 1.8rem; letter-spacing: 0.2rem; color: var(--primary); }
+        .subtitle { font-size: 0.9rem; color: var(--sub-text); margin-top: 10px; }
+
+        .container { max-width: 800px; margin: 0 auto; padding: 20px; }
+
+        /* 年表のスタイル */
+        .timeline { position: relative; }
+        .event {
+            display: flex; margin-bottom: 30px; border-bottom: 1px solid var(--border);
+            padding-bottom: 20px; transition: 0.3s;
+        }
+        .year {
+            min-width: 80px; font-weight: bold; font-size: 1.2rem;
+            color: var(--primary); padding-top: 2px;
+        }
+        .content { flex: 1; padding-left: 20px; }
+        .title { font-weight: bold; font-size: 1.1rem; margin-bottom: 8px; }
+        .desc { font-size: 0.95rem; color: var(--text); text-align: justify; }
+        
+        /* スマホ対応 */
+        @media (max-width: 600px) {
+            .event { flex-direction: column; }
+            .year { margin-bottom: 5px; font-size: 1.4rem; }
+            .content { padding-left: 0; }
+        }
+
+        .footer { text-align: center; padding: 40px; color: #999; font-size: 0.8rem; }
+    </style>
+</head>
+<body>
+
+<header>
+    <h1>平成 詳細年表</h1>
+ <div class="subtitle">1989 - 2019：冷戦終結から情報化社会の進展へ</div>
+</header>
+
+<div class="container">
+    <div class="timeline" id="timeline">
+        <!-- JSで挿入 -->
+    </div>
+</div>
+
+<footer class="footer">
+    &copy; 2026 History Archive Project
+</footer>
+
+<script>
+const heiseiData = [
+        { 
+            year: "1989", 
+            cat: "dip", 
+            title: "冷戦の終結（マルタ会談）", 
+            desc: "【世界】昭和から平成に変わったこの年、アメリカとソ連の首脳が「冷戦の終わり」を宣言。ベルリンの壁も崩壊し、世界が大きく動き出したよ。" 
+        },
+        { 
+            year: "1991", 
+            cat: "cul", 
+            title: "バブル経済の崩壊", 
+            desc: "【重要】異常に上がっていた土地や株の値段が急落。ここから日本は「失われた30年」と呼ばれる長い不況の時代に入っていくことに。" 
+        },
+        { 
+            year: "1993", 
+            cat: "pol", 
+            title: "55年体制の崩壊", 
+            desc: "38年間続いていた自由民主党（自民党）の一党優位が終わり、細川護熙（ほそかわもりひろ）内閣という非自民の連立内閣が誕生したよ。" 
+        },
+        { 
+            year: "1995", 
+            cat: "cul", 
+            title: "阪神・淡路大震災・地下鉄サリン事件", 
+            desc: "大都市を襲った巨大地震。この年から「ボランティア」という言葉が日本に定着した。一方で社会不安を煽る事件も起き、時代の転換点となった年。" 
+        },
+        { 
+            year: "2001", 
+            cat: "dip", 
+            title: "アメリカ同時多発テロ", 
+            desc: "【世界】アメリカでハイジャックされた飛行機がビルに激突。世界中でテロへの警戒が強まり、日本も自衛隊を派遣するなど国際貢献のあり方が議論された。" 
+        },
+        { 
+            year: "2008", 
+            cat: "cul", 
+            title: "リーマン・ショック", 
+            desc: "【経済】アメリカの証券会社が破綻したのをきっかけに、世界的な金融危機が発生。日本も円高が進み、製造業などが大きなダメージを受けたよ。" 
+        },
+        { 
+            year: "2011", 
+            cat: "cul", 
+            title: "東日本大震災", 
+            desc: "【激震】3月11日、東北地方を中心に巨大地震と津波が発生。福島第一原発の事故も起き、日本のエネルギー政策や防災の考え方が根本から見直されることになった。" 
+        },
+        { 
+            year: "2016", 
+            cat: "cul", 
+            title: "マイナンバー制度の運用開始", 
+            desc: "【IT】行政の効率化を目指して導入。君のプログラミング知識（GASとか）でも関わる「データ社会」の基盤が整備され始めた頃だね。" 
+        },
+        { 
+            year: "2019", 
+            cat: "pol", 
+            title: "天皇退位・平成の終焉", 
+            desc: "憲法制定後、初めて天皇が生前に退位され、4月30日に平成が終了。翌日から新しい元号『令和』へとバトンタッチされたんだ。" 
+        }
+    ];
+    const timeline = document.getElementById('timeline');
+
+    meijiData.forEach(item => {
+        const eventDiv = document.createElement('div');
+        eventDiv.className = 'event';
+        eventDiv.innerHTML = `
+            <div class="year">${item.year}</div>
+            <div class="content">
+                <div class="title">${item.title}</div>
+                <div class="desc">${item.desc}</div>
+            </div>
+        `;
+        timeline.appendChild(eventDiv);
+    });
+</script>
+
+</body>
+</html>
