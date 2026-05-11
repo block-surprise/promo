@@ -1,0 +1,146 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>明治時代覚えられない人に</title>
+    <style>
+        :root {
+            --meiji-red: #8b0000; /* 明治っぽい深紅 */
+            --meiji-blue: #2c3e50;
+            --bg-color: #fdfaf5; /* 和紙っぽい色 */
+            --text-color: #333;
+        }
+
+        body {
+            font-family: "Hiragino Mincho ProN", "MS Mincho", serif;
+            background-color: var(--bg-color);
+            color: var(--text-color);
+            margin: 0;
+            padding: 0;
+            line-height: 1.8;
+        }
+
+        header {
+            background-color: var(--meiji-blue);
+            color: white;
+            padding: 60px 20px;
+            text-align: center;
+            border-bottom: 5px solid var(--meiji-red);
+        }
+
+        .container {
+            max-width: 800px;
+            margin: 40px auto;
+            background: white;
+            padding: 40px;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.05);
+            border-radius: 8px;
+        }
+
+        h1 { font-size: 2rem; margin-bottom: 10px; }
+        h2 { 
+            border-bottom: 2px solid var(--meiji-red); 
+            padding-bottom: 5px; 
+            margin-top: 40px;
+            color: var(--meiji-red);
+        }
+
+        .back-home {
+            display: inline-block;
+            margin-bottom: 20px;
+            text-decoration: none;
+            color: var(--meiji-blue);
+            font-weight: bold;
+        }
+
+        .point-box {
+            background-color: #f9f2f2;
+            border: 1px solid var(--meiji-red);
+            padding: 20px;
+            margin: 20px 0;
+            border-radius: 5px;
+        }
+
+        .goro {
+            display: block;
+            font-size: 1.2rem;
+            font-weight: bold;
+            color: #d35400;
+            text-align: center;
+            margin: 10px 0;
+        }
+
+        .summary {
+            background-color: #f1f4f6;
+            padding: 20px;
+            border-radius: 5px;
+            margin-top: 40px;
+        }
+
+        footer {
+            text-align: center;
+            padding: 40px;
+            color: #777;
+            font-size: 0.9rem;
+        }
+
+        /* スマホ対応 */
+        @media (max-width: 600px) {
+            .container { padding: 20px; width: 90%; }
+            h1 { font-size: 1.5rem; }
+        }
+    </style>
+</head>
+<body>
+
+<header>
+    <h1>明治時代：近代日本の幕開け</h1>
+    <p>SURGE History Archive</p>
+</header>
+
+<div class="container">
+    <a href="index.html" class="back-home">← ポータルへ戻る</a>
+
+    <p>日本の歴史が、侍の世の中から「近代国家」へと180度変わったのが明治時代です。テストで狙われるのは、初期の大きな改革と、日本の外交の動きです！</p>
+
+    <h2>1. 明治の三大改革</h2>
+    <p>新しい政府が、国を強くするために真っ先に行った3つの柱があります。</p>
+    <ul>
+        <li><strong>学制(1872)</strong>：小学校を作って、みんなに教育を。</li>
+        <li><strong>徴兵令(1873)</strong>：満20歳以上の男子は兵役に就く。</li>
+        <li><strong>地租改正(1873)</strong>：土地の値段（地価）の3%を、現金で国に納める。</li>
+    </ul>
+
+    <div class="point-box">
+        <strong>💡 暗記用語呂合わせ</strong>
+        <span class="goro">「いやな（187）顔して、学校・兵隊・現金3%」</span>
+    </div>
+
+    <h2>2. 西南戦争と自由民権運動</h2>
+    <p>急激な変化に不満を持った元武士たちが反乱を起こしましたが、1877年の<strong>西南戦争</strong>で西郷隆盛が敗れると、武力による抵抗は終わります。</p>
+    <p>その後は「言葉の力」で政治を良くしようとする<strong>自由民権運動</strong>が盛んになり、板垣退助たちが国会の開設を求めました。</p>
+
+    <h2>3. 憲法の制定と日清・日露戦争</h2>
+    <p>1889年には、ドイツを参考にした<strong>大日本帝国憲法</strong>が発布されます。そして、強力な国力を背景に、日本は清やロシアとの戦争へ進んでいくことになります。</p>
+    <ul>
+        <li><strong>1894年：日清戦争</strong>（下関条約で勝利）</li>
+        <li><strong>1904年：日露戦争</strong>（ポーターマス条約で勝利）</li>
+    </ul>
+
+    <div class="summary">
+        <strong>✍️ テスト直前チェック！</strong>
+        <ul>
+            <li>明治維新：文明開化で生活が西洋風に！</li>
+            <li>富国強兵：国を豊かにし、軍隊を強くするスローガン。</li>
+            <li>条約改正：陸奥宗光や小村寿太郎が不平等条約を直した。</li>
+        </ul>
+    </div>
+</div>
+
+<footer>
+    &copy; 2026 SURGE History Project
+</footer>
+
+</body>
+</html>
