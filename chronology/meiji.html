@@ -1,0 +1,173 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>明治時代・詳細年表アーカイブ</title>
+    <style>
+        :root {
+            --primary: #8b0000; /* 明治の「赤レンガ」をイメージした深い赤 */
+            --bg: #ffffff;
+            --text: #222;
+            --sub-text: #666;
+            --border: #ececec;
+        }
+        body { font-family: "serif"; background: var(--bg); color: var(--text); margin: 0; padding: 0; line-height: 1.6; }
+        
+        header { 
+            padding: 40px 20px; text-align: center; border-bottom: 3px double var(--primary);
+            background: #fdfdfd;
+        }
+        h1 { margin: 0; font-size: 1.8rem; letter-spacing: 0.2rem; color: var(--primary); }
+        .subtitle { font-size: 0.9rem; color: var(--sub-text); margin-top: 10px; }
+
+        .container { max-width: 800px; margin: 0 auto; padding: 20px; }
+
+        /* 年表のスタイル */
+        .timeline { position: relative; }
+        .event {
+            display: flex; margin-bottom: 30px; border-bottom: 1px solid var(--border);
+            padding-bottom: 20px; transition: 0.3s;
+        }
+        .year {
+            min-width: 80px; font-weight: bold; font-size: 1.2rem;
+            color: var(--primary); padding-top: 2px;
+        }
+        .content { flex: 1; padding-left: 20px; }
+        .title { font-weight: bold; font-size: 1.1rem; margin-bottom: 8px; }
+        .desc { font-size: 0.95rem; color: var(--text); text-align: justify; }
+        
+        /* スマホ対応 */
+        @media (max-width: 600px) {
+            .event { flex-direction: column; }
+            .year { margin-bottom: 5px; font-size: 1.4rem; }
+            .content { padding-left: 0; }
+        }
+
+        .footer { text-align: center; padding: 40px; color: #999; font-size: 0.8rem; }
+    </style>
+</head>
+<body>
+
+<header>
+    <h1>明治時代 詳細年表</h1>
+    <div class="subtitle">1868 - 1912：近代日本の夜明け</div>
+</header>
+
+<div class="container">
+    <div class="timeline" id="timeline">
+        <!-- JSで挿入 -->
+    </div>
+</div>
+
+<footer class="footer">
+    &copy; 2026 History Archive Project
+</footer>
+
+<script>
+const meijiData = [
+        { 
+            year: "1868", 
+            title: "明治新政府の発足と戊辰戦争", 
+            desc: "江戸幕府が崩壊し、天皇を中心とする新政府が誕生。「五箇条の御誓文」で近代化の指針を示す一方、旧幕府軍との内戦（戊辰戦争）が勃発。近代国家への脱皮は、激しい軍事衝突の中から始まった。" 
+        },
+        { 
+            year: "1869", 
+            title: "版籍奉還", 
+            desc: "各地の藩主（大名）が、土地（版）と人民（籍）を天皇に返還。これにより、数百年続いた封建的な土地支配が終わり、全国を中央政府が統治する基盤が整った。" 
+        },
+        { 
+            year: "1871", 
+            title: "廃藩置県と岩倉使節団の派遣", 
+            desc: "藩を完全に廃止して県を設置。中央から県令を派遣する直接統治を開始。同時に岩倉具視らが欧米へ出発し、日本の遅れを痛感。この時の衝撃が、後の急速な制度改革のエネルギーとなった。" 
+        },
+        { 
+            year: "1872", 
+            title: "学制の公布と鉄道の開通", 
+            desc: "「国民皆学」を目指し、日本初の近代教育制度を確立。また、新橋〜横浜間に日本初の鉄道が開通。物理的な距離と、教育による知識の差を埋める「近代化」が加速した。" 
+        },
+        { 
+            year: "1873", 
+            title: "地租改正・徴兵令・明治六年の政変", 
+            desc: "土地所有権の確定と現金納税を開始し、政府の財政が安定。一方、国民に兵役を課す「徴兵令」を施行。朝鮮派遣を巡る「征韓論」で政府が分裂し、西郷隆盛らが下野する大きな政変が起きた。" 
+        },
+        { 
+            year: "1874", 
+            title: "民撰議院設立の建白書", 
+            desc: "板垣退助らが、国民が選んだ議員による政治（国会）を求める建白書を提出。ここから、言論によって民主的な権利を求める「自由民権運動」が全国的な火の手となった。" 
+        },
+        { 
+            year: "1876", 
+            title: "廃刀令と秩禄処分", 
+            desc: "武士の魂である刀を差すことを禁じ、給料（秩禄）を打ち切り。数百年続いた武士という特権階級が、この年に事実上消滅した。これへの反発が翌年の大規模な反乱へ繋がる。" 
+        },
+        { 
+            year: "1877", 
+            title: "西南戦争", 
+            desc: "西郷隆盛を担いだ鹿児島士族による最大にして最後の反乱。徴兵制による平民軍が士族軍を破ったことで、「武力による抵抗」の時代が終わり、日本の近代化が後戻りできなくなった。" 
+        },
+        { 
+            year: "1879", 
+            title: "琉球処分", 
+            desc: "琉球藩を廃止して沖縄県を設置。これにより日本列島全域の国境線が概ね画定した。近代国家としての「領域」が確立された重要な年である。" 
+        },
+        { 
+            year: "1881", 
+            title: "国会開設の詔（明治十四年の政変）", 
+            desc: "政府が10年後の国会開設を約束。大隈重信を追放し、伊藤博文を中心とする官僚主導の国づくりが決定。どのような「憲法」を作るべきかの議論が本格化した。" 
+        },
+        { 
+            year: "1885", 
+            title: "内閣制度の発足と初代総理大臣", 
+            desc: "太政官制を廃止し、責任の所在を明確にした内閣制を導入。伊藤博文が初代総理大臣に就任。憲法発布に向けた「受け皿」としての行政機構が完成した。" 
+        },
+        { 
+            year: "1889", 
+            title: "大日本帝国憲法の発布", 
+            desc: "アジアで初となる近代憲法を制定。天皇を主権者としつつ、国民の権利や国会の役割を保障。これにより日本は、欧米列強と対等に渡り合うための「法的資格」を手に入れた。" 
+        },
+        { 
+            year: "1890", 
+            title: "第1回衆議院議員総選挙・教育勅語の発表", 
+            desc: "日本初の国政選挙が実施され、第1回帝国議会が開会。また、国民教育の精神的支柱として教育勅語を発布。政治と教育の両面で、近代国家の骨格が固まった。" 
+        },
+        { 
+            year: "1894", 
+            title: "日清戦争と領事裁判権の撤廃", 
+            desc: "朝鮮の支配権を巡り清と開戦。同時に、幕末以来の屈辱だった「不平等条約」のうち、領事裁判権の撤廃に成功。軍事と外交の両輪で日本がアジアの強国へ躍り出た。" 
+        },
+        { 
+            year: "1895", 
+            title: "下関条約と三国干渉", 
+            desc: "日清戦争に勝利し台湾などを獲得。しかしロシア・ドイツ・フランスの圧力（三国干渉）により遼東半島を返還。「臥薪嘗胆」を合言葉に、対ロシアを意識したさらなる軍備拡張が進む。" 
+        },
+        { 
+            year: "1902", 
+            title: "日英同盟の締結", 
+            desc: "当時世界最強のイギリスが、アジアの新興国である日本と対等な同盟を締結。ロシアの南下を防ぐという利害が一致し、日本の国際的地位は劇的に向上した。" 
+        },
+        { 
+            year: "1904", 
+            title: "日露戦争の勃発", 
+            desc: "満州と朝鮮の利権を巡り、世界最強の陸軍を持つロシアと開戦。国力差は圧倒的だったが、国の命運を賭けた戦いに突入。翌年、日本海海戦などの勝利を経て、日本は列強の仲間入りを果たす。" 
+        }
+    ];
+
+    const timeline = document.getElementById('timeline');
+
+    meijiData.forEach(item => {
+        const eventDiv = document.createElement('div');
+        eventDiv.className = 'event';
+        eventDiv.innerHTML = `
+            <div class="year">${item.year}</div>
+            <div class="content">
+                <div class="title">${item.title}</div>
+                <div class="desc">${item.desc}</div>
+            </div>
+        `;
+        timeline.appendChild(eventDiv);
+    });
+</script>
+
+</body>
+</html>
