@@ -1,0 +1,142 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>江戸時代・詳細年表アーカイブ</title>
+    <style>
+        :root {
+            --primary: #8b0000; 
+            --bg: #ffffff;
+            --text: #222;
+            --sub-text: #666;
+            --border: #ececec;
+        }
+        body { font-family: "serif"; background: var(--bg); color: var(--text); margin: 0; padding: 0; line-height: 1.6; }
+        
+        header { 
+            padding: 40px 20px; text-align: center; border-bottom: 3px double var(--primary);
+            background: #fdfdfd;
+        }
+        h1 { margin: 0; font-size: 1.8rem; letter-spacing: 0.2rem; color: var(--primary); }
+        .subtitle { font-size: 0.9rem; color: var(--sub-text); margin-top: 10px; }
+
+        .container { max-width: 800px; margin: 0 auto; padding: 20px; }
+
+        /* 年表のスタイル */
+        .timeline { position: relative; }
+        .event {
+            display: flex; margin-bottom: 30px; border-bottom: 1px solid var(--border);
+            padding-bottom: 20px; transition: 0.3s;
+        }
+        .year {
+            min-width: 80px; font-weight: bold; font-size: 1.2rem;
+            color: var(--primary); padding-top: 2px;
+        }
+        .content { flex: 1; padding-left: 20px; }
+        .title { font-weight: bold; font-size: 1.1rem; margin-bottom: 8px; }
+        .desc { font-size: 0.95rem; color: var(--text); text-align: justify; }
+        
+        /* スマホ対応 */
+        @media (max-width: 600px) {
+            .event { flex-direction: column; }
+            .year { margin-bottom: 5px; font-size: 1.4rem; }
+            .content { padding-left: 0; }
+        }
+
+        .footer { text-align: center; padding: 40px; color: #999; font-size: 0.8rem; }
+    </style>
+</head>
+<body>
+
+<header>
+    <h1>江戸時代 詳細年表</h1>
+ <div class="subtitle">1603 - 1868：徳川幕府による安定と独自の文化</div>
+</header>
+
+<div class="container">
+    <div class="timeline" id="timeline">
+        <!-- JSで挿入 -->
+    </div>
+</div>
+
+<footer class="footer">
+    &copy; 2026 History Archive Project
+</footer>
+
+<script>
+const edoData = [
+        { 
+            year: "1603", 
+            cat: "pol", 
+            title: "江戸幕府の成立", 
+            desc: "【スタート】徳川家康が征夷大将軍に任命され、江戸に幕府を開く。関ヶ原の戦いに勝った後、名実ともに天下統一を成し遂げた瞬間だよ。" 
+        },
+        { 
+            year: "1635", 
+            cat: "pol", 
+            title: "参勤交代の義務化", 
+            desc: "【重要】三代将軍・家光が制定。大名に1年おきに江戸と領地を往復させる制度。旅費でお金を使わせることで、大名の力を削ぎ、反乱を防ぐのが目的だったんだ。" 
+        },
+        { 
+            year: "1639", 
+            cat: "dip", 
+            title: "鎖国の完成", 
+            desc: "ポルトガル船の来航を禁止。キリスト教の広がりを防ぐため、貿易をオランダ・中国だけに制限した。ここから約200年、日本は独自の文化を育むことになるよ。" 
+        },
+        { 
+            year: "1716", 
+            cat: "pol", 
+            title: "享保（きょうほう）の改革", 
+            desc: "【改革①】八代将軍・徳川吉宗。目安箱の設置や、足高（たしだか）の制など。質素倹約を呼びかけて、苦しくなった幕府の財政を立て直そうとしたんだ。" 
+        },
+        { 
+            year: "1787", 
+            cat: "pol", 
+            title: "寛政（かんせい）の改革", 
+            desc: "【改革②】松平定信。享保の改革を手本にしたけど、厳しすぎて不評だった。「白河の清きに魚のすみかねて…」という落首（らくしゅ）が有名だよ。" 
+        },
+        { 
+            year: "1841", 
+            cat: "pol", 
+            title: "天保（てんぽう）の改革", 
+            desc: "【改革③】水野忠邦。株仲間の解散など。でも、これも失敗してすぐに終わってしまった。このあたりから幕府の支配力が弱まり始めるんだ。" 
+        },
+        { 
+            year: "1853", 
+            cat: "dip", 
+            title: "ペリー来航", 
+            desc: "【激震】浦賀に黒船が登場！アメリカから開国を迫られ、日本中が大パニックに。「太平の眠りをさます上喜撰…」と歌われるほどの衝撃だった。" 
+        },
+        { 
+            year: "1858", 
+            cat: "dip", 
+            title: "日米修好通商条約", 
+            desc: "【重要】井伊直弼が無断でサイン。不平等条約（領事裁判権、関税自主権がない）を結んだことで、幕府を倒そうとする動きが加速したよ。" 
+        },
+        { 
+            year: "1867", 
+            cat: "pol", 
+            title: "大政奉還", 
+            desc: "十五代将軍・慶喜が、政権を天皇に返す。これによって江戸幕府が終わり、明治時代へと繋がっていく。日本の大きな転換点だね。" 
+        }
+    ];
+
+    const timeline = document.getElementById('timeline');
+
+    meijiData.forEach(item => {
+        const eventDiv = document.createElement('div');
+        eventDiv.className = 'event';
+        eventDiv.innerHTML = `
+            <div class="year">${item.year}</div>
+            <div class="content">
+                <div class="title">${item.title}</div>
+                <div class="desc">${item.desc}</div>
+            </div>
+        `;
+        timeline.appendChild(eventDiv);
+    });
+</script>
+
+</body>
+</html>
