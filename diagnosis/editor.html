@@ -130,13 +130,16 @@
         
         <button class="btn-add" onclick="addQuestion()">＋ 質問を追加</button>
 
-        <div style="margin-top: 20px; padding-top: 20px; border-top: 1px solid #f1f5f9;">
-            <label>結果A（ポイントが多い時）</label>
-            <input type="text" id="typeA" placeholder="例：プロ建築士級">
-            
-            <label>結果B（ポイントが少ない時）</label>
-            <input type="text" id="typeB" placeholder="例：初心者ビルダー級">
-        </div>
+
+<div style="margin-top: 20px; padding-top: 20px; border-top: 1px solid #f1f5f9;">
+    <div style="display: flex; justify-content: space-between; align-items: center;">
+        <h2 style="font-size: 1rem; color: var(--primary);">診断結果の設定</h2>
+    </div>
+    <div id="results-list"></div>
+    <button type="button" class="btn-add" onclick="addResult()" style="background: #fff7ed; color: #ff7800; border: 1px solid #ff7800;">＋ 結果を追加</button>
+</div>
+
+
         
         <button class="btn-save" onclick="save()">診断を保存してURL発行</button>
 
@@ -156,8 +159,14 @@
     const PLAYER_PAGE = "player.html"; 
 
     let qCount = 0;
-    addQuestion();
+    let rCount = 0;
 
+    // 最初に質問1つと、結果の枠を2つ表示しておく
+    addQuestion();
+    addResult("プロ級", 10);
+    addResult("初心者級", 0);
+
+    // 質問を追加する関数
     function addQuestion() {
         qCount++;
         document.getElementById('questions-list').insertAdjacentHTML('beforeend', `
@@ -172,18 +181,35 @@
         `);
     }
 
+    // 結果を追加する関数（新しく追加）
+    function addResult(name = "", score = 0) {
+        rCount++;
+        document.getElementById('results-list').insertAdjacentHTML('beforeend', `
+            <div class="r-block" style="border: 1px solid #e2e8f0; padding: 15px; border-radius: 16px; margin-top: 10px; background: #fff;">
+                <div style="display:grid; grid-template-columns: 2fr 1fr; gap: 10px;">
+                    <input type="text" class="r-name" value="${name}" placeholder="結果の名前（例：神）">
+                    <input type="number" class="r-min" value="${score}" title="この点数以上で表示">
+                </div>
+                <p style="font-size:10px; color:#94a3b8; margin:5px 0 0 5px;">この点数以上でこの結果になります</p>
+            </div>
+        `);
+    }
+
     function save() {
         const title = document.getElementById('title').value;
         if(!title) return alert("タイトルを入力してください");
 
         const randomID = Date.now().toString(36) + Math.random().toString(36).substring(2, 5);
 
+        // データを整理（resultsを配列として取得するのがポイント）
         const data = {
             id: randomID,
             title: title,
             visibility: document.getElementById('visibility').value,
-            typeA: document.getElementById('typeA').value,
-            typeB: document.getElementById('typeB').value,
+            results: Array.from(document.querySelectorAll('.r-block')).map(b => ({
+                name: b.querySelector('.r-name').value,
+                minScore: parseInt(b.querySelector('.r-min').value)
+            })),
             questions: Array.from(document.querySelectorAll('.q-block')).map(b => ({
                 q: b.querySelector('.q-text').value,
                 a1: b.querySelector('.a1-text').value,
@@ -191,7 +217,7 @@
             }))
         };
 
-        const postUrl = `https://docs.google.com/forms/d/e/${FORM_ID}/formResponse?${ENTRY_TITLE}=${encodeURIComponent(title)}&${ENTRY_DATA}=${encodeURIComponent(JSON.stringify(data))}&submit=Submit`;
+        const postUrl = `https://docs.google.com/forms/e/${FORM_ID}/formResponse?${ENTRY_TITLE}=${encodeURIComponent(title)}&${ENTRY_DATA}=${encodeURIComponent(JSON.stringify(data))}&submit=Submit`;
         
         fetch(postUrl, { mode: 'no-cors' }).then(() => {
             const currentPath = window.location.href.substring(0, window.location.href.lastIndexOf('/') + 1);
@@ -199,10 +225,10 @@
 
             document.getElementById('share-area').style.display = 'block';
             document.getElementById('share-url').value = finalUrl;
-            // 発行されたURLの場所までスムーズにスクロール
             document.getElementById('share-area').scrollIntoView({ behavior: 'smooth' });
         }).catch(() => alert("送信エラーが発生しました"));
     }
 </script>
+
 </body>
 </html>
