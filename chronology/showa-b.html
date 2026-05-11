@@ -1,0 +1,148 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>大正時代・詳細年表アーカイブ</title>
+    <style>
+        :root {
+            --primary: #8b0000; 
+            --bg: #ffffff;
+            --text: #222;
+            --sub-text: #666;
+            --border: #ececec;
+        }
+        body { font-family: "serif"; background: var(--bg); color: var(--text); margin: 0; padding: 0; line-height: 1.6; }
+        
+        header { 
+            padding: 40px 20px; text-align: center; border-bottom: 3px double var(--primary);
+            background: #fdfdfd;
+        }
+        h1 { margin: 0; font-size: 1.8rem; letter-spacing: 0.2rem; color: var(--primary); }
+        .subtitle { font-size: 0.9rem; color: var(--sub-text); margin-top: 10px; }
+
+        .container { max-width: 800px; margin: 0 auto; padding: 20px; }
+
+        /* 年表のスタイル */
+        .timeline { position: relative; }
+        .event {
+            display: flex; margin-bottom: 30px; border-bottom: 1px solid var(--border);
+            padding-bottom: 20px; transition: 0.3s;
+        }
+        .year {
+            min-width: 80px; font-weight: bold; font-size: 1.2rem;
+            color: var(--primary); padding-top: 2px;
+        }
+        .content { flex: 1; padding-left: 20px; }
+        .title { font-weight: bold; font-size: 1.1rem; margin-bottom: 8px; }
+        .desc { font-size: 0.95rem; color: var(--text); text-align: justify; }
+        
+        /* スマホ対応 */
+        @media (max-width: 600px) {
+            .event { flex-direction: column; }
+            .year { margin-bottom: 5px; font-size: 1.4rem; }
+            .content { padding-left: 0; }
+        }
+
+        .footer { text-align: center; padding: 40px; color: #999; font-size: 0.8rem; }
+    </style>
+</head>
+<body>
+
+<header>
+    <h1>大正時代 詳細年表</h1>
+  <div class="subtitle">1945 - 1989：戦後民主化と驚異の経済成長</div>
+</header>
+
+<div class="container">
+    <div class="timeline" id="timeline">
+        <!-- JSで挿入 -->
+    </div>
+</div>
+
+<footer class="footer">
+    &copy; 2026 History Archive Project
+</footer>
+
+<script>
+const showaLateData = [
+        { 
+            year: "1946", 
+            cat: "pol", 
+            title: "日本国憲法の公布", 
+            desc: "【超重要】11月3日に公布、翌年5月3日に施行。『国権の発動たる戦争と、武力による威嚇又は武力の行使は、国際紛争を解決する手段としては、永久にこれを放棄する』など、平和主義・主権在民・基本的人権の尊重が柱だよ。" 
+        },
+        { 
+            year: "1950", 
+            cat: "dip", 
+            title: "朝鮮戦争と警察予備隊", 
+            desc: "隣の朝鮮半島で戦争が開始。日本にはアメリカ軍の注文（特需）が入り、経済復興のきっかけになった。同時に、国内の治安維持のために『警察予備隊』（後の自衛隊）が作られたよ。" 
+        },
+        { 
+            year: "1951", 
+            cat: "dip", 
+            title: "サンフランシスコ平和条約", 
+            desc: "【最重要】連合国と結び、日本が独立を回復。同時に『日米安全保障条約（安保条約）』も結んで、アメリカ軍が引き続き日本に駐留することになったんだ。" 
+        },
+        { 
+            year: "1954", 
+            cat: "cul", 
+            title: "高度経済成長の開始", 
+            desc: "神武景気など、日本経済が猛烈なスピードで成長し始めた。白黒テレビ・洗濯機・冷蔵庫が『三種の神器』と呼ばれ、みんなの生活が劇的に便利になったよ。" 
+        },
+        { 
+            year: "1956", 
+            cat: "dip", 
+            title: "日ソ共同宣言と国際連盟加盟", 
+            desc: "ソ連との国交が回復し、ついに日本は『国際連合』への加盟を認められた。これでようやく、国際社会のメンバーとして完全に戻ることができたんだ。" 
+        },
+        { 
+            year: "1960", 
+            cat: "pol", 
+            title: "日米安保条約の改定と安保闘争", 
+            desc: "条約の更新に反対する学生や市民による大規模なデモが起きた。当時の岸信介内閣は総辞職し、次の池田勇人内閣は『所得倍増』を掲げて経済重視に舵を切ったよ。" 
+        },
+        { 
+            year: "1964", 
+            cat: "cul", 
+            title: "東京オリンピックと東海道新幹線", 
+            desc: "アジア初のオリンピック。これに合わせて新幹線や高速道路が整備され、日本が戦後復興を成し遂げたことを世界にアピールした象徴的な年。" 
+        },
+        { 
+            year: "1972", 
+            cat: "dip", 
+            title: "沖縄返還と日中共同声明", 
+            desc: "アメリカの統治下にあった沖縄が日本に返還された。また、田中角栄首相が中国を訪問して国交を正常化したよ。この頃、カラーテレビ・クーラー・車が『3C』と呼ばれた。" 
+        },
+        { 
+            year: "1973", 
+            cat: "cul", 
+            title: "石油危機（オイルショック）", 
+            desc: "中東での戦争で石油価格が暴騰。トイレットペーパーの買い占め騒動が起き、長く続いた高度経済成長がついに終わって『安定成長』の時代へ。" 
+        },
+        { 
+            year: "1989", 
+            cat: "pol", 
+            title: "昭和天皇崩御・平成へ", 
+            desc: "激動の64年間におよんだ昭和が終わった。バブル経済の絶頂期の中で、新しい時代『平成』へと引き継がれていったんだ。" 
+        }
+    ];
+
+    const timeline = document.getElementById('timeline');
+
+    meijiData.forEach(item => {
+        const eventDiv = document.createElement('div');
+        eventDiv.className = 'event';
+        eventDiv.innerHTML = `
+            <div class="year">${item.year}</div>
+            <div class="content">
+                <div class="title">${item.title}</div>
+                <div class="desc">${item.desc}</div>
+            </div>
+        `;
+        timeline.appendChild(eventDiv);
+    });
+</script>
+
+</body>
+</html>
