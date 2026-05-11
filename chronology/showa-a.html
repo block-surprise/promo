@@ -1,0 +1,147 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>大正時代・詳細年表アーカイブ</title>
+    <style>
+        :root {
+            --primary: #8b0000; 
+            --bg: #ffffff;
+            --text: #222;
+            --sub-text: #666;
+            --border: #ececec;
+        }
+        body { font-family: "serif"; background: var(--bg); color: var(--text); margin: 0; padding: 0; line-height: 1.6; }
+        
+        header { 
+            padding: 40px 20px; text-align: center; border-bottom: 3px double var(--primary);
+            background: #fdfdfd;
+        }
+        h1 { margin: 0; font-size: 1.8rem; letter-spacing: 0.2rem; color: var(--primary); }
+        .subtitle { font-size: 0.9rem; color: var(--sub-text); margin-top: 10px; }
+
+        .container { max-width: 800px; margin: 0 auto; padding: 20px; }
+
+        /* 年表のスタイル */
+        .timeline { position: relative; }
+        .event {
+            display: flex; margin-bottom: 30px; border-bottom: 1px solid var(--border);
+            padding-bottom: 20px; transition: 0.3s;
+        }
+        .year {
+            min-width: 80px; font-weight: bold; font-size: 1.2rem;
+            color: var(--primary); padding-top: 2px;
+        }
+        .content { flex: 1; padding-left: 20px; }
+        .title { font-weight: bold; font-size: 1.1rem; margin-bottom: 8px; }
+        .desc { font-size: 0.95rem; color: var(--text); text-align: justify; }
+        
+        /* スマホ対応 */
+        @media (max-width: 600px) {
+            .event { flex-direction: column; }
+            .year { margin-bottom: 5px; font-size: 1.4rem; }
+            .content { padding-left: 0; }
+        }
+
+        .footer { text-align: center; padding: 40px; color: #999; font-size: 0.8rem; }
+    </style>
+</head>
+<body>
+
+<header>
+    <h1>大正時代 詳細年表</h1>
+  <div class="subtitle">1926 - 1945：恐慌から激動の戦争へ</div>
+</header>
+
+<div class="container">
+    <div class="timeline" id="timeline">
+        <!-- JSで挿入 -->
+    </div>
+</div>
+
+<footer class="footer">
+    &copy; 2026 History Archive Project
+</footer>
+
+<script>
+const showaEarlyData = [
+        { 
+            year: "1927", 
+            cat: "cul", 
+            title: "金融恐慌", 
+            desc: "【流れ】関東大震災の後の借金が返せなくなり、銀行がつぎつぎと倒産。「自分のお金が引き出せなくなるかも！」とパニックになった人々が銀行に押し寄せたんだ。" 
+        },
+        { 
+            year: "1929", 
+            cat: "dip", 
+            title: "世界恐慌", 
+            desc: "【世界】アメリカのニューヨークで株価が大暴落。これが世界中に広まり、日本も深刻な不況（昭和恐慌）に。農村では娘を売るほどの貧しさになり、社会への不満が爆発したよ。" 
+        },
+        { 
+            year: "1931", 
+            cat: "dip", 
+            title: "満州事変", 
+            desc: "【テスト頻出】軍部（関東軍）が南満州鉄道を爆破し、それを中国側のせいにした（柳条湖事件）。これをきっかけに満州を占領。不況を解決するために、海外の土地を支配しようとしたんだ。" 
+        },
+        { 
+            year: "1932", 
+            cat: "pol", 
+            title: "五・一五事件", 
+            desc: "【重要】海軍の青年将校たちが犬養毅（いぬかいつよし）首相を暗殺。これにより大正から続いていた『政党内閣』が終わり、軍部の発言力が一気に強まったよ。" 
+        },
+        { 
+            year: "1933", 
+            cat: "dip", 
+            title: "国際連盟の脱退", 
+            desc: "満州占領を認めない国際連盟に対し、日本は反発して脱退。これで日本は国際社会で『孤立』する道を選んでしまったんだ。" 
+        },
+        { 
+            year: "1936", 
+            cat: "pol", 
+            title: "二・二六事件", 
+            desc: "陸軍の将校たちが東京の中心部を占拠し、大臣たちを暗殺。失敗に終わったけど、これを機に軍部が政治を完全にコントロールするようになったよ。" 
+        },
+        { 
+            year: "1937", 
+            cat: "dip", 
+            title: "日中戦争の開始", 
+            desc: "北京郊外の『盧溝橋事件（ろこうきょうじけん）』をきっかけに、中国との全面戦争に突入。当初はすぐ終わるはずが、泥沼の長期戦になっていく。" 
+        },
+        { 
+            year: "1838", 
+            cat: "pol", 
+            title: "国家総動員法", 
+            desc: "【最重要】戦争を続けるために、議会の承認なしに『人』や『物』を自由に使えるようにした法律。国民の生活すべてが戦争中心になったんだ。" 
+        },
+        { 
+            year: "1941", 
+            cat: "dip", 
+            title: "太平洋戦争の開始", 
+            desc: "ハワイの真珠湾を奇襲し、アメリカ・イギリスとの戦争がスタート。最初は勝っていたけど、翌年のミッドウェー海戦の敗北から徐々に追い詰められていく。" 
+        },
+        { 
+            year: "1945", 
+            cat: "dip", 
+            title: "ポツダム宣言受諾・終戦", 
+            desc: "東京大空襲、沖縄戦、広島・長崎への原爆投下を経て、日本は無条件降伏。8月15日、長い戦争が終わった。ここから『戦後』という全く新しい日本が始まるよ。" 
+        }
+    ];
+    const timeline = document.getElementById('timeline');
+
+    meijiData.forEach(item => {
+        const eventDiv = document.createElement('div');
+        eventDiv.className = 'event';
+        eventDiv.innerHTML = `
+            <div class="year">${item.year}</div>
+            <div class="content">
+                <div class="title">${item.title}</div>
+                <div class="desc">${item.desc}</div>
+            </div>
+        `;
+        timeline.appendChild(eventDiv);
+    });
+</script>
+
+</body>
+</html>
