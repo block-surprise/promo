@@ -3,230 +3,126 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>THE GRAND CHRONICLE | 日本史全史</title>
+    <title>詳細年表ポータルサイト - 各時代の詳細な年表</title>
     <style>
         :root {
-            --accent: #2c3e50;
-            --sub-accent: #c0392b;
-            --bg: #ffffff;
-            --panel: #f8f9fa;
-            --text: #333333;
-            --border: #e0e0e0;
+            --primary: #2c3e50;
+            --accent: #e74c3c;
+            --bg: #f4f7f6;
         }
-
-        * { box-sizing: border-box; margin: 0; padding: 0; }
         body {
+            font-family: "Helvetica Neue", Arial, sans-serif;
             background: var(--bg);
-            color: var(--text);
-            font-family: "Helvetica Neue", Arial, "Hiragino Sans", "Meiryo", sans-serif;
+            margin: 0;
             display: flex;
             flex-direction: column;
-            height: 100vh;
-        }
-
-        /* ヘッダー・スマホメニュー用 */
-        header {
-            background: var(--panel);
-            border-bottom: 1px solid var(--border);
-            padding: 15px 20px;
-            display: flex;
-            justify-content: space-between;
             align-items: center;
-            position: sticky;
-            top: 0;
-            z-index: 1000;
         }
-
-        .logo { font-weight: bold; color: var(--accent); letter-spacing: 2px; }
-
-        /* サイドバー（PC用・スマホではトグル） */
-        .main-wrapper { display: flex; flex: 1; overflow: hidden; }
-
-        .side-nav {
-            width: 250px;
-            background: var(--panel);
-            border-right: 1px solid var(--border);
-            padding: 20px;
-            overflow-y: auto;
-            transition: transform 0.3s ease;
-        }
-
-        /* スマホ用メニューボタン */
-        #menuToggle {
-            display: none;
-            background: none;
-            border: 1px solid var(--accent);
-            padding: 5px 10px;
-            cursor: pointer;
-            border-radius: 4px;
-        }
-
-        .era-item {
-            padding: 12px;
-            margin-bottom: 5px;
-            cursor: pointer;
-            border-radius: 6px;
-            font-size: 0.9rem;
-            transition: 0.2s;
-            color: #555;
-        }
-
-        .era-item:hover { background: #e9ecef; color: var(--accent); }
-
-        /* メインビュー */
-        .viewer { flex: 1; overflow-y: auto; padding: 20px 40px; scroll-behavior: smooth; }
-
-        .search-box {
-            margin-bottom: 30px;
-            background: white;
-            padding: 10px;
-            border-bottom: 2px solid var(--panel);
-        }
-
-        #searchInput {
+        header {
             width: 100%;
-            padding: 12px;
-            border: 1px solid var(--border);
-            border-radius: 8px;
-            font-size: 1rem;
-        }
-
-        /* 歴史カード */
-        .era-section { margin-top: 60px; }
-        .era-title {
-            font-size: 2rem;
-            color: var(--accent);
-            border-left: 5px solid var(--accent);
-            padding-left: 15px;
+            background: var(--primary);
+            color: white;
+            padding: 40px 0;
+            text-align: center;
             margin-bottom: 30px;
         }
-
-        .chrono-row {
-            display: flex;
-            padding: 20px 0;
-            border-bottom: 1px solid var(--border);
+        .container {
+            max-width: 900px;
+            width: 95%;
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 20px;
+            padding-bottom: 50px;
         }
-
-        .year-col {
-            width: 100px;
+        /* 時代カードのスタイル */
+        .era-link {
+            text-decoration: none;
+            color: var(--primary);
+            background: white;
+            padding: 25px;
+            border-radius: 12px;
+            text-align: center;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+            transition: all 0.3s ease;
+            border: 2px solid transparent;
+        }
+        .era-link:hover {
+            transform: translateY(-5px);
+            border-color: var(--accent);
+            box-shadow: 0 8px 15px rgba(0,0,0,0.15);
+        }
+        .era-name {
+            display: block;
+            font-size: 1.4rem;
             font-weight: bold;
-            color: var(--sub-accent);
-            font-size: 1.1rem;
+            margin-bottom: 10px;
         }
-
-        .content-col { flex: 1; padding-left: 20px; }
-        .event-name { font-weight: bold; font-size: 1.2rem; margin-bottom: 8px; }
-        .event-desc { font-size: 0.95rem; line-height: 1.6; color: #666; text-align: justify; }
-
-        /* スマホ対応のメディアクエリ */
-        @media (max-width: 768px) {
-            #menuToggle { display: block; }
-            .side-nav {
-                position: absolute;
-                left: 0;
-                top: 60px;
-                height: calc(100vh - 60px);
-                transform: translateX(-100%);
-                z-index: 999;
-                width: 80%;
-                box-shadow: 10px 0 15px rgba(0,0,0,0.05);
-            }
-            .side-nav.active { transform: translateX(0); }
-            .viewer { padding: 20px; }
-            .chrono-row { flex-direction: column; }
-            .year-col { width: 100%; margin-bottom: 5px; }
-            .content-col { padding-left: 0; }
+        .era-period {
+            font-size: 0.85rem;
+            color: #7f8c8d;
         }
+        h2 { color: white; margin: 0; font-size: 2rem; }
+        p { color: rgba(255,255,255,0.8); margin-top: 10px; }
     </style>
 </head>
 <body>
 
-    <header>
-        <div class="logo">HISTORY ARCHIVE</div>
-        <button id="menuToggle">時代選択 ☰</button>
-    </header>
+<header>
+    <h2>詳細年表ポータル</h2>
+    <p>調べたい時代を選択してください</p>
+</header>
 
-    <div class="main-wrapper">
-        <aside class="side-nav" id="sideNav">
-            <h3 style="margin-bottom:15px; font-size:0.9rem; color:#999;">時代メニュー</h3>
-            <div id="eraMenu"></div>
-        </aside>
+<div class="container">
+    <!-- 各ファイルへのリンク -->
+    <a href="ancient.html" class="era-link">
+        <span class="era-name">古代</span>
+        <span class="era-period">旧石器 〜 古墳</span>
+    </a>
+    <a href="asuka.html" class="era-link">
+        <span class="era-name">飛鳥</span>
+        <span class="era-period">593 - 710</span>
+    </a>
+    <a href="nara.html" class="era-link">
+        <span class="era-name">奈良</span>
+        <span class="era-period">710 - 794</span>
+    </a>
+    <a href="heian.html" class="era-link">
+        <span class="era-name">平安</span>
+        <span class="era-period">794 - 1185</span>
+    </a>
+    <a href="kamakura.html" class="era-link">
+        <span class="era-name">鎌倉</span>
+        <span class="era-period">1185 - 1333</span>
+    </a>
+    <a href="muromachi.html" class="era-link">
+        <span class="era-name">室町</span>
+        <span class="era-period">1336 - 1573</span>
+    </a>
+    <a href="azuchi.html" class="era-link">
+        <span class="era-name">安土桃山</span>
+        <span class="era-period">1573 - 1603</span>
+    </a>
+    <a href="edo.html" class="era-link">
+        <span class="era-name">江戸</span>
+        <span class="era-period">1603 - 1868</span>
+    </a>
+    <a href="meiji.html" class="era-link">
+        <span class="era-name">明治</span>
+        <span class="era-period">1868 - 1912</span>
+    </a>
+    <a href="taisho.html" class="era-link">
+        <span class="era-name">大正</span>
+        <span class="era-period">1912 - 1926</span>
+    </a>
+    <a href="showa.html" class="era-link">
+        <span class="era-name">昭和</span>
+        <span class="era-period">1926 - 1989</span>
+    </a>
+    <a href="heisei.html" class="era-link">
+        <span class="era-name">平成</span>
+        <span class="era-period">1989 - 2019</span>
+    </a>
+</div>
 
-        <main class="viewer">
-            <div class="search-box">
-                <input type="text" id="searchInput" placeholder="歴史を検索（年、事件、人物...）">
-            </div>
-            <div id="mainContent"></div>
-        </main>
-    </div>
-
-    <script>
-        const historyDB = [
-            {
-                era: "古墳時代",
-                items: [
-                    { year: "3世紀頃", title: "ヤマト政権の成立", desc: "近畿の豪族を中心とした連合政権。全国に前方後円墳が広まり、中央集権の基礎ができた時代です。" },
-                    { year: "471年", title: "稲荷山古墳鉄剣の銘文", desc: "「ワカタケル大王」の文字が発見され、ヤマト政権の支配が関東にまで及んでいたことが証明されました。" }
-                ]
-            },
-            {
-                era: "明治・大正",
-                items: [
-                    { year: "1872年", title: "学制の公布", desc: "「国民皆学」を目指し、日本初の近代教育制度を確立。全国に数万の小学校が作られました。" },
-                    { year: "1889年", title: "帝国憲法発布", desc: "アジアで最初の近代的な憲法を制定。立憲君主制国家としての形を整えました。" },
-                    { year: "1900年", title: "第3次小学校令", desc: "【教育の大改革】授業料の完全無償化を断行。これにより義務教育が定着し、日本の近代化を支える知力が養われました。" }
-                ]
-            },
-            {
-                era: "現代",
-                items: [
-                    { year: "2026年", title: "歴史アーカイブの構築", desc: "スマホ対応・白基調のUIを備えた、5万文字クラスの情報量をさばけるWebエンジンが完成。" }
-                ]
-            }
-        ];
-
-        const menu = document.getElementById('eraMenu');
-        const content = document.getElementById('mainContent');
-        const sideNav = document.getElementById('sideNav');
-        const menuToggle = document.getElementById('menuToggle');
-
-        // サイドバー開閉（スマホ用）
-        menuToggle.onclick = () => sideNav.classList.toggle('active');
-
-        // 描画
-        historyDB.forEach((section, idx) => {
-            const mItem = document.createElement('div');
-            mItem.className = 'era-item';
-            mItem.innerText = section.era;
-            mItem.onclick = () => {
-                document.getElementById('era-' + idx).scrollIntoView();
-                sideNav.classList.remove('active'); // 選んだら閉じる
-            };
-            menu.appendChild(mItem);
-
-            const sec = document.createElement('section');
-            sec.id = 'era-' + idx;
-            sec.className = 'era-section';
-            sec.innerHTML = `<h2 class="era-title">${section.era}</h2>` + 
-                section.items.map(i => `
-                    <div class="chrono-row">
-                        <div class="year-col">${i.year}</div>
-                        <div class="content-col">
-                            <div class="event-name">${i.title}</div>
-                            <div class="event-desc">${i.desc}</div>
-                        </div>
-                    </div>
-                `).join('');
-            content.appendChild(sec);
-        });
-
-        // 検索
-        document.getElementById('searchInput').oninput = (e) => {
-            const q = e.target.value.toLowerCase();
-            document.querySelectorAll('.chrono-row').forEach(r => {
-                r.style.display = r.innerText.toLowerCase().includes(q) ? 'flex' : 'none';
-            });
-        };
-    </script>
 </body>
 </html>
