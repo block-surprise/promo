@@ -1,0 +1,136 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>旧石器・縄文・弥生・古墳時代・詳細年表アーカイブ</title>
+    <style>
+        :root {
+            --primary: #8b0000; 
+            --bg: #ffffff;
+            --text: #222;
+            --sub-text: #666;
+            --border: #ececec;
+        }
+        body { font-family: "serif"; background: var(--bg); color: var(--text); margin: 0; padding: 0; line-height: 1.6; }
+        
+        header { 
+            padding: 40px 20px; text-align: center; border-bottom: 3px double var(--primary);
+            background: #fdfdfd;
+        }
+        h1 { margin: 0; font-size: 1.8rem; letter-spacing: 0.2rem; color: var(--primary); }
+        .subtitle { font-size: 0.9rem; color: var(--sub-text); margin-top: 10px; }
+
+        .container { max-width: 800px; margin: 0 auto; padding: 20px; }
+
+        /* 年表のスタイル */
+        .timeline { position: relative; }
+        .event {
+            display: flex; margin-bottom: 30px; border-bottom: 1px solid var(--border);
+            padding-bottom: 20px; transition: 0.3s;
+        }
+        .year {
+            min-width: 80px; font-weight: bold; font-size: 1.2rem;
+            color: var(--primary); padding-top: 2px;
+        }
+        .content { flex: 1; padding-left: 20px; }
+        .title { font-weight: bold; font-size: 1.1rem; margin-bottom: 8px; }
+        .desc { font-size: 0.95rem; color: var(--text); text-align: justify; }
+        
+        /* スマホ対応 */
+        @media (max-width: 600px) {
+            .event { flex-direction: column; }
+            .year { margin-bottom: 5px; font-size: 1.4rem; }
+            .content { padding-left: 0; }
+        }
+
+        .footer { text-align: center; padding: 40px; color: #999; font-size: 0.8rem; }
+    </style>
+</head>
+<body>
+
+<header>
+    <h1>旧石器・縄文・弥生・古墳時代 詳細年表</h1>
+<div class="subtitle">紀元前 - 593：狩りから稲作へ、そして巨大古墳の時代</div>
+</header>
+
+<div class="container">
+    <div class="timeline" id="timeline">
+        <!-- JSで挿入 -->
+    </div>
+</div>
+
+<footer class="footer">
+    &copy; 2026 History Archive Project
+</footer>
+
+<script>
+const ancientData = [
+        { 
+            year: "約1万年前まで", 
+            cat: "cul", 
+            title: "旧石器時代", 
+            desc: "打製石器を使い、ナウマンゾウなどを追って移動生活をしていた時代。相沢忠洋さんが群馬県の岩宿遺跡で打製石器を発見したことで証明されたよ。" 
+        },
+        { 
+            year: "約1万年前〜", 
+            cat: "cul", 
+            title: "縄文時代", 
+            desc: "【特徴】縄目の文様の『縄文土器』や『たて穴住居』が登場。弓矢を使い、貝塚（ゴミ捨て場）が作られた。青森県の三内丸山遺跡（さんないまるやま）が有名だね。" 
+        },
+        { 
+            year: "紀元前4世紀頃", 
+            cat: "cul", 
+            title: "弥生時代と稲作の伝来", 
+            desc: "【重要】大陸から『稲作』と『鉄器・青銅器』が伝わった。薄くて硬い『弥生土器』や、米を蓄える『高床倉庫』が作られたよ。静岡県の登呂遺跡などが代表例。" 
+        },
+        { 
+            year: "1世紀頃", 
+            cat: "dip", 
+            title: "「漢委奴国王」の金印", 
+            desc: "【テスト頻出】『後漢書』東夷伝に記された話。北九州の『奴国（なこく）』の王が、中国の皇帝から金印を授かった。福岡県の志賀島（しかのしま）で見つかったよ。" 
+        },
+        { 
+            year: "3世紀頃", 
+            cat: "pol", 
+            title: "邪馬台国の卑弥呼", 
+            desc: "【重要】『魏志』倭人伝に記された話。30余りの国をまとめ、中国の魏に使いを送って『親魏倭王』の称号をもらったんだ。" 
+        },
+        { 
+            year: "4世紀〜", 
+            cat: "pol", 
+            title: "古墳時代と大和政権", 
+            desc: "近畿地方の有力な勢力（大和政権）が日本をまとめ始めた時代。各地に巨大な『前方後円墳』が作られた。大阪の大仙古墳（仁徳天皇陵）が世界最大級だよ。" 
+        },
+        { 
+            year: "5世紀頃", 
+            cat: "pol", 
+            title: "ワカタケル大王（雄略天皇）", 
+            desc: "稲荷山古墳（埼玉県）で見つかった鉄剣の銘文から、大和政権の力が九州から関東まで及んでいたことが証明されたんだ。" 
+        },
+        { 
+            year: "6世紀頃", 
+            cat: "dip", 
+            title: "仏教の伝来", 
+            desc: "百済（くだら）から仏教が伝わった。これを「受け入れるか（蘇我氏）」「拒否するか（物部氏）」で争いが起きたけど、最終的に蘇我氏が勝ったんだ。" 
+        }
+    ];
+
+    const timeline = document.getElementById('timeline');
+
+    meijiData.forEach(item => {
+        const eventDiv = document.createElement('div');
+        eventDiv.className = 'event';
+        eventDiv.innerHTML = `
+            <div class="year">${item.year}</div>
+            <div class="content">
+                <div class="title">${item.title}</div>
+                <div class="desc">${item.desc}</div>
+            </div>
+        `;
+        timeline.appendChild(eventDiv);
+    });
+</script>
+
+</body>
+</html>
