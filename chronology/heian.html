@@ -1,0 +1,136 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>平安時代・詳細年表アーカイブ</title>
+    <style>
+        :root {
+            --primary: #8b0000; 
+            --bg: #ffffff;
+            --text: #222;
+            --sub-text: #666;
+            --border: #ececec;
+        }
+        body { font-family: "serif"; background: var(--bg); color: var(--text); margin: 0; padding: 0; line-height: 1.6; }
+        
+        header { 
+            padding: 40px 20px; text-align: center; border-bottom: 3px double var(--primary);
+            background: #fdfdfd;
+        }
+        h1 { margin: 0; font-size: 1.8rem; letter-spacing: 0.2rem; color: var(--primary); }
+        .subtitle { font-size: 0.9rem; color: var(--sub-text); margin-top: 10px; }
+
+        .container { max-width: 800px; margin: 0 auto; padding: 20px; }
+
+        /* 年表のスタイル */
+        .timeline { position: relative; }
+        .event {
+            display: flex; margin-bottom: 30px; border-bottom: 1px solid var(--border);
+            padding-bottom: 20px; transition: 0.3s;
+        }
+        .year {
+            min-width: 80px; font-weight: bold; font-size: 1.2rem;
+            color: var(--primary); padding-top: 2px;
+        }
+        .content { flex: 1; padding-left: 20px; }
+        .title { font-weight: bold; font-size: 1.1rem; margin-bottom: 8px; }
+        .desc { font-size: 0.95rem; color: var(--text); text-align: justify; }
+        
+        /* スマホ対応 */
+        @media (max-width: 600px) {
+            .event { flex-direction: column; }
+            .year { margin-bottom: 5px; font-size: 1.4rem; }
+            .content { padding-left: 0; }
+        }
+
+        .footer { text-align: center; padding: 40px; color: #999; font-size: 0.8rem; }
+    </style>
+</head>
+<body>
+
+<header>
+    <h1>平安時代 詳細年表</h1>
+<div class="subtitle">794 - 1185：鳴くよウグイス平安京から平氏の滅亡まで</div>
+</header>
+
+<div class="container">
+    <div class="timeline" id="timeline">
+        <!-- JSで挿入 -->
+    </div>
+</div>
+
+<footer class="footer">
+    &copy; 2026 History Archive Project
+</footer>
+
+<script>
+const heianData = [
+        { 
+            year: "794", 
+            cat: "pol", 
+            title: "平安京への遷都", 
+            desc: "【スタート】桓武（かんむ）天皇が、仏教勢力の影響を避けて京都の平安京へ都を移した。「鳴くよ（794）ウグイス」の語呂合わせでおなじみだね。" 
+        },
+        { 
+            year: "894", 
+            cat: "dip", 
+            title: "遣唐使の廃止", 
+            desc: "【最重要】菅原道真（すがわらのみちざね）の提案で中止。「白紙（894）に戻そう遣唐使」。これをきっかけに、中国の影響を離れた日本独自の『国風（こくふう）文化』が育ったんだ。" 
+        },
+        { 
+            year: "1016", 
+            cat: "pol", 
+            title: "藤原道長が摂政に", 
+            desc: "【黄金期】藤原氏が娘を天皇のきさきにして、親戚として政治を動かす『摂関（せっかん）政治』が全盛期を迎えた。「この世をば…」の歌が有名だね。" 
+        },
+        { 
+            year: "1000頃", 
+            cat: "cul", 
+            title: "かな文字と文学の発展", 
+            desc: "清少納言が『枕草子』を、紫式部が『源氏物語』を書いた。ひらがな・カタカナが使われ始め、女性による宮廷文学が盛り上がった時代だよ。" 
+        },
+        { 
+            year: "1086", 
+            cat: "pol", 
+            title: "白河上皇の院政開始", 
+            desc: "【重要】天皇を引退した『上皇（じょうこう）』が、役職（摂政・関白）に縛られず自由に政治を行う『院政（いんせい）』を始めた。これで藤原氏の力が弱まっていったんだ。" 
+        },
+        { 
+            year: "1156 / 1159", 
+            cat: "pol", 
+            title: "保元・平治の乱", 
+            desc: "朝廷や貴族の争いに、武士がボディーガードとして借り出された。この結果、「結局、力（軍事力）を持っている武士が一番強いんじゃない？」とみんなが気づき始めたんだ。" 
+        },
+        { 
+            year: "1167", 
+            cat: "pol", 
+            title: "平清盛が太政大臣に", 
+            desc: "【重要】武士として初めて政治のトップに。日宋貿易（中国の宋との貿易）で大儲けしたけど、あまりに強引なやり方に、源氏などの反発を招いたよ。" 
+        },
+        { 
+            year: "1185", 
+            cat: "pol", 
+            title: "平氏の滅亡（壇ノ浦の戦い）", 
+            desc: "源頼朝・義経の兄弟に敗れ、平氏が滅亡。貴族のように振る舞った平氏に代わり、本格的な『武士の世の中』が始まるきっかけになった。" 
+        }
+    ];
+
+    const timeline = document.getElementById('timeline');
+
+    meijiData.forEach(item => {
+        const eventDiv = document.createElement('div');
+        eventDiv.className = 'event';
+        eventDiv.innerHTML = `
+            <div class="year">${item.year}</div>
+            <div class="content">
+                <div class="title">${item.title}</div>
+                <div class="desc">${item.desc}</div>
+            </div>
+        `;
+        timeline.appendChild(eventDiv);
+    });
+</script>
+
+</body>
+</html>
