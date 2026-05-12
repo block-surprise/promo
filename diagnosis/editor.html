@@ -244,6 +244,24 @@ const FORM_ID = "1FAIpQLSdSKCj3z-x-krRzGS5Ux2xCnnnOa4b57tNIYbdiqJsORkenpQ";
         document.getElementById('share-url').value = finalUrl;
         document.getElementById('share-area').scrollIntoView({ behavior: 'smooth' });
     });
+        // save関数内の最後、URLを表示させている処理のあたりに追加
+const finalUrl = currentPath + PLAYER_PAGE + "?id=" + randomID;
+
+document.getElementById('share-area').style.display = 'block';
+document.getElementById('share-url').value = finalUrl;
+
+// --- LINE共有ボタンの設定 ---
+const lineBtn = document.getElementById('line-share-main');
+lineBtn.onclick = function() {
+    // 送信メッセージ（結果ではなく、診断の紹介）
+    const message = `新しい診断を作ったよ！遊んでみてね！\n【 ${title} 】`;
+    
+    // LINE用のURL作成
+    const lineUrl = `https://line.me/R/msg/text/?${encodeURIComponent(message + "\n" + finalUrl)}`;
+    
+    window.open(lineUrl, '_blank');
+};
+
 }
 
 </script>
