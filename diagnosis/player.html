@@ -99,11 +99,19 @@
             <div id="options"></div>
         </div>
 
-        <div id="result-area" style="display:none; text-align:center;">
-            <p style="color: #64748b; font-weight: bold;">診断結果</p>
-            <h2 id="result-name"></h2>
-            <button class="btn-retry" onclick="location.reload()">もう一度遊ぶ</button>
-        </div>
+<div id="result-area" style="display:none; text-align:center;">
+    <p style="color: #64748b; font-weight: bold;">診断結果</p>
+    <h2 id="result-name"></h2>
+    
+    <!-- LINEシェアボタン -->
+    <button id="line-share-btn" style="background: #06C755; color: white; border: none; padding: 16px 32px; border-radius: 50px; font-weight: bold; cursor: pointer; margin-top: 15px; display: inline-flex; align-items: center; gap: 8px; box-shadow: 0 4px 12px rgba(6, 199, 85, 0.3);">
+        <span style="font-size: 1.2rem;">LINE</span> で結果をシェア
+    </button>
+    
+    <br>
+    <button class="btn-retry" onclick="location.reload()">もう一度遊ぶ</button>
+</div>
+
     </div>
     
 
