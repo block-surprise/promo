@@ -144,10 +144,17 @@
         <button class="btn-save" onclick="save()">診断を保存してURL発行</button>
 
         <div id="share-area">
-            <p style="margin:0 0 10px 0; font-size:14px; font-weight:bold; color:#166534;">🎉 診断が完成しました！</p>
-            <input type="text" id="share-url" readonly onclick="this.select()">
-            <p style="font-size:12px; color:#166534; margin-top:10px;">URLをコピーしてSNSや友達にシェアしてね</p>
-        </div>
+    <p style="margin:0 0 10px 0; font-size:14px; font-weight:bold; color:#166534;">🎉 診断が完成しました！</p>
+    <input type="text" id="share-url" readonly onclick="this.select()">
+    
+    <!-- 追加：診断を広めるためのLINEボタン -->
+    <button id="line-share-main" style="background: #06C755; color: white; border: none; padding: 12px; border-radius: 12px; font-weight: bold; cursor: pointer; margin-top: 15px; width: 100%; display: flex; align-items: center; justify-content: center; gap: 8px;">
+        LINEで友達に送る
+    </button>
+    
+    <p style="font-size:12px; color:#166534; margin-top:10px;">URLをコピーしてSNSや友達にシェアしてね</p>
+</div>
+
     </div>
 </div>
 
