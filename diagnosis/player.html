@@ -126,36 +126,14 @@ function loadData() {
     script.src = `https://docs.google.com/spreadsheets/d/${SHEET_ID}/gviz/tq?tqx=responseHandler:myDataLoader`;
     document.body.appendChild(script);
 }
- if (foundData) {
-    currentDiagnostic = foundData;
-    
-    // --- 共有用タイトルの連動処理 ---
-    const shareTitle = `${currentDiagnostic.title} | MAKE DI`;
-    
-    // 1. ブラウザのタブ名を変える
-    document.title = shareTitle; 
-    
-    // 2. OGPタグ（SNS用）を書き換える
-    const metaOgTitle = document.querySelector('meta[property="og:title"]');
-    if (metaOgTitle) metaOgTitle.setAttribute('content', shareTitle);
-    
-    const metaOgUrl = document.querySelector('meta[property="og:url"]');
-    if (metaOgUrl) metaOgUrl.setAttribute('content', window.location.href);
-    
-    // 3. (おまけ) 説明文も診断タイトルに合わせる
-    const metaOgDesc = document.querySelector('meta[property="og:description"]');
-    if (metaOgDesc) metaOgDesc.setAttribute('content', `${currentDiagnostic.title}を遊んでみよう！`);
-    // ----------------------------
 
-    start();
-}
-   
-
+// ここにすべての読み込み処理をまとめました
 window.myDataLoader = function(response) {
     const id = new URLSearchParams(window.location.search).get('id');
     const rows = response.table.rows;
     let foundData = null;
 
+    // スプレッドシートの中から該当するIDを探す
     for (let row of rows) {
         if (row.c && row.c[2] && row.c[2].v) {
             const cellValue = String(row.c[2].v);
@@ -173,10 +151,22 @@ window.myDataLoader = function(response) {
 
     if (foundData) {
         currentDiagnostic = foundData;
+        
+        // --- 共有用タイトル・OGPの連動処理 ---
         const pageTitle = `${currentDiagnostic.title} | MAKE DI`;
         document.title = pageTitle; 
-        document.getElementById('og-title').setAttribute('content', pageTitle);
-        document.getElementById('og-url').setAttribute('content', window.location.href);
+        
+        // OGPタグ（SNS用）の書き換え
+        const metaOgTitle = document.querySelector('meta[property="og:title"]');
+        if (metaOgTitle) metaOgTitle.setAttribute('content', pageTitle);
+        
+        const metaOgUrl = document.querySelector('meta[property="og:url"]');
+        if (metaOgUrl) metaOgUrl.setAttribute('content', window.location.href);
+        
+        const metaOgDesc = document.querySelector('meta[property="og:description"]');
+        if (metaOgDesc) metaOgDesc.setAttribute('content', `${currentDiagnostic.title}を遊んでみよう！`);
+        // ------------------------------------
+
         start();
     } else {
         document.getElementById('title').innerText = "診断が見つかりませんでした";
@@ -188,7 +178,6 @@ function start() {
     render();
 }
 
-// 修正点1: ボタンの点数を1点と0点に変更（分かりやすさのため）
 function render() {
     if (currentIdx < currentDiagnostic.questions.length) {
         const q = currentDiagnostic.questions[currentIdx];
@@ -208,7 +197,6 @@ function answer(pts) {
     render();
 }
 
-// 修正点2: typeA/B判定を「results配列からの検索」に変更
 function showResult() {
     document.getElementById('game-area').style.display = 'none';
     document.getElementById('result-area').style.display = 'block';
@@ -219,12 +207,14 @@ function showResult() {
     // 現在の点数で、条件を満たしている一番上の結果を探す
     const finalResult = sortedResults.find(r => totalScore >= r.minScore);
 
-    // 見つかったら名前を表示、なければ予備のテキストを表示
+    // 名前を表示
     document.getElementById('result-name').innerText = finalResult ? finalResult.name : "判定結果なし";
 }
 
+// データの読み込みを開始
 loadData();
 </script>
+
 
 </body>
 </html>
