@@ -195,38 +195,50 @@ const FORM_ID = "1FAIpQLSdSKCj3z-x-krRzGS5Ux2xCnnnOa4b57tNIYbdiqJsORkenpQ";
     }
 
     function save() {
-        const title = document.getElementById('title').value;
-        if(!title) return alert("タイトルを入力してください");
+    const title = document.getElementById('title').value;
+    if(!title) return alert("タイトルを入力してください");
 
-        const randomID = Date.now().toString(36) + Math.random().toString(36).substring(2, 5);
+    const randomID = Date.now().toString(36) + Math.random().toString(36).substring(2, 5);
 
-        // データを整理（resultsを配列として取得するのがポイント）
-        const data = {
-            id: randomID,
-            title: title,
-            visibility: document.getElementById('visibility').value,
-            results: Array.from(document.querySelectorAll('.r-block')).map(b => ({
-                name: b.querySelector('.r-name').value,
-                minScore: parseInt(b.querySelector('.r-min').value)
-            })),
-            questions: Array.from(document.querySelectorAll('.q-block')).map(b => ({
-                q: b.querySelector('.q-text').value,
-                a1: b.querySelector('.a1-text').value,
-                a2: b.querySelector('.a2-text').value
-            }))
-        };
+    const data = {
+        id: randomID,
+        title: title,
+        visibility: document.getElementById('visibility').value,
+        results: Array.from(document.querySelectorAll('.r-block')).map(b => ({
+            name: b.querySelector('.r-name').value,
+            minScore: parseInt(b.querySelector('.r-min').value) || 0
+        })),
+        questions: Array.from(document.querySelectorAll('.q-block')).map(b => ({
+            q: b.querySelector('.q-text').value,
+            a1: b.querySelector('.a1-text').value,
+            a2: b.querySelector('.a2-text').value
+        }))
+    };
 
-        const postUrl = `https://docs.google.com/forms/e/${FORM_ID}/formResponse?${ENTRY_TITLE}=${encodeURIComponent(title)}&${ENTRY_DATA}=${encodeURIComponent(JSON.stringify(data))}&submit=Submit`;
-        
-        fetch(postUrl, { mode: 'no-cors' }).then(() => {
-            const currentPath = window.location.href.substring(0, window.location.href.lastIndexOf('/') + 1);
-            const finalUrl = currentPath + PLAYER_PAGE + "?id=" + randomID;
+    // 1. URLの修正（/d/e/ に変更）
+    const postUrl = `https://docs.google.com/forms/d/e/${FORM_ID}/formResponse`;
+    
+    // 2. URLSearchParams を使って、特殊文字を完璧にエンコードする
+    const params = new URLSearchParams();
+    params.append(ENTRY_TITLE, title);
+    params.append(ENTRY_DATA, JSON.stringify(data));
+    params.append('submit', 'Submit');
 
-            document.getElementById('share-area').style.display = 'block';
-            document.getElementById('share-url').value = finalUrl;
-            document.getElementById('share-area').scrollIntoView({ behavior: 'smooth' });
-        }).catch(() => alert("送信エラーが発生しました"));
-    }
+    // 3. 送信（エラーが出ないのは mode: 'no-cors' の仕様です）
+    fetch(`${postUrl}?${params.toString()}`, { 
+        mode: 'no-cors',
+        method: 'GET' // 確実にパラメータを届けるためにGETを指定
+    }).then(() => {
+        // 送信直後に完了画面を出す
+        const currentPath = window.location.href.substring(0, window.location.href.lastIndexOf('/') + 1);
+        const finalUrl = currentPath + PLAYER_PAGE + "?id=" + randomID;
+
+        document.getElementById('share-area').style.display = 'block';
+        document.getElementById('share-url').value = finalUrl;
+        document.getElementById('share-area').scrollIntoView({ behavior: 'smooth' });
+    });
+}
+
 </script>
 
 </body>
