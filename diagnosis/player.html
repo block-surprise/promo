@@ -126,6 +126,30 @@ function loadData() {
     script.src = `https://docs.google.com/spreadsheets/d/${SHEET_ID}/gviz/tq?tqx=responseHandler:myDataLoader`;
     document.body.appendChild(script);
 }
+ if (foundData) {
+    currentDiagnostic = foundData;
+    
+    // --- 共有用タイトルの連動処理 ---
+    const shareTitle = `${currentDiagnostic.title} | MAKE DI`;
+    
+    // 1. ブラウザのタブ名を変える
+    document.title = shareTitle; 
+    
+    // 2. OGPタグ（SNS用）を書き換える
+    const metaOgTitle = document.querySelector('meta[property="og:title"]');
+    if (metaOgTitle) metaOgTitle.setAttribute('content', shareTitle);
+    
+    const metaOgUrl = document.querySelector('meta[property="og:url"]');
+    if (metaOgUrl) metaOgUrl.setAttribute('content', window.location.href);
+    
+    // 3. (おまけ) 説明文も診断タイトルに合わせる
+    const metaOgDesc = document.querySelector('meta[property="og:description"]');
+    if (metaOgDesc) metaOgDesc.setAttribute('content', `${currentDiagnostic.title}を遊んでみよう！`);
+    // ----------------------------
+
+    start();
+}
+   
 
 window.myDataLoader = function(response) {
     const id = new URLSearchParams(window.location.search).get('id');
