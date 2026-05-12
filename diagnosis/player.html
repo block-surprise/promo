@@ -91,34 +91,31 @@
     </div>
 </nav>
 
-    <div class="main-container">
+<div class="main-container">
     <div id="title">診断を読み込み中...</div>
     
-    
+    <!-- 診断そのものを教えるボタン（最初は隠れている） -->
     <div id="main-share-area" style="display:none; text-align:center; margin-bottom:20px;">
-        <button id="line-share-main" style="background: #06C755; color: white; border: none; padding: 8px 16px; border-radius: 50px; font-weight: bold; cursor: pointer; font-size: 0.8rem; display: inline-flex; align-items: center; gap: 5px;">
-            LINEでこの診断を教える
-        </button>
+        <button id="line-share-main" style="background: #06C755; color: white; border: none; padding: 8px 16px; border-radius: 50px; font-weight: bold; cursor: pointer; font-size: 0.8rem;">LINEでこの診断を教える</button>
     </div>
     
     <div id="game-area">
         <p id="question-text"></p>
         <div id="options"></div>
     </div>
-    
 
-        </div>
-
-<div id="result-area" style="display:none; text-align:center;">
-    <p style="color: #64748b; font-weight: bold;">診断結果</p>
-    <h2 id="result-name"></h2>
-    
-    
-    <br>
-    <button class="btn-retry" onclick="location.reload()">もう一度遊ぶ</button>
+    <div id="result-area" style="display:none; text-align:center;">
+        <p style="color: #64748b; font-weight: bold;">診断結果</p>
+        <h2 id="result-name"></h2>
+        
+        <!-- 結果をシェアするボタン -->
+        <button id="line-share-result" style="background: #06C755; color: white; border: none; padding: 12px 24px; border-radius: 10px; font-weight: bold; cursor: pointer; margin-top: 10px;">LINEで結果をシェア</button>
+        
+        <br>
+        <button class="btn-retry" onclick="location.reload()">もう一度遊ぶ</button>
+    </div>
 </div>
 
-    </div>
     
 
 
@@ -141,13 +138,12 @@ function loadData() {
     document.body.appendChild(script);
 }
 
-// ここにすべての読み込み処理をまとめました
+// データの読み込みと初期設定
 window.myDataLoader = function(response) {
     const id = new URLSearchParams(window.location.search).get('id');
     const rows = response.table.rows;
     let foundData = null;
 
-    // スプレッドシートの中から該当するIDを探す
     for (let row of rows) {
         if (row.c && row.c[2] && row.c[2].v) {
             const cellValue = String(row.c[2].v);
@@ -166,20 +162,26 @@ window.myDataLoader = function(response) {
     if (foundData) {
         currentDiagnostic = foundData;
         
-        // --- 共有用タイトル・OGPの連動処理 ---
+        // ブラウザのタイトルやSNSタグの連動
         const pageTitle = `${currentDiagnostic.title} | MAKE DI`;
         document.title = pageTitle; 
         
-        // OGPタグ（SNS用）の書き換え
         const metaOgTitle = document.querySelector('meta[property="og:title"]');
         if (metaOgTitle) metaOgTitle.setAttribute('content', pageTitle);
         
         const metaOgUrl = document.querySelector('meta[property="og:url"]');
         if (metaOgUrl) metaOgUrl.setAttribute('content', window.location.href);
         
-        const metaOgDesc = document.querySelector('meta[property="og:description"]');
-        if (metaOgDesc) metaOgDesc.setAttribute('content', `${currentDiagnostic.title}を遊んでみよう！`);
-        // ------------------------------------
+        // --- ★診断そのものをシェアするボタンの設定 ---
+        const mainShareArea = document.getElementById('main-share-area');
+        if (mainShareArea) {
+            mainShareArea.style.display = 'block';
+            document.getElementById('line-share-main').onclick = function() {
+                const message = `この診断、面白いよ！やってみて！\n【 ${currentDiagnostic.title} 】`;
+                const url = window.location.href;
+                window.open(`https://line.me/R/msg/text/?${encodeURIComponent(message + "\n" + url)}`, '_blank');
+            };
+        }
 
         start();
     } else {
@@ -215,19 +217,26 @@ function showResult() {
     document.getElementById('game-area').style.display = 'none';
     document.getElementById('result-area').style.display = 'block';
 
-    // 点数が高い順に並び替える
     const sortedResults = currentDiagnostic.results.sort((a, b) => b.minScore - a.minScore);
-    
-    // 現在の点数で、条件を満たしている一番上の結果を探す
     const finalResult = sortedResults.find(r => totalScore >= r.minScore);
+    const resultName = finalResult ? finalResult.name : "判定結果なし";
 
-    // 名前を表示
-    document.getElementById('result-name').innerText = finalResult ? finalResult.name : "判定結果なし";
+    document.getElementById('result-name').innerText = resultName;
+
+    // --- ★診断結果をシェアするボタンの設定 ---
+    const resultShareBtn = document.getElementById('line-share-result');
+    if (resultShareBtn) {
+        resultShareBtn.onclick = function() {
+            const message = `【${currentDiagnostic.title}】\n結果は…「${resultName}」でした！\n\n#MAKEDI で診断しよう！`;
+            const url = window.location.href;
+            window.open(`https://line.me/R/msg/text/?${encodeURIComponent(message + "\n" + url)}`, '_blank');
+        };
+    }
 }
 
-// データの読み込みを開始
 loadData();
 </script>
+
 
 
 </body>
