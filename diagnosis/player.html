@@ -109,7 +109,6 @@
 
 
 <script>
-
 // --- あなたの設定 ---
 const SHEET_ID = '1EYXz3Preu5Xf0OKVXomovvzHJP4MtRQDgaQC0rWney0';
 
@@ -117,42 +116,33 @@ let currentDiagnostic = null;
 let currentIdx = 0;
 let totalScore = 0;
 
-// 1. 最初に呼ばれる関数
 function loadData() {
     const id = new URLSearchParams(window.location.search).get('id');
     if (!id) {
         document.getElementById('title').innerText = "IDを入力してください";
         return;
     }
-
-    // Googleスプレッドシートから「スクリプト」としてデータを取得（CORS回避）
     const script = document.createElement('script');
-    // responseHandlerに「myDataLoader」を指定するのがコツ
     script.src = `https://docs.google.com/spreadsheets/d/${SHEET_ID}/gviz/tq?tqx=responseHandler:myDataLoader`;
     document.body.appendChild(script);
 }
 
-// 2. データが届いたらGoogleが勝手に実行してくれる関数
 window.myDataLoader = function(response) {
     const id = new URLSearchParams(window.location.search).get('id');
     const rows = response.table.rows;
     let foundData = null;
 
     for (let row of rows) {
-        // C列（index 2）の中身を確認
         if (row.c && row.c[2] && row.c[2].v) {
             const cellValue = String(row.c[2].v);
             if (cellValue.includes('{')) {
                 try {
-                    // CSVと違って、gviz経由なら "" の置換は不要
                     const d = JSON.parse(cellValue);
                     if (String(d.id) === String(id)) {
                         foundData = d;
                         break;
                     }
-                } catch (e) {
-                    console.error("JSONパース失敗:", e);
-                }
+                } catch (e) { console.error("JSONパース失敗:", e); }
             }
         }
     }
@@ -166,7 +156,6 @@ window.myDataLoader = function(response) {
         start();
     } else {
         document.getElementById('title').innerText = "診断が見つかりませんでした";
-        console.log("探したID:", id);
     }
 };
 
@@ -175,13 +164,14 @@ function start() {
     render();
 }
 
+// 修正点1: ボタンの点数を1点と0点に変更（分かりやすさのため）
 function render() {
     if (currentIdx < currentDiagnostic.questions.length) {
         const q = currentDiagnostic.questions[currentIdx];
         document.getElementById('question-text').innerText = q.q;
         document.getElementById('options').innerHTML = `
             <button class="btn-answer" onclick="answer(1)">${q.a1}</button>
-            <button class="btn-answer" onclick="answer(-1)">${q.a2}</button>
+            <button class="btn-answer" onclick="answer(0)">${q.a2}</button>
         `;
     } else {
         showResult();
@@ -194,14 +184,23 @@ function answer(pts) {
     render();
 }
 
+// 修正点2: typeA/B判定を「results配列からの検索」に変更
 function showResult() {
     document.getElementById('game-area').style.display = 'none';
     document.getElementById('result-area').style.display = 'block';
-    document.getElementById('result-name').innerText = (totalScore >= 0) ? currentDiagnostic.typeA : currentDiagnostic.typeB;
+
+    // 点数が高い順に並び替える
+    const sortedResults = currentDiagnostic.results.sort((a, b) => b.minScore - a.minScore);
+    
+    // 現在の点数で、条件を満たしている一番上の結果を探す
+    const finalResult = sortedResults.find(r => totalScore >= r.minScore);
+
+    // 見つかったら名前を表示、なければ予備のテキストを表示
+    document.getElementById('result-name').innerText = finalResult ? finalResult.name : "判定結果なし";
 }
 
-// 実行！
 loadData();
 </script>
+
 </body>
 </html>
