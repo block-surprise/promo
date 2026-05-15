@@ -1,0 +1,29 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <title>SURGE PRO - File Download</title>
+    <script>
+        window.onload = function() {
+            // 1. PDFのダウンロードを開始
+            // 'pdf_url_here' を実際のPDFのURLに書き換えてください
+            const pdfUrl = 'https://promo.blocksurprise.f5.si/file/pdf/%E5%A4%A9%E6%B0%97%E3%80%80%E7%B7%B4%E7%BF%92%E5%95%8F%E9%A1%8C.pdf';
+            const link = document.createElement('a');
+            link.href = pdfUrl;
+            link.download = ''; // ダウンロード属性を付与
+            document.body.appendChild(link);
+            link.click();
+            document.body.removeChild(link);
+
+            // 2. 3秒後にブログに戻る
+            // 'blog_url_here' を戻り先のブログ記事URLに書き換えてください
+            setTimeout(function() {
+                window.location.href = 'https://blockun.blogspot.com/2026/05/blog-post_22.html';
+            }, 3000); 
+        };
+    </script>
+</head>
+<body>
+    <p>ダウンロードを開始します。完了後、元のページに自動で戻ります...</p>
+</body>
+</html>
