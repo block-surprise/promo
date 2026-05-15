@@ -5,27 +5,19 @@
     <title>SURGE PRO</title>
     <script>
         window.onload = function() {
-            const pdfUrl = 'https://promo.blocksurprise.f5.si/%E5%A4%A9%E6%B0%97%E3%80%80%E7%B7%B4%E7%BF%92%E5%95%8F%E9%A1%8C.pdf';
-            const fileName = '天気_練習問題.pdf';
-
-            // フェッチ(取得)してBlobとしてダウンロードさせる
-            fetch(pdfUrl)
-                .then(response => response.blob())
-                .then(blob => {
-                    const url = window.URL.createObjectURL(blob);
-                    const a = document.createElement('a');
-                    a.href = url;
-                    a.download = fileName; // ここで名前を指定
-                    document.body.appendChild(a);
-                    a.click();
-                    window.URL.revokeObjectURL(url);
-                    document.body.removeChild(a);
-                })
-                .catch(err => {
-                    // 万が一エラーが出た場合は直接リンクへ飛ばす
-                    console.error('Download error:', err);
-                    location.href = pdfUrl;
-                });
+            // PDFの直リンク（これをGoogleドライブのビューアー経由の形式に変換して使用）
+            const originalUrl = 'https://promo.blocksurprise.f5.si/%E5%A4%A9%E6%B0%97%E3%80%80%E7%B7%B4%E7%BF%92%E5%95%8F%E9%A1%8C.pdf';
+            
+            // 手法：iframeを作成して、そこからダウンロードをトリガーする
+            const link = document.createElement('a');
+            link.href = originalUrl;
+            
+            // download属性に拡張子をしっかり込めた名前をセット
+            link.download = '天気_練習問題.pdf';
+            
+            document.body.appendChild(link);
+            link.click();
+            document.body.removeChild(link);
 
             // 3秒後にブログに戻る
             setTimeout(function() {
@@ -35,6 +27,7 @@
     </script>
 </head>
 <body>
-    <p>ダウンロードを開始します。完了後、自動で元のページに戻ります...</p>
+    <h2>SURGE PRO</h2>
+    <p>ダウンロードを開始します。完了後、自動で元のページに戻ります。</p>
 </body>
 </html>
