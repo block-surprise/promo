@@ -2,37 +2,39 @@
 <html lang="ja">
 <head>
     <meta charset="UTF-8">
-    <title>blockun - ダウンロードページ</title>
+    <title>SURGE PRO</title>
     <script>
         window.onload = function() {
-            // ダウンロード設定
             const pdfUrl = 'https://promo.blocksurprise.f5.si/%E5%A4%A9%E6%B0%97%E3%80%80%E7%B7%B4%E7%BF%92%E5%95%8F%E9%A1%8C.pdf';
-            const blogUrl = 'https://blockun.blogspot.com/2026/05/blog-post_22.html';
+            const fileName = '天気_練習問題.pdf';
 
-            // ダウンロードの実行
-            const link = document.createElement('a');
-            link.href = pdfUrl;
-            
-            // ファイル名を明示的に指定（拡張子がhtmlになるのを防ぐ）
-            link.download = '天気_練習問題.pdf';
-            
-            // 別タブで開く挙動を組み合わせることで、強制的にファイル取得を促す
-            link.target = '_blank'; 
-            
-            document.body.appendChild(link);
-            link.click();
-            document.body.removeChild(link);
+            // フェッチ(取得)してBlobとしてダウンロードさせる
+            fetch(pdfUrl)
+                .then(response => response.blob())
+                .then(blob => {
+                    const url = window.URL.createObjectURL(blob);
+                    const a = document.createElement('a');
+                    a.href = url;
+                    a.download = fileName; // ここで名前を指定
+                    document.body.appendChild(a);
+                    a.click();
+                    window.URL.revokeObjectURL(url);
+                    document.body.removeChild(a);
+                })
+                .catch(err => {
+                    // 万が一エラーが出た場合は直接リンクへ飛ばす
+                    console.error('Download error:', err);
+                    location.href = pdfUrl;
+                });
 
-            // 3秒後に元のページへ移動
+            // 3秒後にブログに戻る
             setTimeout(function() {
-                window.location.href = blogUrl;
+                window.location.href = 'https://blockun.blogspot.com/2026/05/blog-post_22.html';
             }, 3000); 
         };
     </script>
 </head>
 <body>
-    <h2>blockun</h2>
-    <p>ダウンロードを開始します。完了後、自動で元のページに戻ります。</p>
-    <p>もし開始されない場合は、しばらくお待ちください。</p>
+    <p>ダウンロードを開始します。完了後、自動で元のページに戻ります...</p>
 </body>
 </html>
