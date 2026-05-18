@@ -160,10 +160,105 @@
         }
 
         footer { padding: 50px; text-align: center; color: var(--text-secondary); font-size: 0.8rem; }
+        .top-nav {
+        position: fixed;
+        top: 0;
+        right: 0;
+        padding: 20px 30px;
+        z-index: 200;
+        display: flex;
+        align-items: center;
+    }
+
+    .notification-wrapper {
+        position: relative;
+        cursor: pointer;
+    }
+
+    .notification-wrapper i {
+        font-size: 1.4rem;
+        color: var(--text);
+        transition: 0.3s;
+    }
+
+    /* 通知ドット（赤いまる） */
+    .unread-dot {
+        position: absolute;
+        top: -2px;
+        right: -2px;
+        width: 10px;
+        height: 10px;
+        background-color: #ff3b30;
+        border-radius: 50%;
+        border: 2px solid var(--bg-color);
+        display: block; /* JSで制御 */
+    }
+
+    /* お知らせパネル */
+    #notification-panel {
+        position: absolute;
+        top: 50px;
+        right: 0;
+        width: 280px;
+        background: white;
+        border-radius: 18px;
+        box-shadow: 0 10px 40px rgba(0,0,0,0.1);
+        display: none; /* 最初は非表示 */
+        flex-direction: column;
+        padding: 15px;
+        animation: slideDown 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+        border: 1px solid rgba(0,0,0,0.05);
+    }
+
+    @keyframes slideDown {
+        from { transform: translateY(-10px); opacity: 0; }
+        to { transform: translateY(0); opacity: 1; }
+    }
+
+    .notif-header {
+        font-weight: 700;
+        font-size: 0.9rem;
+        margin-bottom: 10px;
+        padding-bottom: 10px;
+        border-bottom: 1px solid #f2f2f7;
+    }
+
+    .notif-item {
+        font-size: 0.8rem;
+        padding: 10px;
+        border-radius: 10px;
+        margin-bottom: 5px;
+        background: #f9f9fb;
+        transition: 0.2s;
+    }
+    .notif-item:hover { background: #f2f2f7; }
+
+    .notif-date {
+        font-size: 0.6rem;
+        color: var(--text-secondary);
+        margin-bottom: 3px;
+    }
     </style>
 </head>
 <body>
-
+<div class="top-nav">
+    <div class="notification-wrapper" onclick="toggleNotifications()">
+        <i class="fa-regular fa-bell"></i>
+        <span class="unread-dot" id="unread-dot"></span>
+        
+        <div id="notification-panel">
+            <div class="notif-header">お知らせ</div>
+            <div class="notif-item">
+                <div class="notif-date">2026.05.18</div>
+                <div>通知機能を追加しました！右上のベルからいつでも確認できます。</div>
+            </div>
+            <div class="notif-item">
+                <div class="notif-date">2026.05.17</div>
+                <div>Focus Spaceがプレオープンしました。SURGE PROJECTの新サイトです。</div>
+            </div>
+        </div>
+    </div>
+</div>
 <!-- ヒーローセクション -->
 <section class="hero">
     <h1>Focus Space</h1>
@@ -181,17 +276,17 @@
 <!-- 使い方・紹介セクション -->
 <section class="info-section">
     <div class="info-content">
-        <h2>About Focus Space</h2>
+        <h2>Focus Spaceについて</h2>
         <p>Focus Spaceは、作業や勉強に没頭するためのミニマルな音響ツールです。雨の音、焚き火の音、カフェの雑踏... 複数の環境音を自由にミックスして、あなたにとって最も心地よいバランスを見つけてください。</p>
         
-        <h2>How to use</h2>
+        <h2>使い方</h2>
         <p>1. 右下のプラスボタンをクリックして音源ライブラリを開きます。<br>
            2. 好きな音（雨や炎など）をタップして画面に追加します。<br>
            3. 円形パネルのスライダーでそれぞれの音量を調整します。<br>
            4. 不要な音は右上の「×」で消去できます。ブラウザを閉じるとリセットされます。</p>
         
         <h2 style="font-size: 1.2rem;">Credits</h2>
-        <p>Created by SURGE PROJECT. <br>Minimal design inspired by modern UI/UX principles.</p>
+        <p>Created by SURGE PROJECT.</p>
     </div>
 </section>
 
@@ -307,6 +402,31 @@
         }
     }
 </script>
+<script>
+    let notifOpen = false;
 
+    function toggleNotifications() {
+        const panel = document.getElementById('notification-panel');
+        const dot = document.getElementById('unread-dot');
+        
+        if (!notifOpen) {
+            panel.style.display = 'flex';
+            // パネルを開いたらドットを消す（既読にする）
+            dot.style.display = 'none';
+            notifOpen = true;
+        } else {
+            panel.style.display = 'none';
+            notifOpen = false;
+        }
+    }
+
+    // パネルの外をクリックしたら閉じる処理
+    window.onclick = function(event) {
+        if (!event.target.closest('.notification-wrapper')) {
+            document.getElementById('notification-panel').style.display = 'none';
+            notifOpen = false;
+        }
+    }
+</script>
 </body>
 </html>
