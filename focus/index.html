@@ -1,0 +1,153 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>FOCUS SPACE | 自分だけの集中環境音</title>
+    <style>
+        :root {
+            --bg-color: #0f172a;
+            --card-bg: #1e293b;
+            --accent: #38bdf8;
+            --text: #f1f5f9;
+        }
+
+        body {
+            font-family: 'Segoe UI', sans-serif;
+            background-color: var(--bg-color);
+            color: var(--text);
+            margin: 0;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+        }
+
+        .container {
+            width: 90%;
+            max-width: 500px;
+            background: var(--card-bg);
+            padding: 30px;
+            border-radius: 24px;
+            box-shadow: 0 20px 50px rgba(0,0,0,0.3);
+            text-align: center;
+        }
+
+        h1 { font-size: 1.5rem; margin-bottom: 10px; color: var(--accent); }
+        p { font-size: 0.9rem; color: #94a3b8; margin-bottom: 30px; }
+
+        .mixer {
+            display: grid;
+            gap: 20px;
+        }
+
+        .sound-row {
+            display: flex;
+            align-items: center;
+            background: rgba(255,255,255,0.05);
+            padding: 15px;
+            border-radius: 12px;
+        }
+
+        .sound-info { width: 80px; text-align: left; font-size: 0.9rem; }
+        
+        input[type="range"] {
+            flex-grow: 1;
+            cursor: pointer;
+            accent-color: var(--accent);
+        }
+
+        .master-controls {
+            margin-top: 30px;
+            padding-top: 20px;
+            border-top: 1px solid #334155;
+        }
+
+        button {
+            background: var(--accent);
+            color: var(--bg-color);
+            border: none;
+            padding: 12px 24px;
+            border-radius: 8px;
+            font-weight: bold;
+            cursor: pointer;
+            transition: transform 0.2s;
+        }
+
+        button:active { transform: scale(0.95); }
+    </style>
+</head>
+<body>
+
+<div class="container">
+    <h1>FOCUS SPACE</h1>
+    <p>音を組み合わせて、理想の集中空間を作る</p>
+
+    <div class="mixer">
+        <!-- 音の種類：雨 -->
+        <div class="sound-row">
+            <div class="sound-info">🌧️ 雨</div>
+            <input type="range" min="0" max="1" step="0.01" value="0" oninput="updateVol('rain', this.value)">
+        </div>
+
+        <!-- 音の種類：焚き火 -->
+        <div class="sound-row">
+            <div class="sound-info">🔥 焚き火</div>
+            <input type="range" min="0" max="1" step="0.01" value="0" oninput="updateVol('fire', this.value)">
+        </div>
+
+        <!-- 音の種類：カフェ -->
+        <div class="sound-row">
+            <div class="sound-info">☕ カフェ</div>
+            <input type="range" min="0" max="1" step="0.01" value="0" oninput="updateVol('cafe', this.value)">
+        </div>
+
+        <!-- 音の種類：森 -->
+        <div class="sound-row">
+            <div class="sound-info">🌲 森</div>
+            <input type="range" min="0" max="1" step="0.01" value="0" oninput="updateVol('forest', this.value)">
+        </div>
+    </div>
+
+    <div class="master-controls">
+        <button onclick="stopAll()">すべての音を止める</button>
+    </div>
+</div>
+
+<script>
+    // 音源の設定（ここは後で自分の好きなMP3のパスに変えられます）
+    const sounds = {
+        rain: new Audio('https://www.soundhelix.com/examples/mp3/SoundHelix-Song-1.mp3'), // サンプル音源
+        fire: new Audio('https://www.soundhelix.com/examples/mp3/SoundHelix-Song-2.mp3'),
+        cafe: new Audio('https://www.soundhelix.com/examples/mp3/SoundHelix-Song-3.mp3'),
+        forest: new Audio('https://www.soundhelix.com/examples/mp3/SoundHelix-Song-4.mp3')
+    };
+
+    // すべての音をループ再生設定にする
+    for (let key in sounds) {
+        sounds[key].loop = true;
+    }
+
+    function updateVol(type, vol) {
+        const audio = sounds[type];
+        if (vol > 0) {
+            if (audio.paused) audio.play().catch(e => console.log("再生にはユーザーの操作が必要です"));
+            audio.volume = vol;
+        } else {
+            audio.pause();
+        }
+    }
+
+    function stopAll() {
+        for (let key in sounds) {
+            sounds[key].pause();
+            sounds[key].currentTime = 0;
+        }
+        // スライダーも0に戻す
+        const sliders = document.querySelectorAll('input[type="range"]');
+        sliders.forEach(s => s.value = 0);
+    }
+</script>
+
+</body>
+</html>
