@@ -68,7 +68,7 @@
         display: none;
     }
 
-    /* お知らせパネル（位置を固定） */
+    /* お知らせパネル（位置を画面に対して固定） */
     #notification-panel {
         position: fixed;
         top: 70px;
@@ -135,6 +135,18 @@
         -webkit-text-fill-color: transparent;
     }
 
+    .hero p {
+        font-size: 1.2rem;
+        color: var(--text-secondary);
+        max-width: 500px;
+    }
+
+    #empty-hint {
+        margin-top: 20px;
+        color: var(--text-secondary);
+        font-size: 0.9rem;
+    }
+
     /* ミキサーエリア */
     #active-mixer {
         display: flex;
@@ -157,7 +169,61 @@
         align-items: center; justify-content: center;
         position: relative;
         animation: popIn 0.5s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+        border: 1px solid rgba(0,0,0,0.02);
     }
+
+    @keyframes popIn {
+        from { transform: scale(0.5); opacity: 0; }
+        to { transform: scale(1); opacity: 1; }
+    }
+
+    .icon-circle { font-size: 1.8rem; color: var(--accent); margin-bottom: 12px; }
+
+    .remove-btn {
+        position: absolute; top: 10px; right: 10px;
+        background: #f2f2f7; color: #8e8e93; border: none;
+        width: 26px; height: 26px; border-radius: 50%;
+        cursor: pointer; font-size: 0.8rem;
+    }
+    .remove-btn:hover { background: #ff3b30; color: white; }
+
+    .volume-slider {
+        width: 80px; height: 4px;
+        -webkit-appearance: none; background: #e5e5ea;
+        border-radius: 2px; outline: none;
+    }
+    .volume-slider::-webkit-slider-thumb {
+        -webkit-appearance: none; width: 12px; height: 12px;
+        background: var(--accent); border-radius: 50%; cursor: pointer;
+    }
+
+    /* 使い方・紹介セクション */
+    .info-section {
+        background: white;
+        padding: 100px 20px;
+        width: 100%;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        box-sizing: border-box;
+    }
+
+    .info-content { max-width: 600px; width: 100%; }
+    .info-content h2 { font-size: 1.8rem; margin-top: 40px; border-bottom: 2px solid var(--bg-color); padding-bottom: 10px;}
+    .info-content p { color: var(--text-secondary); line-height: 1.8; }
+
+    /* プラスボタン */
+    .add-trigger {
+        position: fixed; bottom: 40px; right: 40px;
+        width: 65px; height: 65px;
+        background: var(--accent); color: white;
+        border-radius: 50%; display: flex;
+        justify-content: center; align-items: center;
+        font-size: 1.5rem; box-shadow: 0 10px 30px rgba(0,122,255,0.4);
+        cursor: pointer; border: none; z-index: 500;
+        transition: 0.3s;
+    }
+    .add-trigger:hover { transform: scale(1.1) rotate(90deg); }
 
     /* ライブラリ（追加画面） */
     #library-overlay {
@@ -169,7 +235,9 @@
         flex-direction: column;
         align-items: center;
         z-index: 3000;
-        overflow-y: auto; /* ここでスクロールさせる */
+        overflow-y: auto; /* 縦スクロールを有効化 */
+        padding-top: env(safe-area-inset-top, 40px);
+        box-sizing: border-box;
         -webkit-overflow-scrolling: touch;
     }
 
@@ -177,8 +245,8 @@
         display: grid;
         grid-template-columns: repeat(3, 1fr);
         gap: 15px;
-        margin: 40px auto;
-        padding: 0 20px 140px; /* 完了ボタンに被らないように余白 */
+        margin: 30px auto;
+        padding: 0 20px 140px; /* 完了ボタンに被らないように最下部に広い余白 */
         width: 100%;
         max-width: 400px;
         box-sizing: border-box;
@@ -197,9 +265,12 @@
         box-shadow: 0 4px 15px rgba(0,0,0,0.05);
         border: 1px solid rgba(0,0,0,0.05);
         cursor: pointer;
+        transition: transform 0.2s;
     }
+    .lib-item-circle:active { transform: scale(0.9); }
+    .lib-item-circle i { font-size: 1.6rem; margin-bottom: 8px; }
 
-    /* 【重要】完了ボタン：画面に対して固定 */
+    /* 完了ボタン：画面下部に完全固定 */
     .close-lib {
         position: fixed;
         bottom: 30px;
@@ -218,27 +289,19 @@
         display: flex;
         justify-content: center;
         align-items: center;
-        z-index: 4000; 
+        z-index: 4000; /* 最前面に配置 */
+        cursor: pointer;
     }
-
-  
-    .add-trigger {
-        position: fixed; bottom: 40px; right: 40px;
-        width: 65px; height: 65px;
-        background: var(--accent); color: white;
-        border-radius: 50%; display: flex;
-        justify-content: center; align-items: center;
-        font-size: 1.5rem; box-shadow: 0 10px 30px rgba(0,122,255,0.4);
-        cursor: pointer; border: none; z-index: 500;
-    }
+    .close-lib:hover { background: #000; }
 
     footer { padding: 50px; text-align: center; color: var(--text-secondary); font-size: 0.8rem; }
 </style>
 </head>
 <body>
+
 <div class="top-nav">
     <div class="notification-wrapper" onclick="toggleNotifications(event)">
-        <i class="fa-regular fa-bell" style="pointer-events: none;"></i>
+        <i class="fa-regular fa-bell"></i>
         <span class="unread-dot" id="unread-dot"></span>
     </div>
     
@@ -254,6 +317,7 @@
         </div>
     </div>
 </div>
+
 <!-- ヒーローセクション -->
 <section class="hero">
     <h1>Focus Space</h1>
@@ -291,34 +355,34 @@
 
 <!-- 追加画面 -->
 <div id="library-overlay">
-    <h2 style="font-weight: 600;">Add Ambient Sound</h2>
+    <h2 style="font-weight: 600; margin-top: 20px;">環境音を追加</h2>
     <div class="lib-grid">
         <button class="lib-item-circle" onclick="addSound('rain', 'fa-cloud-showers-heavy', '雨')">
-            <i class="fa-solid fa-cloud-showers-heavy" style="color:#007aff"></i><span style="font-size:0.7rem">雨</span>
+            <i class="fa-solid fa-cloud-showers-heavy" style="color:#007aff"></i><span style="font-size:0.7rem; font-weight:600;">雨</span>
         </button>
         <button class="lib-item-circle" onclick="addSound('fire', 'fa-fire', '炎')">
-            <i class="fa-solid fa-fire" style="color:#ff9500"></i><span style="font-size:0.7rem">炎</span>
+            <i class="fa-solid fa-fire" style="color:#ff9500"></i><span style="font-size:0.7rem; font-weight:600;">炎</span>
         </button>
         <button class="lib-item-circle" onclick="addSound('cafe', 'fa-mug-hot', 'カフェ')">
-            <i class="fa-solid fa-mug-hot" style="color:#5856d6"></i><span style="font-size:0.7rem">カフェ</span>
+            <i class="fa-solid fa-mug-hot" style="color:#5856d6"></i><span style="font-size:0.7rem; font-weight:600;">カフェ</span>
         </button>
         <button class="lib-item-circle" onclick="addSound('wave', 'fa-water', '海')">
-            <i class="fa-solid fa-water" style="color:#34c759"></i><span style="font-size:0.7rem">海</span>
+            <i class="fa-solid fa-water" style="color:#34c759"></i><span style="font-size:0.7rem; font-weight:600;">海</span>
         </button>
         <button class="lib-item-circle" onclick="addSound('stream', 'fa-droplet', '水')">
-            <i class="fa-solid fa-droplet" style="color:#5ac8fa"></i><span style="font-size:0.7rem">水</span>
+            <i class="fa-solid fa-droplet" style="color:#5ac8fa"></i><span style="font-size:0.7rem; font-weight:600;">水</span>
         </button>
         <button class="lib-item-circle" onclick="addSound('pigeon', 'fa-dove', '山鳩')">
-            <i class="fa-solid fa-dove" style="color:#8e8e93"></i><span style="font-size:0.7rem">山鳩</span>
+            <i class="fa-solid fa-dove" style="color:#8e8e93"></i><span style="font-size:0.7rem; font-weight:600;">山鳩</span>
         </button>
         <button class="lib-item-circle" onclick="addSound('frog', 'fa-frog', 'カエル')">
-            <i class="fa-solid fa-frog" style="color:#4cd964"></i><span style="font-size:0.7rem">カエル</span>
+            <i class="fa-solid fa-frog" style="color:#4cd964"></i><span style="font-size:0.7rem; font-weight:600;">カエル</span>
         </button>
         <button class="lib-item-circle" onclick="addSound('warbler', 'fa-feather-pointed', 'ウグイス')">
-            <i class="fa-solid fa-feather-pointed" style="color:#ffcc00"></i><span style="font-size:0.7rem">ウグイス</span>
+            <i class="fa-solid fa-feather-pointed" style="color:#ffcc00"></i><span style="font-size:0.7rem; font-weight:600;">ウグイス</span>
         </button>
         <button class="lib-item-circle" onclick="addSound('bubbles', 'fa-circle-nodes', '泡')">
-            <i class="fa-solid fa-circle-nodes" style="color:#af52de"></i><span style="font-size:0.7rem">泡</span>
+            <i class="fa-solid fa-circle-nodes" style="color:#af52de"></i><span style="font-size:0.7rem; font-weight:600;">泡</span>
         </button>
     </div>
     <button class="close-lib" onclick="toggleLibrary(false)">完了</button>
@@ -345,7 +409,7 @@
     let notifOpen = false;
     const LATEST_NOTIF_ID = 2;
 
- 
+    // --- 通知機能 ---
     function checkNotifications() {
         const lastReadId = localStorage.getItem('lastReadNotifId') || 0;
         const dot = document.getElementById('unread-dot');
@@ -370,11 +434,11 @@
         }
     }
 
- 
+    // --- ライブラリ・音源操作 ---
     function toggleLibrary(show) {
         const overlay = document.getElementById('library-overlay');
         overlay.style.display = show ? 'flex' : 'none';
- 
+        
         if(show) overlay.scrollTo(0, 0);
     }
 
@@ -424,9 +488,8 @@
         }
     }
 
-
+    // --- 全体イベント監視 ---
     window.onclick = function(event) {
-
         if (notifOpen) {
             const panel = document.getElementById('notification-panel');
             panel.style.display = 'none';
@@ -437,7 +500,6 @@
     window.onload = function() {
         checkNotifications();
         
-
         const panel = document.getElementById('notification-panel');
         if (panel) {
             panel.onclick = (e) => e.stopPropagation();
