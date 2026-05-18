@@ -177,17 +177,52 @@
         <i class="fa-solid fa-water"></i>
         <span class="lib-label">Wave</span>
     </div>
+    <div class="lib-item" onclick="addSound('wave', 'fa-water')">
+        <i class="fa-solid fa-water"></i>
+        <span class="lib-label">Sea</span>
+    </div>
+    <!-- 水（小川・せせらぎ） -->
+    <div class="lib-item" onclick="addSound('stream', 'fa-droplet')">
+        <i class="fa-solid fa-droplet"></i>
+        <span class="lib-label">Stream</span>
+    </div>
+    <!-- 山鳩 -->
+    <div class="lib-item" onclick="addSound('pigeon', 'fa-dove')">
+        <i class="fa-solid fa-dove"></i>
+        <span class="lib-label">Pigeon</span>
+    </div>
+    <!-- カエル -->
+    <div class="lib-item" onclick="addSound('frog', 'fa-frog')">
+        <i class="fa-solid fa-frog"></i>
+        <span class="lib-label">Frog</span>
+    </div>
+    <!-- うぐいす -->
+    <div class="lib-item" onclick="addSound('warbler', 'fa-feather-pointed')">
+        <i class="fa-solid fa-feather-pointed"></i>
+        <span class="lib-label">Warbler</span>
+    </div>
+    <!-- 泡 -->
+    <div class="lib-item" onclick="addSound('bubbles', 'fa-bubbles')">
+        <i class="fa-solid fa-circle-nodes"></i>
+        <span class="lib-label">Bubbles</span>
+    </div>
 </div>
 
 <script>
     // 音源データ
     const audioData = {
-        rain: 'https://www.soundhelix.com/examples/mp3/SoundHelix-Song-1.mp3',
-        fire: 'https://www.soundhelix.com/examples/mp3/SoundHelix-Song-2.mp3',
-        cafe: 'https://www.soundhelix.com/examples/mp3/SoundHelix-Song-3.mp3',
+        rain: 'https://promo.blocksurprise.f5.si/focus/file/sound1.mp3',
+        fire: 'https://promo.blocksurprise.f5.si/focus/file/fire.mp3',
+        cafe: 'https://promo.blocksurprise.f5.si/focus/file/cafe.mp3',
         wind: 'https://www.soundhelix.com/examples/mp3/SoundHelix-Song-4.mp3',
         forest: 'https://www.soundhelix.com/examples/mp3/SoundHelix-Song-5.mp3',
         wave: 'https://www.soundhelix.com/examples/mp3/SoundHelix-Song-6.mp3'
+        wave: 'https://example.com/sea.mp3',
+        stream: 'https://example.com/water.mp3',
+        pigeon: 'https://example.com/pigeon.mp3',
+        frog: 'https://example.com/frog.mp3',
+        warbler: 'https://example.com/uguisu.mp3',
+        bubbles: 'https://example.com/bubbles.mp3'
     };
 
     const activeSounds = {}; // 再生中のAudioオブジェクトを管理
