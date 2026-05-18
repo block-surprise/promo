@@ -410,7 +410,15 @@
     let notifOpen = false;
     const LATEST_NOTIF_ID = 2;
 
-    // --- 通知機能 ---
+    // ブラウザのロックを解除するための関数
+    function unlockAudio() {
+        const silentAudio = new Audio();
+        silentAudio.src = "data:audio/wav;base64,UklGRigAAABXQVZFZm10IBAAAAABAAEARKwAAIhYAQACABAAZGF0YQQAAAAAAA== ";
+        silentAudio.play().then(() => {
+            console.log("Audio Unlocked");
+        }).catch(e => console.log("Unlock failed", e));
+    }
+
     function checkNotifications() {
         const lastReadId = localStorage.getItem('lastReadNotifId') || 0;
         const dot = document.getElementById('unread-dot');
@@ -435,11 +443,11 @@
         }
     }
 
-    // --- ライブラリ・音源操作 ---
     function toggleLibrary(show) {
+        // ライブラリを開く瞬間にオーディオのロックを解除しにいく
+        if (show) unlockAudio();
         const overlay = document.getElementById('library-overlay');
         overlay.style.display = show ? 'flex' : 'none';
-        
         if(show) overlay.scrollTo(0, 0);
     }
 
@@ -451,7 +459,10 @@
         const audio = new Audio(audioData[id]);
         audio.loop = true;
         audio.volume = 0;
-        audio.play().catch(e => console.log("再生にはユーザー操作が必要です"));
+        
+        // 追加時に一度playを試みる（この時点ではボリューム0）
+        audio.play().catch(e => console.warn("Auto-play blocked, waiting for slider."));
+        
         activeSounds[id] = audio;
 
         const mixerArea = document.getElementById('active-mixer');
@@ -472,13 +483,19 @@
         const audio = activeSounds[id];
         if (audio) {
             audio.volume = vol;
-            if (vol > 0 && audio.paused) audio.play();
+            // ユーザーがスライダーを触った瞬間に再生を再試行する
+            if (vol > 0) {
+                audio.play().catch(e => {
+                    console.error("Playback error:", e);
+                });
+            }
         }
     }
 
     function removeSound(id) {
         if (activeSounds[id]) {
             activeSounds[id].pause();
+            activeSounds[id].src = ""; // メモリ解放
             delete activeSounds[id];
         }
         const card = document.getElementById(`card-${id}`);
@@ -489,28 +506,16 @@
         }
     }
 
-    // --- 安全なイベントリスナー登録 ---
     document.addEventListener('DOMContentLoaded', () => {
-        // 初期通知チェック
         checkNotifications();
-
-        // ベルのクリックイベントを設定
         const trigger = document.getElementById('notif-trigger');
         if (trigger) {
-            trigger.addEventListener('click', (e) => {
-                toggleNotifications(e);
-            });
+            trigger.addEventListener('click', (e) => toggleNotifications(e));
         }
-
-        // パネル内をクリックしても閉じないようにガード
         const panel = document.getElementById('notification-panel');
         if (panel) {
-            panel.addEventListener('click', (e) => {
-                e.stopPropagation();
-            });
+            panel.addEventListener('click', (e) => e.stopPropagation());
         }
-
-        // 画面のどこかをクリックしたらお知らせを閉じる
         window.addEventListener('click', () => {
             if (notifOpen) {
                 if (panel) panel.style.display = 'none';
