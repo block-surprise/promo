@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Focus Space | あなたのだけの集中環境音をつくれる</title>
+    <title>Focus Space | あなただけの集中環境音をつくる</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
     <style>
         :root {
@@ -11,44 +11,77 @@
             --card-bg: #ffffff;
             --accent: #007aff;
             --text: #1d1d1f;
+            --text-secondary: #8e8e93;
             --shadow: 0 8px 30px rgba(0,0,0,0.04);
         }
 
         body {
-            font-family: -apple-system, "SF Pro Display", sans-serif;
+            font-family: -apple-system, "SF Pro Display", "Helvetica Neue", sans-serif;
             background-color: var(--bg-color);
             color: var(--text);
             margin: 0;
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            min-height: 100vh;
+            line-height: 1.5;
             overflow-x: hidden;
         }
 
-        header { margin-top: 50px; text-align: center; }
-        h1 { font-weight: 600; font-size: 2rem; letter-spacing: -0.02em; }
+        /* ヒーローセクション（ホーム感の要） */
+        .hero {
+            height: 60vh;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            text-align: center;
+            padding: 0 20px;
+        }
 
+        .hero h1 {
+            font-size: 3rem;
+            font-weight: 700;
+            letter-spacing: -0.04em;
+            margin-bottom: 10px;
+            background: linear-gradient(135deg, #007aff, #5856d6);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        .hero p {
+            font-size: 1.2rem;
+            color: var(--text-secondary);
+            max-width: 500px;
+        }
+
+        /* ミキサーエリア */
         #active-mixer {
             display: flex;
             flex-wrap: wrap;
             justify-content: center;
             gap: 25px;
-            padding: 40px;
+            padding: 20px;
             width: 100%;
             max-width: 900px;
+            margin: 0 auto;
+            min-height: 200px;
         }
+
+        /* 何もない時のガイド */
+        #empty-hint {
+            text-align: center;
+            color: var(--text-secondary);
+            margin-top: 40px;
+            font-size: 0.9rem;
+            animation: fadeIn 1s ease;
+        }
+
+        @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
 
         .mixer-circle {
             background: var(--card-bg);
-            width: 160px;
-            height: 160px;
+            width: 160px; height: 160px;
             border-radius: 50%;
             box-shadow: var(--shadow);
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            justify-content: center;
+            display: flex; flex-direction: column;
+            align-items: center; justify-content: center;
             position: relative;
             animation: popIn 0.5s cubic-bezier(0.175, 0.885, 0.32, 1.275);
             border: 1px solid rgba(0,0,0,0.02);
@@ -59,169 +92,154 @@
             to { transform: scale(1); opacity: 1; }
         }
 
-        .icon-circle {
-            font-size: 1.8rem;
-            color: var(--accent);
-            margin-bottom: 12px;
-        }
+        .icon-circle { font-size: 1.8rem; color: var(--accent); margin-bottom: 12px; }
 
-  
         .remove-btn {
-            position: absolute;
-            top: 10px;
-            right: 10px;
-            background: #f2f2f7;
-            color: #8e8e93;
-            border: none;
-            width: 26px;
-            height: 26px;
-            border-radius: 50%;
-            cursor: pointer;
-            font-size: 0.8rem;
-            transition: 0.2s;
+            position: absolute; top: 10px; right: 10px;
+            background: #f2f2f7; color: #8e8e93; border: none;
+            width: 26px; height: 26px; border-radius: 50%;
+            cursor: pointer; font-size: 0.8rem;
         }
         .remove-btn:hover { background: #ff3b30; color: white; }
 
-        /* スライダー（横向きで円の中に収める） */
         .volume-slider {
-            width: 80px;
-            height: 4px;
-            -webkit-appearance: none;
-            background: #e5e5ea;
-            border-radius: 2px;
-            outline: none;
+            width: 80px; height: 4px;
+            -webkit-appearance: none; background: #e5e5ea;
+            border-radius: 2px; outline: none;
         }
         .volume-slider::-webkit-slider-thumb {
-            -webkit-appearance: none;
-            width: 12px;
-            height: 12px;
-            background: var(--accent);
-            border-radius: 50%;
-            cursor: pointer;
+            -webkit-appearance: none; width: 12px; height: 12px;
+            background: var(--accent); border-radius: 50%; cursor: pointer;
         }
 
-        .add-trigger {
-            position: fixed;
-            bottom: 40px;
-            width: 60px;
-            height: 60px;
-            background: var(--card-bg);
-            border-radius: 50%;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            font-size: 1.5rem;
-            box-shadow: 0 10px 40px rgba(0,0,0,0.1);
-            cursor: pointer;
-            transition: 0.3s;
-            border: none;
-            color: var(--accent);
-        }
-        .add-trigger:hover { transform: scale(1.1); }
-
-       
-        #library-overlay {
-            position: fixed;
-            top: 0;
-            left: 0;
+        /* 使い方セクション（スクロール後） */
+        .info-section {
+            background: white;
+            padding: 100px 20px;
             width: 100%;
-            height: 100%;
-            background: rgba(245, 245, 247, 0.95);
-            backdrop-filter: blur(20px);
-            display: none;
+            display: flex;
             flex-direction: column;
             align-items: center;
-            z-index: 100;
-            padding-top: 80px;
+        }
+
+        .info-content { max-width: 600px; width: 100%; }
+        .info-content h2 { font-size: 1.8rem; margin-top: 40px; border-bottom: 2px solid var(--bg-color); padding-bottom: 10px;}
+        .info-content p { color: var(--text-secondary); line-height: 1.8; }
+
+        /* プラスボタン */
+        .add-trigger {
+            position: fixed; bottom: 40px; right: 40px;
+            width: 65px; height: 65px;
+            background: var(--accent); color: white;
+            border-radius: 50%; display: flex;
+            justify-content: center; align-items: center;
+            font-size: 1.5rem; box-shadow: 0 10px 30px rgba(0,122,255,0.4);
+            cursor: pointer; transition: 0.3s; border: none; z-index: 50;
+        }
+        .add-trigger:hover { transform: scale(1.1) rotate(90deg); }
+
+        /* 追加画面モーダル */
+        #library-overlay {
+            position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+            background: rgba(255, 255, 255, 0.95); backdrop-filter: blur(20px);
+            display: none; flex-direction: column; align-items: center;
+            z-index: 100; padding-top: 60px;
         }
 
         .lib-grid {
-            display: grid;
-            grid-template-columns: repeat(3, 1fr);
-            gap: 30px;
-            margin-top: 40px;
+            display: grid; grid-template-columns: repeat(3, 1fr);
+            gap: 25px; margin-top: 40px;
         }
 
         .lib-item-circle {
-            width: 100px;
-            height: 100px;
-            background: var(--card-bg);
-            border-radius: 50%;
-            display: flex;
-            flex-direction: column;
-            justify-content: center;
-            align-items: center;
-            box-shadow: var(--shadow);
-            cursor: pointer;
-            transition: 0.3s;
-            border: none;
+            width: 100px; height: 100px;
+            background: white; border-radius: 50%;
+            display: flex; flex-direction: column;
+            justify-content: center; align-items: center;
+            box-shadow: var(--shadow); border: none; cursor: pointer;
         }
-        .lib-item-circle:hover { transform: translateY(-5px); box-shadow: 0 15px 40px rgba(0,0,0,0.08); }
-        .lib-item-circle i { font-size: 1.5rem; color: #8e8e93; margin-bottom: 5px; }
-        .lib-item-circle span { font-size: 0.7rem; color: #1d1d1f; }
 
-        .close-lib {
-            margin-top: 50px;
-            background: var(--text);
-            color: white;
-            border: none;
-            padding: 12px 30px;
-            border-radius: 25px;
-            cursor: pointer;
-        }
+        footer { padding: 50px; text-align: center; color: var(--text-secondary); font-size: 0.8rem; }
     </style>
 </head>
 <body>
 
-<header>
+<!-- ヒーローセクション -->
+<section class="hero">
     <h1>Focus Space</h1>
-</header>
+    <p>好きな環境音を重ねて、あなただけの「集中できる空間」をデザインしよう。</p>
+    
+    <div id="empty-hint">
+        <i class="fa-solid fa-arrow-down" style="margin-bottom: 10px;"></i><br>
+        下の「＋」ボタンから音を追加してください
+    </div>
+</section>
 
-<div id="active-mixer">
+<!-- ミキサーエリア -->
+<div id="active-mixer"></div>
 
-</div>
+<!-- 使い方・紹介セクション -->
+<section class="info-section">
+    <div class="info-content">
+        <h2>About Focus Space</h2>
+        <p>Focus Spaceは、作業や勉強に没頭するためのミニマルな音響ツールです。雨の音、焚き火の音、カフェの雑踏... 複数の環境音を自由にミックスして、あなたにとって最も心地よいバランスを見つけてください。</p>
+        
+        <h2>How to use</h2>
+        <p>1. 右下のプラスボタンをクリックして音源ライブラリを開きます。<br>
+           2. 好きな音（雨や炎など）をタップして画面に追加します。<br>
+           3. 円形パネルのスライダーでそれぞれの音量を調整します。<br>
+           4. 不要な音は右上の「×」で消去できます。ブラウザを閉じるとリセットされます。</p>
+        
+        <h2 style="font-size: 1.2rem;">Credits</h2>
+        <p>Created by SURGE PROJECT. <br>Minimal design inspired by modern UI/UX principles.</p>
+    </div>
+</section>
 
 <button class="add-trigger" onclick="toggleLibrary(true)">
     <i class="fa-solid fa-plus"></i>
 </button>
 
-
+<!-- 追加画面 -->
 <div id="library-overlay">
-    <h2>音楽を追加する</h2>
+    <h2 style="font-weight: 600;">Add Ambient Sound</h2>
     <div class="lib-grid">
-        <button class="lib-item-circle" onclick="addSound('rain', 'fa-cloud-showers-heavy', ''雨)">
-            <i class="fa-solid fa-cloud-showers-heavy"></i><span>雨</span>
+        <button class="lib-item-circle" onclick="addSound('rain', 'fa-cloud-showers-heavy', '雨')">
+            <i class="fa-solid fa-cloud-showers-heavy" style="color:#007aff"></i><span style="font-size:0.7rem">雨</span>
         </button>
         <button class="lib-item-circle" onclick="addSound('fire', 'fa-fire', '炎')">
-            <i class="fa-solid fa-fire"></i><span>炎</span>
+            <i class="fa-solid fa-fire" style="color:#ff9500"></i><span style="font-size:0.7rem">炎</span>
         </button>
         <button class="lib-item-circle" onclick="addSound('cafe', 'fa-mug-hot', 'カフェ')">
-            <i class="fa-solid fa-mug-hot"></i><span>カフェ</span>
+            <i class="fa-solid fa-mug-hot" style="color:#5856d6"></i><span style="font-size:0.7rem">カフェ</span>
         </button>
         <button class="lib-item-circle" onclick="addSound('wave', 'fa-water', '海')">
-            <i class="fa-solid fa-water"></i><span>海</span>
+            <i class="fa-solid fa-water" style="color:#34c759"></i><span style="font-size:0.7rem">海</span>
         </button>
         <button class="lib-item-circle" onclick="addSound('stream', 'fa-droplet', '水')">
-            <i class="fa-solid fa-droplet"></i><span>水</span>
+            <i class="fa-solid fa-droplet" style="color:#5ac8fa"></i><span style="font-size:0.7rem">水</span>
         </button>
         <button class="lib-item-circle" onclick="addSound('pigeon', 'fa-dove', '山鳩')">
-            <i class="fa-solid fa-dove"></i><span>山鳩</span>
+            <i class="fa-solid fa-dove" style="color:#8e8e93"></i><span style="font-size:0.7rem">山鳩</span>
         </button>
         <button class="lib-item-circle" onclick="addSound('frog', 'fa-frog', 'カエル')">
-            <i class="fa-solid fa-frog"></i><span>カエル</span>
+            <i class="fa-solid fa-frog" style="color:#4cd964"></i><span style="font-size:0.7rem">カエル</span>
         </button>
         <button class="lib-item-circle" onclick="addSound('warbler', 'fa-feather-pointed', 'ウグイス')">
-            <i class="fa-solid fa-feather-pointed"></i><span>ウグイス</span>
+            <i class="fa-solid fa-feather-pointed" style="color:#ffcc00"></i><span style="font-size:0.7rem">ウグイス</span>
         </button>
         <button class="lib-item-circle" onclick="addSound('bubbles', 'fa-circle-nodes', '泡')">
-            <i class="fa-solid fa-circle-nodes"></i><span>泡</span>
+            <i class="fa-solid fa-circle-nodes" style="color:#af52de"></i><span style="font-size:0.7rem">泡</span>
         </button>
     </div>
     <button class="close-lib" onclick="toggleLibrary(false)">完了</button>
 </div>
 
+<footer>
+    &copy; 2026 Focus Space | Powered by SURGE
+</footer>
+
 <script>
-const audioData = {
+    const audioData = {
         rain: 'https://promo.blocksurprise.f5.si/focus/file/sound1.mp3',
         fire: 'https://promo.blocksurprise.f5.si/focus/file/fire.mp3',
         cafe: 'https://promo.blocksurprise.f5.si/focus/file/cafe.mp3',
@@ -229,7 +247,7 @@ const audioData = {
         stream: 'https://promo.blocksurprise.f5.si/focus/file/bubble.mp3',
         pigeon: 'https://promo.blocksurprise.f5.si/focus/file/yama-dori1.mp3',
         frog: 'https://promo.blocksurprise.f5.si/VSQSE_0819_frog_02.mp3',
-        warbler: 'https://promo.blocksurprise.f5.si/focus/file/ugu.mp3',
+        warbler: 'https://promo.blocksurprise.f5.si/VSQSE_1187_Japanese_nightingale_04.mp3',
         bubbles: 'https://promo.blocksurprise.f5.si/focus/file/bubbles.mp3' 
     };
 
@@ -242,16 +260,16 @@ const audioData = {
     function addSound(id, iconClass, label) {
         if (activeSounds[id]) return;
 
+        // ヒントを消す
+        document.getElementById('empty-hint').style.display = 'none';
+
         const audio = new Audio(audioData[id]);
         audio.loop = true;
-        audio.volume = 0; // 最初は無音
+        audio.volume = 0;
 
-        // 重要: ボタンを押した瞬間に「無音で再生」を開始して、ブラウザのロックを解除する
         audio.play().then(() => {
-            console.log(`${label} started silently.`);
-        }).catch(e => {
-            console.error("Autoplay blocked or load error:", e);
-        });
+            console.log(`${label} ready.`);
+        }).catch(e => console.error(e));
 
         activeSounds[id] = audio;
 
@@ -264,7 +282,7 @@ const audioData = {
             <div class="icon-circle"><i class="fa-solid ${iconClass}"></i></div>
             <input type="range" class="volume-slider" min="0" max="1" step="0.01" value="0" 
                    oninput="changeVol('${id}', this.value)">
-            <div style="font-size:0.6rem; color:#8e8e93; margin-top:8px;">${label}</div>
+            <div style="font-size:0.7rem; font-weight:500; margin-top:8px;">${label}</div>
         `;
         mixerArea.appendChild(circle);
     }
@@ -272,26 +290,21 @@ const audioData = {
     function changeVol(id, vol) {
         const audio = activeSounds[id];
         if (!audio) return;
-
         audio.volume = vol;
-
-        // スライダーを動かしたときに一時停止状態なら再生を試みる
-        if (vol > 0 && audio.paused) {
-            audio.play().catch(e => console.log("Play failed on slider move:", e));
-        } else if (vol == 0) {
-            // 音量0のときはリソース節約のために一時停止しても良い（お好みで）
-            // audio.pause(); 
-        }
+        if (vol > 0 && audio.paused) audio.play();
     }
 
     function removeSound(id) {
         if (activeSounds[id]) {
             activeSounds[id].pause();
-            activeSounds[id].src = ""; // メモリ解放
             delete activeSounds[id];
         }
-        const el = document.getElementById(`card-${id}`);
-        if (el) el.remove();
+        document.getElementById(`card-${id}`).remove();
+        
+        // 全て消えたらヒントを再表示
+        if (Object.keys(activeSounds).length === 0) {
+            document.getElementById('empty-hint').style.display = 'block';
+        }
     }
 </script>
 
