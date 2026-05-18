@@ -483,30 +483,38 @@
     }
 </script>
 <script>
-    let notifOpen = false;
+let notifOpen = false;
 
-    function toggleNotifications() {
+function toggleNotifications(event) {
+    // ベルアイコンをクリックした時の動作
+    event.stopPropagation(); // ベル自体のクリックが window.onclick に伝わるのを防ぐ
+    
+    const panel = document.getElementById('notification-panel');
+    const dot = document.getElementById('unread-dot');
+    
+    if (!notifOpen) {
+        panel.style.display = 'flex';
+        if (dot) dot.style.display = 'none'; // 既読にする
+        notifOpen = true;
+    } else {
+        panel.style.display = 'none';
+        notifOpen = false;
+    }
+}
+
+
+document.getElementById('notification-panel').addEventListener('click', function(event) {
+    event.stopPropagation(); // これでパネル内のクリックでは window.onclick が反応しなくなる
+});
+
+
+window.onclick = function(event) {
+    if (notifOpen) {
         const panel = document.getElementById('notification-panel');
-        const dot = document.getElementById('unread-dot');
-        
-        if (!notifOpen) {
-            panel.style.display = 'flex';
-            // パネルを開いたらドットを消す（既読にする）
-            dot.style.display = 'none';
-            notifOpen = true;
-        } else {
-            panel.style.display = 'none';
-            notifOpen = false;
-        }
+        panel.style.display = 'none';
+        notifOpen = false;
     }
-
-    // パネルの外をクリックしたら閉じる処理
-    window.onclick = function(event) {
-        if (!event.target.closest('.notification-wrapper')) {
-            document.getElementById('notification-panel').style.display = 'none';
-            notifOpen = false;
-        }
-    }
+}
 </script>
 </body>
 </html>
