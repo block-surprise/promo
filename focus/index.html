@@ -5,7 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Focus Space | あなただけの集中環境音をつくる</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
- <style>
+<style>
     :root {
         --bg-color: #f5f5f7;
         --card-bg: #ffffff;
@@ -15,7 +15,7 @@
         --shadow: 0 8px 30px rgba(0,0,0,0.04);
     }
 
-    /* 全体設定：横揺れ防止 */
+    /* 全体設定 */
     html, body {
         overflow-x: hidden;
         width: 100%;
@@ -25,37 +25,10 @@
         color: var(--text);
         margin: 0;
         line-height: 1.5;
-        -webkit-tap-highlight-color: transparent; /* タップ時の青い枠を消す */
+        -webkit-tap-highlight-color: transparent;
     }
 
-    /* ヒーローセクション */
-    .hero {
-        height: 60vh;
-        display: flex;
-        flex-direction: column;
-        justify-content: center;
-        align-items: center;
-        text-align: center;
-        padding: 0 20px;
-    }
-
-    .hero h1 {
-        font-size: 3rem;
-        font-weight: 700;
-        letter-spacing: -0.04em;
-        margin-bottom: 10px;
-        background: linear-gradient(135deg, #007aff, #5856d6);
-        -webkit-background-clip: text;
-        -webkit-text-fill-color: transparent;
-    }
-
-    .hero p {
-        font-size: 1.2rem;
-        color: var(--text-secondary);
-        max-width: 500px;
-    }
-
-    /* 通知機能（右上のベル） */
+    /* ナビゲーション（お知らせベル周り） */
     .top-nav {
         position: fixed;
         top: 0;
@@ -69,18 +42,24 @@
     .notification-wrapper {
         position: relative;
         cursor: pointer;
+        width: 44px;
+        height: 44px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        z-index: 10001;
     }
 
     .notification-wrapper i {
         font-size: 1.4rem;
         color: var(--text);
-        transition: 0.3s;
+        pointer-events: none; /* アイコンをすり抜けて親のクリックを発火させる */
     }
 
     .unread-dot {
         position: absolute;
-        top: -2px;
-        right: -2px;
+        top: 8px;
+        right: 8px;
         width: 10px;
         height: 10px;
         background-color: #ff3b30;
@@ -89,11 +68,11 @@
         display: none;
     }
 
-    /* お知らせパネル：最前面表示 */
+    /* お知らせパネル（位置を固定） */
     #notification-panel {
-        position: absolute;
-        top: 50px;
-        right: 0;
+        position: fixed;
+        top: 70px;
+        right: 20px;
         width: 280px;
         background: #ffffff;
         border-radius: 18px;
@@ -118,7 +97,6 @@
         margin-bottom: 10px;
         padding-bottom: 10px;
         border-bottom: 1px solid #f2f2f7;
-        color: var(--text);
     }
 
     .notif-item {
@@ -127,15 +105,34 @@
         border-radius: 10px;
         margin-bottom: 5px;
         background: #f9f9fb;
-        color: var(--text);
         transition: 0.2s;
     }
-    .notif-item:hover { background: #f2f2f7; }
 
     .notif-date {
         font-size: 0.6rem;
         color: var(--text-secondary);
         margin-bottom: 3px;
+    }
+
+    /* ヒーローセクション */
+    .hero {
+        height: 60vh;
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        align-items: center;
+        text-align: center;
+        padding: 0 20px;
+    }
+
+    .hero h1 {
+        font-size: 3rem;
+        font-weight: 700;
+        letter-spacing: -0.04em;
+        margin-bottom: 10px;
+        background: linear-gradient(135deg, #007aff, #5856d6);
+        -webkit-background-clip: text;
+        -webkit-text-fill-color: transparent;
     }
 
     /* ミキサーエリア */
@@ -149,7 +146,6 @@
         max-width: 900px;
         margin: 0 auto;
         min-height: 200px;
-        box-sizing: border-box;
     }
 
     .mixer-circle {
@@ -161,77 +157,31 @@
         align-items: center; justify-content: center;
         position: relative;
         animation: popIn 0.5s cubic-bezier(0.175, 0.885, 0.32, 1.275);
-        border: 1px solid rgba(0,0,0,0.02);
     }
 
-    @keyframes popIn {
-        from { transform: scale(0.5); opacity: 0; }
-        to { transform: scale(1); opacity: 1; }
-    }
-
-    .icon-circle { font-size: 1.8rem; color: var(--accent); margin-bottom: 12px; }
-
-    .remove-btn {
-        position: absolute; top: 10px; right: 10px;
-        background: #f2f2f7; color: #8e8e93; border: none;
-        width: 26px; height: 26px; border-radius: 50%;
-        cursor: pointer; font-size: 0.8rem;
-    }
-    .remove-btn:hover { background: #ff3b30; color: white; }
-
-    .volume-slider {
-        width: 80px; height: 4px;
-        -webkit-appearance: none; background: #e5e5ea;
-        border-radius: 2px; outline: none;
-    }
-    .volume-slider::-webkit-slider-thumb {
-        -webkit-appearance: none; width: 12px; height: 12px;
-        background: var(--accent); border-radius: 50%; cursor: pointer;
-    }
-
-    /* 情報セクション */
-    .info-section {
-        background: white;
-        padding: 100px 20px;
-        width: 100%;
-        display: flex;
+    /* ライブラリ（追加画面） */
+    #library-overlay {
+        position: fixed;
+        top: 0; left: 0; width: 100%; height: 100%;
+        background: rgba(255, 255, 255, 0.98);
+        backdrop-filter: blur(25px);
+        display: none;
         flex-direction: column;
         align-items: center;
-        box-sizing: border-box;
-    }
-
-    .info-content { max-width: 600px; width: 100%; }
-    .info-content h2 { font-size: 1.8rem; margin-top: 40px; border-bottom: 2px solid var(--bg-color); padding-bottom: 10px;}
-    .info-content p { color: var(--text-secondary); line-height: 1.8; }
-
-    /* プラスボタン */
-    .add-trigger {
-        position: fixed; bottom: 40px; right: 40px;
-        width: 65px; height: 65px;
-        background: var(--accent); color: white;
-        border-radius: 50%; display: flex;
-        justify-content: center; align-items: center;
-        font-size: 1.5rem; box-shadow: 0 10px 30px rgba(0,122,255,0.4);
-        cursor: pointer; transition: 0.3s; border: none; z-index: 500;
-    }
-    .add-trigger:hover { transform: scale(1.1) rotate(90deg); }
-
-    /* 追加画面（ライブラリ）：スクロール可能に修正 */
-    #library-overlay {
-        position: fixed; top: 0; left: 0; width: 100%; height: 100%;
-        background: rgba(255, 255, 255, 0.98); backdrop-filter: blur(25px);
-        display: none; flex-direction: column; align-items: center;
-        z-index: 3000; padding-top: env(safe-area-inset-top, 40px);
-        box-sizing: border-box;
-        overflow-y: auto; /* 縦スクロールを許可 */
+        z-index: 3000;
+        overflow-y: auto; /* ここでスクロールさせる */
         -webkit-overflow-scrolling: touch;
     }
 
     .lib-grid {
-        display: grid; grid-template-columns: repeat(3, 1fr);
-        gap: 15px; margin: 30px auto; 
-        padding: 0 20px 140px; /* ボタンに被らないよう下の余白を多めに */
-        width: 100%; max-width: 400px; box-sizing: border-box;
+        display: grid;
+        grid-template-columns: repeat(3, 1fr);
+        gap: 15px;
+        margin: 40px auto;
+        padding: 0 20px 140px; /* 完了ボタンに被らないように余白 */
+        width: 100%;
+        max-width: 400px;
+        box-sizing: border-box;
     }
 
     @media (max-width: 400px) {
@@ -244,26 +194,43 @@
         background: white; border-radius: 24px;
         display: flex; flex-direction: column;
         justify-content: center; align-items: center;
-        box-shadow: 0 4px 15px rgba(0,0,0,0.05); border: 1px solid rgba(0,0,0,0.05);
-        cursor: pointer; transition: transform 0.2s;
+        box-shadow: 0 4px 15px rgba(0,0,0,0.05);
+        border: 1px solid rgba(0,0,0,0.05);
+        cursor: pointer;
     }
-    .lib-item-circle:active { transform: scale(0.9); }
-    .lib-item-circle i { font-size: 1.6rem; margin-bottom: 8px; }
-    .lib-item-circle span { font-size: 0.8rem; font-weight: 600; }
 
-    /* 完了ボタン：常に画面下に固定 */
+    /* 【重要】完了ボタン：画面に対して固定 */
     .close-lib {
-        position: fixed; bottom: 30px;
-        left: 50%; transform: translateX(-50%);
-        width: 85%; max-width: 300px; height: 60px;
-        background: var(--text); color: white;
-        border: none; border-radius: 30px;
-        font-size: 1.1rem; font-weight: 600;
-        cursor: pointer; box-shadow: 0 10px 30px rgba(0,0,0,0.2);
-        display: flex; justify-content: center; align-items: center;
-        z-index: 3100;
+        position: fixed;
+        bottom: 30px;
+        left: 50%;
+        transform: translateX(-50%);
+        width: 85%;
+        max-width: 300px;
+        height: 60px;
+        background: var(--text);
+        color: white;
+        border: none;
+        border-radius: 30px;
+        font-size: 1.1rem;
+        font-weight: 600;
+        box-shadow: 0 10px 30px rgba(0,0,0,0.2);
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        z-index: 4000; 
     }
-    .close-lib:hover { background: #000; }
+
+  
+    .add-trigger {
+        position: fixed; bottom: 40px; right: 40px;
+        width: 65px; height: 65px;
+        background: var(--accent); color: white;
+        border-radius: 50%; display: flex;
+        justify-content: center; align-items: center;
+        font-size: 1.5rem; box-shadow: 0 10px 30px rgba(0,122,255,0.4);
+        cursor: pointer; border: none; z-index: 500;
+    }
 
     footer { padding: 50px; text-align: center; color: var(--text-secondary); font-size: 0.8rem; }
 </style>
@@ -271,19 +238,19 @@
 <body>
 <div class="top-nav">
     <div class="notification-wrapper" onclick="toggleNotifications(event)">
-        <i class="fa-regular fa-bell"></i>
+        <i class="fa-regular fa-bell" style="pointer-events: none;"></i>
         <span class="unread-dot" id="unread-dot"></span>
-        
-        <div id="notification-panel">
-            <div class="notif-header">お知らせ</div>
-            <div class="notif-item">
-                <div class="notif-date">2026.05.18</div>
-                <div>通知機能を追加しました！右上のベルからいつでも確認できます。</div>
-            </div>
-            <div class="notif-item">
-                <div class="notif-date">2026.05.17</div>
-                <div>Focus Spaceがプレオープンしました。</div>
-            </div>
+    </div>
+    
+    <div id="notification-panel">
+        <div class="notif-header">お知らせ</div>
+        <div class="notif-item">
+            <div class="notif-date">2026.05.18</div>
+            <div style="color: #1d1d1f;">通知機能を追加しました！右上のベルからいつでも確認できます。</div>
+        </div>
+        <div class="notif-item">
+            <div class="notif-date">2026.05.17</div>
+            <div style="color: #1d1d1f;">Focus Spaceがプレオープンしました。</div>
         </div>
     </div>
 </div>
@@ -376,34 +343,25 @@
 
     const activeSounds = {};
     let notifOpen = false;
+    const LATEST_NOTIF_ID = 2;
 
-    // --- 通知関連の設定 ---
-    const LATEST_NOTIF_ID = 2; // お知らせを更新したらここを増やす
-
-    // 通知をチェックする関数
+ 
     function checkNotifications() {
         const lastReadId = localStorage.getItem('lastReadNotifId') || 0;
         const dot = document.getElementById('unread-dot');
         if (dot) {
-            if (parseInt(LATEST_NOTIF_ID) > parseInt(lastReadId)) {
-                dot.style.display = 'block'; 
-            } else {
-                dot.style.display = 'none'; 
-            }
+            dot.style.display = (parseInt(LATEST_NOTIF_ID) > parseInt(lastReadId)) ? 'block' : 'none';
         }
     }
 
-    // ベルを押した時の動作（1つにまとめました！）
     function toggleNotifications(event) {
-        if (event) event.stopPropagation();
-        
+        if (event) event.stopPropagation(); 
         const panel = document.getElementById('notification-panel');
         const dot = document.getElementById('unread-dot');
 
         if (!notifOpen) {
             panel.style.display = 'flex';
             if (dot) dot.style.display = 'none';
-            // 読んだことを保存
             localStorage.setItem('lastReadNotifId', LATEST_NOTIF_ID);
             notifOpen = true;
         } else {
@@ -412,18 +370,23 @@
         }
     }
 
-    // --- 音源操作関連の関数 ---
+ 
     function toggleLibrary(show) {
-        document.getElementById('library-overlay').style.display = show ? 'flex' : 'none';
+        const overlay = document.getElementById('library-overlay');
+        overlay.style.display = show ? 'flex' : 'none';
+ 
+        if(show) overlay.scrollTo(0, 0);
     }
 
     function addSound(id, iconClass, label) {
         if (activeSounds[id]) return;
-        document.getElementById('empty-hint').style.display = 'none';
+        const hint = document.getElementById('empty-hint');
+        if (hint) hint.style.display = 'none';
+
         const audio = new Audio(audioData[id]);
         audio.loop = true;
         audio.volume = 0;
-        audio.play().catch(e => console.error(e));
+        audio.play().catch(e => console.log("再生にはユーザー操作が必要です"));
         activeSounds[id] = audio;
 
         const mixerArea = document.getElementById('active-mixer');
@@ -456,30 +419,28 @@
         const card = document.getElementById(`card-${id}`);
         if (card) card.remove();
         if (Object.keys(activeSounds).length === 0) {
-            document.getElementById('empty-hint').style.display = 'block';
+            const hint = document.getElementById('empty-hint');
+            if (hint) hint.style.display = 'block';
         }
     }
 
-    // --- イベントリスナー設定 ---
 
-    // 画面のどこかをクリックしたら通知を閉じる
     window.onclick = function(event) {
+
         if (notifOpen) {
-            document.getElementById('notification-panel').style.display = 'none';
+            const panel = document.getElementById('notification-panel');
+            panel.style.display = 'none';
             notifOpen = false;
         }
     };
 
-    // ページ読み込み完了時の処理
     window.onload = function() {
         checkNotifications();
         
-        // お知らせパネル内をクリックしても閉じないようにする設定
+
         const panel = document.getElementById('notification-panel');
         if (panel) {
-            panel.onclick = function(e) {
-                e.stopPropagation();
-            };
+            panel.onclick = (e) => e.stopPropagation();
         }
     };
 </script>
