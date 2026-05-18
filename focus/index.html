@@ -427,25 +427,55 @@
     };
 
     const activeSounds = {};
+    let notifOpen = false;
 
+    // --- 通知関連の設定 ---
+    const LATEST_NOTIF_ID = 2; // お知らせを更新したらここを増やす
+
+    // 通知をチェックする関数
+    function checkNotifications() {
+        const lastReadId = localStorage.getItem('lastReadNotifId') || 0;
+        const dot = document.getElementById('unread-dot');
+        if (dot) {
+            if (parseInt(LATEST_NOTIF_ID) > parseInt(lastReadId)) {
+                dot.style.display = 'block'; 
+            } else {
+                dot.style.display = 'none'; 
+            }
+        }
+    }
+
+    // ベルを押した時の動作（1つにまとめました！）
+    function toggleNotifications(event) {
+        if (event) event.stopPropagation();
+        
+        const panel = document.getElementById('notification-panel');
+        const dot = document.getElementById('unread-dot');
+
+        if (!notifOpen) {
+            panel.style.display = 'flex';
+            if (dot) dot.style.display = 'none';
+            // 読んだことを保存
+            localStorage.setItem('lastReadNotifId', LATEST_NOTIF_ID);
+            notifOpen = true;
+        } else {
+            panel.style.display = 'none';
+            notifOpen = false;
+        }
+    }
+
+    // --- 音源操作関連の関数 ---
     function toggleLibrary(show) {
         document.getElementById('library-overlay').style.display = show ? 'flex' : 'none';
     }
 
     function addSound(id, iconClass, label) {
         if (activeSounds[id]) return;
-
-        // ヒントを消す
         document.getElementById('empty-hint').style.display = 'none';
-
         const audio = new Audio(audioData[id]);
         audio.loop = true;
         audio.volume = 0;
-
-        audio.play().then(() => {
-            console.log(`${label} ready.`);
-        }).catch(e => console.error(e));
-
+        audio.play().catch(e => console.error(e));
         activeSounds[id] = audio;
 
         const mixerArea = document.getElementById('active-mixer');
@@ -464,9 +494,10 @@
 
     function changeVol(id, vol) {
         const audio = activeSounds[id];
-        if (!audio) return;
-        audio.volume = vol;
-        if (vol > 0 && audio.paused) audio.play();
+        if (audio) {
+            audio.volume = vol;
+            if (vol > 0 && audio.paused) audio.play();
+        }
     }
 
     function removeSound(id) {
@@ -474,47 +505,35 @@
             activeSounds[id].pause();
             delete activeSounds[id];
         }
-        document.getElementById(`card-${id}`).remove();
-        
-        // 全て消えたらヒントを再表示
+        const card = document.getElementById(`card-${id}`);
+        if (card) card.remove();
         if (Object.keys(activeSounds).length === 0) {
             document.getElementById('empty-hint').style.display = 'block';
         }
     }
-</script>
-<script>
-let notifOpen = false;
 
-function toggleNotifications(event) {
-    // ベルアイコンをクリックした時の動作
-    event.stopPropagation(); // ベル自体のクリックが window.onclick に伝わるのを防ぐ
-    
-    const panel = document.getElementById('notification-panel');
-    const dot = document.getElementById('unread-dot');
-    
-    if (!notifOpen) {
-        panel.style.display = 'flex';
-        if (dot) dot.style.display = 'none'; // 既読にする
-        notifOpen = true;
-    } else {
-        panel.style.display = 'none';
-        notifOpen = false;
-    }
-}
+    // --- イベントリスナー設定 ---
 
+    // 画面のどこかをクリックしたら通知を閉じる
+    window.onclick = function(event) {
+        if (notifOpen) {
+            document.getElementById('notification-panel').style.display = 'none';
+            notifOpen = false;
+        }
+    };
 
-document.getElementById('notification-panel').addEventListener('click', function(event) {
-    event.stopPropagation(); // これでパネル内のクリックでは window.onclick が反応しなくなる
-});
-
-
-window.onclick = function(event) {
-    if (notifOpen) {
+    // ページ読み込み完了時の処理
+    window.onload = function() {
+        checkNotifications();
+        
+        // お知らせパネル内をクリックしても閉じないようにする設定
         const panel = document.getElementById('notification-panel');
-        panel.style.display = 'none';
-        notifOpen = false;
-    }
-}
+        if (panel) {
+            panel.onclick = function(e) {
+                e.stopPropagation();
+            };
+        }
+    };
 </script>
 </body>
 </html>
