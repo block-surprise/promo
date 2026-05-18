@@ -1,0 +1,132 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>簡単QRコード作成 | すぐに使える無料ツール</title>
+ <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-3571574988222927"
+     crossorigin="anonymous"></script>
+        <link rel="icon" href="https://blocksurprise.f5.si/IMG_3967.png">
+    <link rel="apple-touch-icon" href="https://blocksurprise.f5.si/IMG_3967.png">
+    <meta name="google-site-verification" content="QzpufK8Cl_B7crFUTFlAgQPzxa3RfE3NILhwN_26cwk" />
+<meta name="google-adsense-account" content="ca-pub-3571574988222927">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
+
+    <style>
+        :root {
+            --primary-color: #0284c7;
+            --bg-color: #f0f9ff;
+            --card-bg: #ffffff;
+        }
+
+        body {
+            font-family: sans-serif;
+            background-color: var(--bg-color);
+            margin: 0;
+            padding: 20px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+
+        .container {
+            max-width: 450px;
+            width: 100%;
+            background: var(--card-bg);
+            padding: 30px;
+            border-radius: 20px;
+            box-shadow: 0 10px 25px rgba(0,0,0,0.05);
+            text-align: center;
+        }
+
+        input {
+            width: 100%;
+            padding: 12px;
+            margin: 20px 0;
+            border: 2px solid #e0e7ff;
+            border-radius: 10px;
+            box-sizing: border-box;
+            font-size: 1rem;
+        }
+
+        #qrcode {
+            margin-top: 20px;
+            display: flex;
+            justify-content: center;
+            padding: 10px;
+            background: #fff;
+        }
+
+        .download-btn {
+            display: none;
+            margin-top: 20px;
+            background: var(--primary-color);
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 8px;
+            cursor: pointer;
+            text-decoration: none;
+        }
+
+        .article-space {
+            max-width: 450px;
+            margin-top: 30px;
+            font-size: 0.9rem;
+            color: #64748b;
+            line-height: 1.6;
+            text-align: left;
+        }
+    </style>
+</head>
+<body>
+
+<div class="container">
+    <h2>簡単QRコード作成</h2>
+    <p>URLや文字を入れるだけで即座に作成</p>
+    
+    <input type="text" id="text" placeholder="https://example.com" oninput="generateQR()">
+
+    <div id="qrcode"></div>
+    
+    <p style="font-size: 0.8rem; color: #94a3b8; margin-top: 10px;">
+        ※画像は右クリックや長押しで保存できます
+    </p>
+</div>
+
+<div class="article-space">
+    <hr>
+    <h3>このツールの使い方</h3>
+    <p>
+        URLやテキストを入力欄に書き込むだけで、リアルタイムにQRコードが生成されます。
+        作成されたQRコードは、スマホのカメラで読み取ってリンク先へ移動したり、画像を保存して資料に貼り付けたりして自由にご利用いただけます。
+    </p>
+    <p>
+        <strong>活用シーン：</strong><br>
+        ・自分のブログやSNSのURLを友達に送りたい時<br>
+        ・お店のメニューやチラシにリンクを載せたい時<br>
+        ・PCで見ているページをスマホに引き継ぎたい時
+    </p>
+</div>
+
+<script>
+    const qrcode = new QRCode(document.getElementById("qrcode"), {
+        width: 200,
+        height: 200
+    });
+
+    function generateQR() {
+        const text = document.getElementById("text").value;
+        if (text.trim() === "") {
+            document.getElementById("qrcode").style.display = "none";
+        } else {
+            document.getElementById("qrcode").style.display = "flex";
+            qrcode.makeCode(text);
+        }
+    }
+    // 初期状態は非表示
+    document.getElementById("qrcode").style.display = "none";
+</script>
+
+</body>
+</html>
