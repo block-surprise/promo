@@ -3,209 +3,236 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>FOCUS SPACE | Minimal Ambient Mixer</title>
+    <title>Focus Space | Minimal Mixer</title>
+    <!-- Font Awesome -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
     <style>
         :root {
-            --bg-color: #020617;
-            --panel-bg: rgba(30, 41, 59, 0.5);
-            --accent: #38bdf8;
-            --text-main: #f8fafc;
-            --text-dim: #94a3b8;
+            --bg-color: #f8f9fa;
+            --card-bg: #ffffff;
+            --accent: #007aff; /* iOS風のブルー */
+            --text: #1d1d1f;
         }
 
         body {
-            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
-            background: radial-gradient(circle at top right, #1e1b4b, #020617);
-            color: var(--text-main);
+            font-family: "SF Pro Display", "Helvetica Neue", Arial, sans-serif;
+            background-color: var(--bg-color);
+            color: var(--text);
             margin: 0;
-            height: 100vh;
             display: flex;
             flex-direction: column;
-            justify-content: center;
             align-items: center;
-            overflow: hidden;
+            min-height: 100vh;
         }
 
-        /* 背景の動く光（エフェクト） */
-        .ambient-glow {
-            position: absolute;
-            width: 400px;
-            height: 400px;
-            background: var(--accent);
-            filter: blur(120px);
-            opacity: 0.1;
-            z-index: -1;
-            animation: move 20s infinite alternate;
-        }
-
-        @keyframes move {
-            from { transform: translate(-50%, -50%); }
-            to { transform: translate(50%, 50%); }
-        }
-
-        .container {
-            width: 100%;
-            max-width: 420px;
-            padding: 40px 20px;
+        header {
+            margin-top: 60px;
             text-align: center;
-            backdrop-filter: blur(20px);
         }
 
         h1 {
-            font-size: 1.8rem;
-            font-weight: 200;
-            letter-spacing: 0.2rem;
-            margin-bottom: 8px;
-            text-transform: uppercase;
+            font-size: 2.5rem;
+            font-weight: 700;
+            letter-spacing: -0.02em;
+            margin: 0;
         }
 
-        .subtitle {
-            font-size: 0.8rem;
-            color: var(--text-dim);
-            margin-bottom: 40px;
-            letter-spacing: 0.1rem;
-        }
-
-        /* ミキサー部分 */
-        .mixer {
-            display: grid;
-            gap: 24px;
-        }
-
-        .sound-card {
-            background: var(--panel-bg);
-            padding: 20px;
-            border-radius: 20px;
-            border: 1px solid rgba(255, 255, 255, 0.05);
-            transition: transform 0.3s, border-color 0.3s;
-        }
-
-        .sound-card:hover {
-            border-color: rgba(56, 189, 248, 0.3);
-        }
-
-        .card-header {
+        /* 選択された音源が並ぶエリア */
+        #active-mixer {
             display: flex;
-            justify-content: space-between;
-            margin-bottom: 15px;
-            font-size: 0.9rem;
-            font-weight: 500;
+            flex-wrap: wrap;
+            justify-content: center;
+            gap: 30px;
+            margin: 50px 0;
+            min-height: 200px;
+            width: 90%;
+            max-width: 800px;
         }
 
-        /* スライダーのカスタムデザイン */
-        input[type="range"] {
-            -webkit-appearance: none;
-            width: 100%;
-            height: 4px;
-            background: #334155;
-            border-radius: 2px;
-            outline: none;
+        /* 音量調整の丸いパネル */
+        .mixer-circle {
+            background: var(--card-bg);
+            width: 140px;
+            height: 180px;
+            border-radius: 70px; /* カプセル型 */
+            box-shadow: 0 10px 30px rgba(0,0,0,0.05);
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            padding: 20px 10px;
+            box-sizing: border-box;
+            animation: popIn 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
         }
 
-        input[type="range"]::-webkit-slider-thumb {
-            -webkit-appearance: none;
-            width: 16px;
-            height: 16px;
-            background: var(--text-main);
+        @keyframes popIn {
+            from { transform: scale(0.8); opacity: 0; }
+            to { transform: scale(1); opacity: 1; }
+        }
+
+        .icon-box {
+            width: 60px;
+            height: 60px;
+            background: #f2f2f7;
             border-radius: 50%;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            font-size: 1.5rem;
+            color: var(--accent);
+            margin-bottom: 15px;
+            position: relative;
+        }
+
+        .remove-btn {
+            position: absolute;
+            top: -5px;
+            right: -5px;
+            background: #ff3b30;
+            color: white;
+            border: none;
+            width: 20px;
+            height: 20px;
+            border-radius: 50%;
+            font-size: 0.7rem;
             cursor: pointer;
-            box-shadow: 0 0 10px rgba(0,0,0,0.5);
+        }
+
+        /* 縦向きのスライダー */
+        .volume-slider {
+            -webkit-appearance: slider-vertical;
+            width: 8px;
+            height: 60px;
+            accent-color: var(--accent);
+        }
+
+        /* 音源選択リスト */
+        .library {
+            background: rgba(255,255,255,0.8);
+            backdrop-filter: blur(10px);
+            position: fixed;
+            bottom: 30px;
+            padding: 15px 30px;
+            border-radius: 40px;
+            display: flex;
+            gap: 20px;
+            box-shadow: 0 4px 20px rgba(0,0,0,0.08);
+        }
+
+        .lib-item {
+            cursor: pointer;
+            font-size: 1.2rem;
+            color: #8e8e93;
             transition: 0.2s;
         }
 
-        input[type="range"]:active::-webkit-slider-thumb {
-            transform: scale(1.2);
-            background: var(--accent);
+        .lib-item:hover {
+            color: var(--accent);
+            transform: translateY(-5px);
         }
 
-        .controls {
-            margin-top: 50px;
+        .lib-label {
+            position: absolute;
+            bottom: -25px;
+            font-size: 0.7rem;
+            white-space: nowrap;
+            opacity: 0;
+            transition: 0.2s;
         }
 
-        .btn-stop {
-            background: transparent;
-            color: var(--text-dim);
-            border: 1px solid var(--text-dim);
-            padding: 10px 25px;
-            border-radius: 30px;
-            font-size: 0.75rem;
-            cursor: pointer;
-            transition: all 0.3s;
-            letter-spacing: 0.1rem;
-        }
-
-        .btn-stop:hover {
-            color: white;
-            border-color: white;
-            background: rgba(255,255,255,0.05);
-        }
+        .lib-item:hover .lib-label { opacity: 1; }
     </style>
 </head>
 <body>
 
-<div class="ambient-glow"></div>
-
-<div class="container">
+<header>
     <h1>Focus Space</h1>
-    <div class="subtitle">Customize your silence</div>
+</header>
 
-    <div class="mixer">
-        <div class="sound-card">
-            <div class="card-header"><span>Rain</span><span class="vol-label">0%</span></div>
-            <input type="range" min="0" max="1" step="0.01" value="0" oninput="updateVol('rain', this)">
-        </div>
+<!-- 再生中の音源が出る場所 -->
+<div id="active-mixer"></div>
 
-        <div class="sound-card">
-            <div class="card-header"><span>Forest</span><span class="vol-label">0%</span></div>
-            <input type="range" min="0" max="1" step="0.01" value="0" oninput="updateVol('forest', this)">
-        </div>
-
-        <div class="sound-card">
-            <div class="card-header"><span>Coffee Shop</span><span class="vol-label">0%</span></div>
-            <input type="range" min="0" max="1" step="0.01" value="0" oninput="updateVol('cafe', this)">
-        </div>
-
-        <div class="sound-card">
-            <div class="card-header"><span>White Noise</span><span class="vol-label">0%</span></div>
-            <input type="range" min="0" max="1" step="0.01" value="0" oninput="updateVol('white', this)">
-        </div>
+<!-- 音源ライブラリ -->
+<div class="library" id="library">
+    <div class="lib-item" onclick="addSound('rain', 'fa-cloud-showers-heavy')">
+        <i class="fa-solid fa-cloud-showers-heavy"></i>
+        <span class="lib-label">Rain</span>
     </div>
-
-    <div class="controls">
-        <button class="btn-stop" onclick="stopAll()">ALL STOP</button>
+    <div class="lib-item" onclick="addSound('fire', 'fa-fire')">
+        <i class="fa-solid fa-fire"></i>
+        <span class="lib-label">Fire</span>
+    </div>
+    <div class="lib-item" onclick="addSound('cafe', 'fa-mug-hot')">
+        <i class="fa-solid fa-mug-hot"></i>
+        <span class="lib-label">Cafe</span>
+    </div>
+    <div class="lib-item" onclick="addSound('wind', 'fa-wind')">
+        <i class="fa-solid fa-wind"></i>
+        <span class="lib-label">Wind</span>
+    </div>
+    <div class="lib-item" onclick="addSound('forest', 'fa-tree')">
+        <i class="fa-solid fa-tree"></i>
+        <span class="lib-label">Forest</span>
+    </div>
+    <div class="lib-item" onclick="addSound('wave', 'fa-water')">
+        <i class="fa-solid fa-water"></i>
+        <span class="lib-label">Wave</span>
     </div>
 </div>
 
 <script>
-    // サンプル音源（後で本番用に差し替えてください）
-    const sounds = {
-        rain: new Audio('https://www.soundhelix.com/examples/mp3/SoundHelix-Song-1.mp3'),
-        forest: new Audio('https://www.soundhelix.com/examples/mp3/SoundHelix-Song-2.mp3'),
-        cafe: new Audio('https://www.soundhelix.com/examples/mp3/SoundHelix-Song-3.mp3'),
-        white: new Audio('https://www.soundhelix.com/examples/mp3/SoundHelix-Song-4.mp3')
+    // 音源データ
+    const audioData = {
+        rain: 'https://www.soundhelix.com/examples/mp3/SoundHelix-Song-1.mp3',
+        fire: 'https://www.soundhelix.com/examples/mp3/SoundHelix-Song-2.mp3',
+        cafe: 'https://www.soundhelix.com/examples/mp3/SoundHelix-Song-3.mp3',
+        wind: 'https://www.soundhelix.com/examples/mp3/SoundHelix-Song-4.mp3',
+        forest: 'https://www.soundhelix.com/examples/mp3/SoundHelix-Song-5.mp3',
+        wave: 'https://www.soundhelix.com/examples/mp3/SoundHelix-Song-6.mp3'
     };
 
-    Object.values(sounds).forEach(s => s.loop = true);
+    const activeSounds = {}; // 再生中のAudioオブジェクトを管理
 
-    function updateVol(type, el) {
-        const vol = el.value;
-        const audio = sounds[type];
-        const label = el.previousElementSibling.querySelector('.vol-label');
-        
-        label.innerText = Math.round(vol * 100) + "%";
+    function addSound(id, iconClass) {
+        if (activeSounds[id]) return; // 既に追加されていれば何もしない
 
+        // Audioの作成
+        const audio = new Audio(audioData[id]);
+        audio.loop = true;
+        activeSounds[id] = audio;
+
+        // UIの作成
+        const mixerArea = document.getElementById('active-mixer');
+        const card = document.createElement('div');
+        card.className = 'mixer-circle';
+        card.id = `card-${id}`;
+        card.innerHTML = `
+            <div class="icon-box">
+                <i class="fa-solid ${iconClass}"></i>
+                <button class="remove-btn" onclick="removeSound('${id}')">×</button>
+            </div>
+            <input type="range" class="volume-slider" min="0" max="1" step="0.01" value="0" 
+                   oninput="changeVol('${id}', this.value)">
+        `;
+        mixerArea.appendChild(card);
+    }
+
+    function changeVol(id, vol) {
+        const audio = activeSounds[id];
         if (vol > 0) {
-            if (audio.paused) audio.play().catch(() => {});
+            if (audio.paused) audio.play();
             audio.volume = vol;
         } else {
             audio.pause();
         }
     }
 
-    function stopAll() {
-        Object.values(sounds).forEach(s => { s.pause(); s.currentTime = 0; });
-        document.querySelectorAll('input[type="range"]').forEach(s => s.value = 0);
-        document.querySelectorAll('.vol-label').forEach(l => l.innerText = "0%");
+    function removeSound(id) {
+        activeSounds[id].pause();
+        delete activeSounds[id];
+        const card = document.getElementById(`card-${id}`);
+        card.style.transform = "scale(0.5)";
+        card.style.opacity = "0";
+        setTimeout(() => card.remove(), 300);
     }
 </script>
 
