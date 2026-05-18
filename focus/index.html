@@ -4,18 +4,18 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Focus Space | Minimal Mixer</title>
-    <!-- Font Awesome -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
     <style>
         :root {
-            --bg-color: #f8f9fa;
+            --bg-color: #f5f5f7;
             --card-bg: #ffffff;
-            --accent: #007aff; 
+            --accent: #007aff;
             --text: #1d1d1f;
+            --shadow: 0 8px 30px rgba(0,0,0,0.04);
         }
 
         body {
-            font-family: "SF Pro Display", "Helvetica Neue", Arial, sans-serif;
+            font-family: -apple-system, "SF Pro Display", sans-serif;
             background-color: var(--bg-color);
             color: var(--text);
             margin: 0;
@@ -23,123 +23,155 @@
             flex-direction: column;
             align-items: center;
             min-height: 100vh;
+            overflow-x: hidden;
         }
 
-        header {
-            margin-top: 60px;
-            text-align: center;
-        }
+        header { margin-top: 50px; text-align: center; }
+        h1 { font-weight: 600; font-size: 2rem; letter-spacing: -0.02em; }
 
-        h1 {
-            font-size: 2.5rem;
-            font-weight: 700;
-            letter-spacing: -0.02em;
-            margin: 0;
-        }
-
-   
+        /* メインのミキサーエリア */
         #active-mixer {
             display: flex;
             flex-wrap: wrap;
             justify-content: center;
-            gap: 30px;
-            margin: 50px 0;
-            min-height: 200px;
-            width: 90%;
-            max-width: 800px;
+            gap: 25px;
+            padding: 40px;
+            width: 100%;
+            max-width: 900px;
         }
 
-      
+        /* 再生パネル：完全な円形 */
         .mixer-circle {
             background: var(--card-bg);
-            width: 140px;
-            height: 180px;
-            border-radius: 70px;
-            box-shadow: 0 10px 30px rgba(0,0,0,0.05);
+            width: 160px;
+            height: 160px;
+            border-radius: 50%;
+            box-shadow: var(--shadow);
             display: flex;
             flex-direction: column;
             align-items: center;
-            padding: 20px 10px;
-            box-sizing: border-box;
-            animation: popIn 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+            justify-content: center;
+            position: relative;
+            animation: popIn 0.5s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+            border: 1px solid rgba(0,0,0,0.02);
         }
 
         @keyframes popIn {
-            from { transform: scale(0.8); opacity: 0; }
+            from { transform: scale(0.5); opacity: 0; }
             to { transform: scale(1); opacity: 1; }
         }
 
-        .icon-box {
+        .icon-circle {
+            font-size: 1.8rem;
+            color: var(--accent);
+            margin-bottom: 12px;
+        }
+
+        /* 削除ボタン */
+        .remove-btn {
+            position: absolute;
+            top: 10px;
+            right: 10px;
+            background: #f2f2f7;
+            color: #8e8e93;
+            border: none;
+            width: 26px;
+            height: 26px;
+            border-radius: 50%;
+            cursor: pointer;
+            font-size: 0.8rem;
+            transition: 0.2s;
+        }
+        .remove-btn:hover { background: #ff3b30; color: white; }
+
+        /* スライダー（横向きで円の中に収める） */
+        .volume-slider {
+            width: 80px;
+            height: 4px;
+            -webkit-appearance: none;
+            background: #e5e5ea;
+            border-radius: 2px;
+            outline: none;
+        }
+        .volume-slider::-webkit-slider-thumb {
+            -webkit-appearance: none;
+            width: 12px;
+            height: 12px;
+            background: var(--accent);
+            border-radius: 50%;
+            cursor: pointer;
+        }
+
+        /* 追加ボタン（フローティング） */
+        .add-trigger {
+            position: fixed;
+            bottom: 40px;
             width: 60px;
             height: 60px;
-            background: #f2f2f7;
+            background: var(--card-bg);
             border-radius: 50%;
             display: flex;
             justify-content: center;
             align-items: center;
             font-size: 1.5rem;
+            box-shadow: 0 10px 40px rgba(0,0,0,0.1);
+            cursor: pointer;
+            transition: 0.3s;
+            border: none;
             color: var(--accent);
-            margin-bottom: 15px;
-            position: relative;
+        }
+        .add-trigger:hover { transform: scale(1.1); }
+
+        /* 追加用別ページ（モーダル） */
+        #library-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(245, 245, 247, 0.95);
+            backdrop-filter: blur(20px);
+            display: none;
+            flex-direction: column;
+            align-items: center;
+            z-index: 100;
+            padding-top: 80px;
         }
 
-        .remove-btn {
-            position: absolute;
-            top: -5px;
-            right: -5px;
-            background: #ff3b30;
+        .lib-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 30px;
+            margin-top: 40px;
+        }
+
+        .lib-item-circle {
+            width: 100px;
+            height: 100px;
+            background: var(--card-bg);
+            border-radius: 50%;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            box-shadow: var(--shadow);
+            cursor: pointer;
+            transition: 0.3s;
+            border: none;
+        }
+        .lib-item-circle:hover { transform: translateY(-5px); box-shadow: 0 15px 40px rgba(0,0,0,0.08); }
+        .lib-item-circle i { font-size: 1.5rem; color: #8e8e93; margin-bottom: 5px; }
+        .lib-item-circle span { font-size: 0.7rem; color: #1d1d1f; }
+
+        .close-lib {
+            margin-top: 50px;
+            background: var(--text);
             color: white;
             border: none;
-            width: 20px;
-            height: 20px;
-            border-radius: 50%;
-            font-size: 0.7rem;
+            padding: 12px 30px;
+            border-radius: 25px;
             cursor: pointer;
         }
-
-      
-        .volume-slider {
-            -webkit-appearance: slider-vertical;
-            width: 8px;
-            height: 60px;
-            accent-color: var(--accent);
-        }
-
-   
-        .library {
-            background: rgba(255,255,255,0.8);
-            backdrop-filter: blur(10px);
-            position: fixed;
-            bottom: 30px;
-            padding: 15px 30px;
-            border-radius: 40px;
-            display: flex;
-            gap: 20px;
-            box-shadow: 0 4px 20px rgba(0,0,0,0.08);
-        }
-
-        .lib-item {
-            cursor: pointer;
-            font-size: 1.2rem;
-            color: #8e8e93;
-            transition: 0.2s;
-        }
-
-        .lib-item:hover {
-            color: var(--accent);
-            transform: translateY(-5px);
-        }
-
-        .lib-label {
-            position: absolute;
-            bottom: -25px;
-            font-size: 0.7rem;
-            white-space: nowrap;
-            opacity: 0;
-            transition: 0.2s;
-        }
-
-        .lib-item:hover .lib-label { opacity: 1; }
     </style>
 </head>
 <body>
@@ -148,97 +180,87 @@
     <h1>Focus Space</h1>
 </header>
 
-
-<div id="active-mixer"></div>
-
-
-<div class="library" id="library">
-    <div class="lib-item" onclick="addSound('rain', 'fa-cloud-showers-heavy')">
-        <i class="fa-solid fa-cloud-showers-heavy"></i>
-        <span class="lib-label">Rain</span>
-    </div>
-    <div class="lib-item" onclick="addSound('fire', 'fa-fire')">
-        <i class="fa-solid fa-fire"></i>
-        <span class="lib-label">Fire</span>
-    </div>
-    <div class="lib-item" onclick="addSound('cafe', 'fa-mug-hot')">
-        <i class="fa-solid fa-mug-hot"></i>
-        <span class="lib-label">Cafe</span>
-    </div>
-    <div class="lib-item" onclick="addSound('wind', 'fa-wind')">
-        <i class="fa-solid fa-wind"></i>
-        <span class="lib-label">Wind</span>
-    </div>
-    <div class="lib-item" onclick="addSound('forest', 'fa-tree')">
-        <i class="fa-solid fa-tree"></i>
-        <span class="lib-label">Forest</span>
-    </div>
-    <div class="lib-item" onclick="addSound('wave', 'fa-water')">
-        <i class="fa-solid fa-water"></i>
-        <span class="lib-label">Wave</span>
-    </div>
-    <!-- 水（小川・せせらぎ） -->
-    <div class="lib-item" onclick="addSound('stream', 'fa-droplet')">
-        <i class="fa-solid fa-droplet"></i>
-        <span class="lib-label">Stream</span>
-    </div>
-    <!-- 山鳩 -->
-    <div class="lib-item" onclick="addSound('pigeon', 'fa-dove')">
-        <i class="fa-solid fa-dove"></i>
-        <span class="lib-label">Pigeon</span>
-    </div>
-    <!-- カエル -->
-    <div class="lib-item" onclick="addSound('frog', 'fa-frog')">
-        <i class="fa-solid fa-frog"></i>
-        <span class="lib-label">Frog</span>
-    </div>
-    <!-- うぐいす -->
-    <div class="lib-item" onclick="addSound('warbler', 'fa-feather-pointed')">
-        <i class="fa-solid fa-feather-pointed"></i>
-        <span class="lib-label">Warbler</span>
-    </div>
+<div id="active-mixer">
 
 </div>
 
+<button class="add-trigger" onclick="toggleLibrary(true)">
+    <i class="fa-solid fa-plus"></i>
+</button>
+
+
+<div id="library-overlay">
+    <h2>Add Sounds</h2>
+    <div class="lib-grid">
+        <button class="lib-item-circle" onclick="addSound('rain', 'fa-cloud-showers-heavy', 'Rain')">
+            <i class="fa-solid fa-cloud-showers-heavy"></i><span>Rain</span>
+        </button>
+        <button class="lib-item-circle" onclick="addSound('fire', 'fa-fire', 'Fire')">
+            <i class="fa-solid fa-fire"></i><span>Fire</span>
+        </button>
+        <button class="lib-item-circle" onclick="addSound('cafe', 'fa-mug-hot', 'Cafe')">
+            <i class="fa-solid fa-mug-hot"></i><span>Cafe</span>
+        </button>
+        <button class="lib-item-circle" onclick="addSound('wave', 'fa-water', 'Sea')">
+            <i class="fa-solid fa-water"></i><span>Sea</span>
+        </button>
+        <button class="lib-item-circle" onclick="addSound('stream', 'fa-droplet', 'Stream')">
+            <i class="fa-solid fa-droplet"></i><span>Stream</span>
+        </button>
+        <button class="lib-item-circle" onclick="addSound('pigeon', 'fa-dove', 'Pigeon')">
+            <i class="fa-solid fa-dove"></i><span>Pigeon</span>
+        </button>
+        <button class="lib-item-circle" onclick="addSound('frog', 'fa-frog', 'Frog')">
+            <i class="fa-solid fa-frog"></i><span>Frog</span>
+        </button>
+        <button class="lib-item-circle" onclick="addSound('warbler', 'fa-feather-pointed', 'Warbler')">
+            <i class="fa-solid fa-feather-pointed"></i><span>Warbler</span>
+        </button>
+        <button class="lib-item-circle" onclick="addSound('bubbles', 'fa-circle-nodes', 'Bubbles')">
+            <i class="fa-solid fa-circle-nodes"></i><span>Bubbles</span>
+        </button>
+    </div>
+    <button class="close-lib" onclick="toggleLibrary(false)">Done</button>
+</div>
+
 <script>
-    // 音源データ
     const audioData = {
         rain: 'https://promo.blocksurprise.f5.si/focus/file/sound1.mp3',
         fire: 'https://promo.blocksurprise.f5.si/focus/file/fire.mp3',
         cafe: 'https://promo.blocksurprise.f5.si/focus/file/cafe.mp3',
-        wind: 'https://promo.blocksurprise.f5.si/focus/file/wind.mp3',
-        forest: 'https://promo.blocksurprise.f5.si/focus/file/forest.mp3',
-        wave: 'https://promo.blocksurprise.f5.si/focus/file/wa-sp.mp3'
-        stream: 'promo.blocksurprise.f5.si/focus/file/bubble.mp3',
+        wave: 'https://promo.blocksurprise.f5.si/focus/file/wa-sp.mp3',
+        stream: 'https://promo.blocksurprise.f5.si/focus/file/bubble.mp3',
         pigeon: 'https://promo.blocksurprise.f5.si/focus/file/yama-dori.mp3',
         frog: 'https://promo.blocksurprise.f5.si/focus/file/frog.mp3',
         warbler: 'https://promo.blocksurprise.f5.si/focus/file/ugu.mp3',
+        bubbles: 'https://promo.blocksurprise.f5.si/focus/file/bubbles.mp3' // 仮
     };
 
-    const activeSounds = {}; // 再生中のAudioオブジェクトを管理
+    const activeSounds = {};
 
-    function addSound(id, iconClass) {
-        if (activeSounds[id]) return; // 既に追加されていれば何もしない
+    function toggleLibrary(show) {
+        document.getElementById('library-overlay').style.display = show ? 'flex' : 'none';
+    }
 
-        // Audioの作成
+    function addSound(id, iconClass, label) {
+        if (activeSounds[id]) return;
+
         const audio = new Audio(audioData[id]);
         audio.loop = true;
         activeSounds[id] = audio;
 
-        // UIの作成
         const mixerArea = document.getElementById('active-mixer');
-        const card = document.createElement('div');
-        card.className = 'mixer-circle';
-        card.id = `card-${id}`;
-        card.innerHTML = `
-            <div class="icon-box">
-                <i class="fa-solid ${iconClass}"></i>
-                <button class="remove-btn" onclick="removeSound('${id}')">×</button>
-            </div>
+        const circle = document.createElement('div');
+        circle.className = 'mixer-circle';
+        circle.id = `card-${id}`;
+        circle.innerHTML = `
+            <button class="remove-btn" onclick="removeSound('${id}')">×</button>
+            <div class="icon-circle"><i class="fa-solid ${iconClass}"></i></div>
             <input type="range" class="volume-slider" min="0" max="1" step="0.01" value="0" 
                    oninput="changeVol('${id}', this.value)">
+            <div style="font-size:0.6rem; color:#8e8e93; margin-top:8px;">${label}</div>
         `;
-        mixerArea.appendChild(card);
+        mixerArea.appendChild(circle);
     }
 
     function changeVol(id, vol) {
@@ -254,10 +276,7 @@
     function removeSound(id) {
         activeSounds[id].pause();
         delete activeSounds[id];
-        const card = document.getElementById(`card-${id}`);
-        card.style.transform = "scale(0.5)";
-        card.style.opacity = "0";
-        setTimeout(() => card.remove(), 300);
+        document.getElementById(`card-${id}`).remove();
     }
 </script>
 
