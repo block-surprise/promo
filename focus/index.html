@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Focus Space | Minimal Mixer</title>
+    <title>Focus Space | あなたのだけの集中環境音をつくれる</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
     <style>
         :root {
@@ -29,7 +29,6 @@
         header { margin-top: 50px; text-align: center; }
         h1 { font-weight: 600; font-size: 2rem; letter-spacing: -0.02em; }
 
-        /* メインのミキサーエリア */
         #active-mixer {
             display: flex;
             flex-wrap: wrap;
@@ -40,7 +39,6 @@
             max-width: 900px;
         }
 
-        /* 再生パネル：完全な円形 */
         .mixer-circle {
             background: var(--card-bg);
             width: 160px;
@@ -67,7 +65,7 @@
             margin-bottom: 12px;
         }
 
-        /* 削除ボタン */
+  
         .remove-btn {
             position: absolute;
             top: 10px;
@@ -102,7 +100,6 @@
             cursor: pointer;
         }
 
-        /* 追加ボタン（フローティング） */
         .add-trigger {
             position: fixed;
             bottom: 40px;
@@ -122,7 +119,7 @@
         }
         .add-trigger:hover { transform: scale(1.1); }
 
-        /* 追加用別ページ（モーダル） */
+       
         #library-overlay {
             position: fixed;
             top: 0;
@@ -190,41 +187,41 @@
 
 
 <div id="library-overlay">
-    <h2>Add Sounds</h2>
+    <h2>音楽を追加する</h2>
     <div class="lib-grid">
         <button class="lib-item-circle" onclick="addSound('rain', 'fa-cloud-showers-heavy', 'Rain')">
-            <i class="fa-solid fa-cloud-showers-heavy"></i><span>Rain</span>
+            <i class="fa-solid fa-cloud-showers-heavy"></i><span>雨</span>
         </button>
         <button class="lib-item-circle" onclick="addSound('fire', 'fa-fire', 'Fire')">
-            <i class="fa-solid fa-fire"></i><span>Fire</span>
+            <i class="fa-solid fa-fire"></i><span>炎</span>
         </button>
         <button class="lib-item-circle" onclick="addSound('cafe', 'fa-mug-hot', 'Cafe')">
-            <i class="fa-solid fa-mug-hot"></i><span>Cafe</span>
+            <i class="fa-solid fa-mug-hot"></i><span>カフェ</span>
         </button>
         <button class="lib-item-circle" onclick="addSound('wave', 'fa-water', 'Sea')">
-            <i class="fa-solid fa-water"></i><span>Sea</span>
+            <i class="fa-solid fa-water"></i><span>海</span>
         </button>
         <button class="lib-item-circle" onclick="addSound('stream', 'fa-droplet', 'Stream')">
-            <i class="fa-solid fa-droplet"></i><span>Stream</span>
+            <i class="fa-solid fa-droplet"></i><span>水</span>
         </button>
         <button class="lib-item-circle" onclick="addSound('pigeon', 'fa-dove', 'Pigeon')">
-            <i class="fa-solid fa-dove"></i><span>Pigeon</span>
+            <i class="fa-solid fa-dove"></i><span>山鳩</span>
         </button>
         <button class="lib-item-circle" onclick="addSound('frog', 'fa-frog', 'Frog')">
-            <i class="fa-solid fa-frog"></i><span>Frog</span>
+            <i class="fa-solid fa-frog"></i><span>カエル</span>
         </button>
         <button class="lib-item-circle" onclick="addSound('warbler', 'fa-feather-pointed', 'Warbler')">
-            <i class="fa-solid fa-feather-pointed"></i><span>Warbler</span>
+            <i class="fa-solid fa-feather-pointed"></i><span>ウグイス</span>
         </button>
         <button class="lib-item-circle" onclick="addSound('bubbles', 'fa-circle-nodes', 'Bubbles')">
-            <i class="fa-solid fa-circle-nodes"></i><span>Bubbles</span>
+            <i class="fa-solid fa-circle-nodes"></i><span>泡</span>
         </button>
     </div>
-    <button class="close-lib" onclick="toggleLibrary(false)">Done</button>
+    <button class="close-lib" onclick="toggleLibrary(false)">完了</button>
 </div>
 
 <script>
-    const audioData = {
+const audioData = {
         rain: 'https://promo.blocksurprise.f5.si/focus/file/sound1.mp3',
         fire: 'https://promo.blocksurprise.f5.si/focus/file/fire.mp3',
         cafe: 'https://promo.blocksurprise.f5.si/focus/file/cafe.mp3',
@@ -233,7 +230,7 @@
         pigeon: 'https://promo.blocksurprise.f5.si/focus/file/yama-dori.mp3',
         frog: 'https://promo.blocksurprise.f5.si/focus/file/frog.mp3',
         warbler: 'https://promo.blocksurprise.f5.si/focus/file/ugu.mp3',
-        bubbles: 'https://promo.blocksurprise.f5.si/focus/file/bubbles.mp3' // 仮
+        bubbles: 'https://promo.blocksurprise.f5.si/focus/file/bubbles.mp3' 
     };
 
     const activeSounds = {};
@@ -247,6 +244,15 @@
 
         const audio = new Audio(audioData[id]);
         audio.loop = true;
+        audio.volume = 0; // 最初は無音
+
+        // 重要: ボタンを押した瞬間に「無音で再生」を開始して、ブラウザのロックを解除する
+        audio.play().then(() => {
+            console.log(`${label} started silently.`);
+        }).catch(e => {
+            console.error("Autoplay blocked or load error:", e);
+        });
+
         activeSounds[id] = audio;
 
         const mixerArea = document.getElementById('active-mixer');
@@ -265,18 +271,27 @@
 
     function changeVol(id, vol) {
         const audio = activeSounds[id];
-        if (vol > 0) {
-            if (audio.paused) audio.play();
-            audio.volume = vol;
-        } else {
-            audio.pause();
+        if (!audio) return;
+
+        audio.volume = vol;
+
+        // スライダーを動かしたときに一時停止状態なら再生を試みる
+        if (vol > 0 && audio.paused) {
+            audio.play().catch(e => console.log("Play failed on slider move:", e));
+        } else if (vol == 0) {
+            // 音量0のときはリソース節約のために一時停止しても良い（お好みで）
+            // audio.pause(); 
         }
     }
 
     function removeSound(id) {
-        activeSounds[id].pause();
-        delete activeSounds[id];
-        document.getElementById(`card-${id}`).remove();
+        if (activeSounds[id]) {
+            activeSounds[id].pause();
+            activeSounds[id].src = ""; // メモリ解放
+            delete activeSounds[id];
+        }
+        const el = document.getElementById(`card-${id}`);
+        if (el) el.remove();
     }
 </script>
 
