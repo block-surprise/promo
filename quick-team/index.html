@@ -1,0 +1,191 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>クイックチームfine | シンプルチーム分けツール</title>
+    
+    <style>
+        :root {
+            --primary-color: #2563eb;
+            --bg-color: #f8fafc;
+            --card-bg: #ffffff;
+            --text-color: #1e293b;
+        }
+
+        body {
+            font-family: 'Helvetica Neue', Arial, sans-serif;
+            background-color: var(--bg-color);
+            color: var(--text-color);
+            margin: 0;
+            padding: 20px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+
+        .container {
+            max-width: 600px;
+            width: 100%;
+            background: var(--card-bg);
+            padding: 24px;
+            border-radius: 12px;
+            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
+        }
+
+        h1 { font-size: 1.5rem; text-align: center; margin-bottom: 20px; }
+
+        textarea {
+            width: 100%;
+            height: 120px;
+            padding: 12px;
+            border: 1px solid #cbd5e1;
+            border-radius: 8px;
+            box-sizing: border-box;
+            font-size: 1rem;
+            resize: vertical;
+        }
+
+        .controls {
+            margin: 20px 0;
+            display: flex;
+            gap: 10px;
+            align-items: center;
+            justify-content: space-between;
+        }
+
+        input[type="number"] {
+            width: 60px;
+            padding: 8px;
+            border: 1px solid #cbd5e1;
+            border-radius: 4px;
+        }
+
+        button {
+            background-color: var(--primary-color);
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 8px;
+            cursor: pointer;
+            font-weight: bold;
+            transition: opacity 0.2s;
+        }
+
+        button:hover { opacity: 0.9; }
+
+        #result {
+            margin-top: 24px;
+            display: grid;
+            gap: 16px;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+        }
+
+        .team-card {
+            background: #f1f5f9;
+            padding: 16px;
+            border-radius: 8px;
+            border-left: 4px solid var(--primary-color);
+        }
+
+        .team-title { font-weight: bold; margin-bottom: 8px; color: var(--primary-color); }
+        .member-list { list-style: none; padding: 0; margin: 0; }
+        
+        /* アドセンス用記事スペース */
+        .article-space {
+            max-width: 600px;
+            width: 100%;
+            margin-top: 40px;
+            line-height: 1.6;
+            color: #475569;
+        }
+    </style>
+</head>
+<body>
+
+<div class="container">
+    <h1>チーム分けツール</h1>
+    
+    <label for="names">参加者の名前（改行区切り）</label>
+    <textarea id="names" placeholder="佐藤&#13;&#10;田中&#13;&#10;鈴木..."></textarea>
+
+    <div class="controls">
+        <div>
+            チーム数: <input type="number" id="teamCount" value="2" min="2">
+        </div>
+        <button onclick="divideTeams()">チームを分ける！</button>
+    </div>
+
+    <div id="result"></div>
+</div>
+
+<!-- アドセンス審査用のコンテンツエリア -->
+<div class="article-space">
+    <hr>
+    <h2>このツールについて</h2>
+    <p>
+        この「チーム分けツール」は、ゲームやスポーツ、イベント等で公平にグループ分けを行うためのWebツールです。
+        入力された名前を独自のシャッフルアルゴリズムでランダムに入れ替え、指定された数に均等に振り分けます。
+    </p>
+    <p>
+        <strong>使い方：</strong><br>
+        1. 上の入力欄にメンバーの名前を1行ずつ入力します。<br>
+        2. 分けたいチームの数を設定します。<br>
+        3. ボタンを押すと、即座にランダムなチームが生成されます。
+    </p>
+    <p>
+        ※個人情報はサーバーに保存されず、すべてブラウザ上のJavaScriptで処理されるため、プライバシー面でも安心してご利用いただけます。
+    </p>
+</div>
+
+<script>
+    function divideTeams() {
+        const nameText = document.getElementById('names').value.trim();
+        if (!nameText) {
+            alert('名前を入力してください');
+            return;
+        }
+
+        // 配列に変換してシャッフル
+        let members = nameText.split(/\n/).filter(name => name.trim() !== "");
+        for (let i = members.length - 1; i > 0; i--) {
+            const j = Math.floor(Math.random() * (i + 1));
+            [members[i], members[j]] = [members[j], members[i]];
+        }
+
+        const teamCount = parseInt(document.getElementById('teamCount').value);
+        const resultDiv = document.getElementById('result');
+        resultDiv.innerHTML = '';
+
+        // チームごとの配列を作成
+        const teams = Array.from({ length: teamCount }, () => []);
+        members.forEach((member, index) => {
+            teams[index % teamCount].push(member);
+        });
+
+        // 結果を表示
+        teams.forEach((team, i) => {
+            const card = document.createElement('div');
+            card.className = 'team-card';
+            
+            const title = document.createElement('div');
+            title.className = 'team-title';
+            title.textContent = `チーム ${i + 1}`;
+            
+            const list = document.createElement('ul');
+            list.className = 'member-list';
+            team.forEach(m => {
+                const li = document.createElement('li');
+                li.textContent = m;
+                list.appendChild(li);
+            });
+
+            card.appendChild(title);
+            card.appendChild(list);
+            resultDiv.appendChild(card);
+        });
+    }
+</script>
+
+</body>
+</html>
