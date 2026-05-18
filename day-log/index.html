@@ -1,0 +1,141 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>DAY'S LOG | 今日を特別にする場所</title>
+    <style>
+        :root {
+            --accent-color: #6366f1;
+            --bg-gradient: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
+        }
+
+        body {
+            font-family: 'Helvetica Neue', Arial, "Hiragino Sans", sans-serif;
+            margin: 0;
+            background: var(--bg-gradient);
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            color: #2d3436;
+        }
+
+        .main-card {
+            background: rgba(255, 255, 255, 0.9);
+            backdrop-filter: blur(10px);
+            width: 90%;
+            max-width: 500px;
+            margin-top: 50px;
+            padding: 40px;
+            border-radius: 30px;
+            box-shadow: 0 20px 40px rgba(0,0,0,0.1);
+            text-align: center;
+        }
+
+        .date-display { font-size: 1.2rem; font-weight: bold; color: var(--accent-color); }
+        .day-big { font-size: 4rem; font-weight: 900; margin: 10px 0; }
+        
+        .info-grid {
+            margin-top: 30px;
+            display: grid;
+            gap: 20px;
+            text-align: left;
+        }
+
+        .info-item {
+            background: white;
+            padding: 15px;
+            border-radius: 15px;
+            border-left: 5px solid var(--accent-color);
+        }
+
+        .info-label { font-size: 0.8rem; color: #636e72; margin-bottom: 5px; }
+        .info-content { font-size: 1rem; font-weight: bold; }
+
+        .custom-add {
+            margin-top: 30px;
+            font-size: 0.9rem;
+            color: var(--accent-color);
+            cursor: pointer;
+            text-decoration: underline;
+        }
+
+        #luck-area { color: #e17055; font-weight: bold; }
+    </style>
+</head>
+<body>
+
+<div class="main-card">
+    <div class="date-display" id="fullDate">2026.05.18 Mon</div>
+    <div class="day-big" id="dayNum">18</div>
+
+    <div class="info-grid">
+        <!-- 世の中の記念日 -->
+        <div class="info-item">
+            <div class="info-label">世の中では</div>
+            <div class="info-content" id="worldDay">読み込み中...</div>
+        </div>
+
+        <!-- 自分のカウントダウン -->
+        <div class="info-item">
+            <div class="info-label">あなたにとっての目標</div>
+            <div class="info-content" id="myGoal">目標を登録しよう</div>
+        </div>
+
+        <!-- 今日の運勢 -->
+        <div class="info-item">
+            <div class="info-label">今日のラッキーアイテム</div>
+            <div class="info-content" id="luck-area">...</div>
+        </div>
+    </div>
+
+    <div class="custom-add" onclick="setGoal()">目標日をセットする</div>
+</div>
+
+<script>
+    // 日付の表示
+    const now = new Date();
+    const days = ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'];
+    document.getElementById('fullDate').innerText = `${now.getFullYear()}.${now.getMonth()+1}.${now.getDate()} ${days[now.getDay()]}`;
+    document.getElementById('dayNum').innerText = now.getDate();
+
+    // 世の中の記念日（簡易版：APIを叩く代わりに主要なものを配列で持つか、GASで取得する）
+    const worldDays = {
+        "5-18": "ことばの日",
+        "5-19": "ボクシングの日",
+        // ここにデータを追加していく
+    };
+    const key = `${now.getMonth()+1}-${now.getDate()}`;
+    document.getElementById('worldDay').innerText = worldDays[key] || "素敵な1日";
+
+    // ラッキーアイテム（自分の好きなものを混ぜる）
+    const items = ["0.5mmのAin芯", "マインクラフトのダイヤ剣", "青色のペン", "ANAの飛行機", "Vポイント"];
+    const lucky = items[Math.floor(Math.random() * items.length)];
+    document.getElementById('luck-area').innerText = lucky;
+
+    // 目標カウントダウン（LocalStorage）
+    function updateGoal() {
+        const savedGoal = localStorage.getItem('userGoalDate');
+        if (savedGoal) {
+            const goalDate = new Date(savedGoal);
+            const diff = goalDate - now;
+            const diffDays = Math.ceil(diff / (1000 * 60 * 60 * 24));
+            document.getElementById('myGoal').innerText = 
+                diffDays > 0 ? `大事な日まであと ${diffDays}日` : "目標日を過ぎました！";
+        }
+    }
+
+    function setGoal() {
+        const date = prompt("目標日を入力してください (例: 2027-04-01)");
+        if (date) {
+            localStorage.setItem('userGoalDate', date);
+            updateGoal();
+        }
+    }
+
+    updateGoal();
+</script>
+
+</body>
+</html>
