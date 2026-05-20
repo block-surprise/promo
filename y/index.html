@@ -16,19 +16,13 @@
 }
 
 body{
-  background:#f2f2f2;
-  color:#222;
+  background:#f3f3f3;
   min-height:100vh;
+  color:#222;
+  padding:20px;
 }
 
-.container{
-  width:100%;
-  max-width:1000px;
-  margin:auto;
-  padding:30px 20px;
-}
-
-/* ナビ */
+/* ナビだけ新UI */
 
 .navbar{
 
@@ -81,15 +75,24 @@ body{
   background:black;
   color:white;
 }
-.nav-menu a{
-  white-space:nowrap;
+
+/* ↓ ここから元の友情診断デザイン */
+
+.container{
+  width:100%;
+  max-width:650px;
+  background:white;
+  border-radius:25px;
+  padding:30px;
+  box-shadow:0 10px 30px rgba(0,0,0,0.08);
+
+  margin:auto;
 }
-/* タイトル */
 
 h1{
   text-align:center;
-  font-size:50px;
   margin-bottom:10px;
+  font-size:36px;
 }
 
 .sub{
@@ -98,32 +101,37 @@ h1{
   margin-bottom:30px;
 }
 
-/* セクション */
-
-.section{
-  background:white;
-  border-radius:25px;
-  padding:25px;
-  margin-bottom:25px;
+.box{
+  margin-bottom:30px;
+  padding:20px;
+  border-radius:20px;
+  background:#fafafa;
   border:1px solid #eee;
 }
 
-.section h2{
-  margin-bottom:20px;
+.box h2{
+  margin-bottom:15px;
+}
+
+input{
+  width:100%;
+  padding:14px;
+  border-radius:12px;
+  border:2px solid #ddd;
+  margin-bottom:15px;
+  font-size:16px;
 }
 
 label{
   display:block;
-  margin-bottom:15px;
+  margin-bottom:12px;
   cursor:pointer;
-  font-size:16px;
 }
 
 input[type="checkbox"]{
+  width:auto;
   margin-right:8px;
 }
-
-/* ボタン */
 
 button{
   width:100%;
@@ -132,7 +140,7 @@ button{
   border-radius:14px;
   background:black;
   color:white;
-  font-size:18px;
+  font-size:17px;
   cursor:pointer;
   transition:0.2s;
 }
@@ -141,64 +149,70 @@ button:hover{
   transform:scale(1.02);
 }
 
-/* 結果 */
-
 .result{
-  display:none;
   margin-top:30px;
-  background:white;
-  border-radius:25px;
+  background:#fafafa;
+  border-radius:20px;
   padding:25px;
-  border:1px solid #eee;
+  display:none;
   animation:fade 0.3s;
 }
 
 @keyframes fade{
+
   from{
     opacity:0;
     transform:translateY(10px);
   }
+
   to{
     opacity:1;
     transform:translateY(0);
   }
+
 }
 
 .score{
-  text-align:center;
-  font-size:60px;
+  font-size:55px;
   font-weight:bold;
+  text-align:center;
   margin-bottom:20px;
 }
 
 .line{
-  margin-bottom:14px;
+  margin-bottom:12px;
   font-size:18px;
 }
 
 .comment{
   margin-top:20px;
-  background:#fafafa;
-  border-radius:14px;
-  padding:18px;
-  line-height:1.8;
+  background:white;
+  padding:15px;
+  border-radius:12px;
+  line-height:1.7;
+  border:1px solid #eee;
 }
 
-.share{
+.footer{
+  margin-top:20px;
+  text-align:center;
+  color:gray;
+  font-size:13px;
+}
+
+.shareButtons{
   display:flex;
   gap:10px;
   margin-top:20px;
 }
 
-.share button{
+.shareBtn{
   flex:1;
+  background:#222;
 }
 
-.footer{
-  text-align:center;
-  margin-top:20px;
-  color:gray;
-  font-size:13px;
+.shareBtn:hover{
+  opacity:0.9;
 }
 
 @media(max-width:700px){
@@ -208,12 +222,7 @@ button:hover{
     gap:15px;
   }
 
-  h1{
-    font-size:40px;
-  }
-
 }
-
 </style>
 </head>
 
