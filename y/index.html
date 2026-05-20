@@ -1,0 +1,231 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>友情破壊診断</title>
+
+  <style>
+    *{
+      margin:0;
+      padding:0;
+      box-sizing:border-box;
+      font-family:sans-serif;
+    }
+
+    body{
+      background:#f5f5f5;
+      color:#222;
+      min-height:100vh;
+      display:flex;
+      justify-content:center;
+      align-items:center;
+      padding:20px;
+    }
+
+    .container{
+      width:100%;
+      max-width:500px;
+      background:white;
+      border-radius:20px;
+      padding:30px;
+      box-shadow:0 10px 30px rgba(0,0,0,0.1);
+    }
+
+    h1{
+      text-align:center;
+      margin-bottom:10px;
+      font-size:32px;
+    }
+
+    .sub{
+      text-align:center;
+      color:gray;
+      margin-bottom:30px;
+    }
+
+    input{
+      width:100%;
+      padding:15px;
+      border:2px solid #ddd;
+      border-radius:12px;
+      margin-bottom:15px;
+      font-size:16px;
+      outline:none;
+      transition:0.2s;
+    }
+
+    input:focus{
+      border-color:#666;
+    }
+
+    button{
+      width:100%;
+      padding:15px;
+      border:none;
+      border-radius:12px;
+      background:black;
+      color:white;
+      font-size:17px;
+      cursor:pointer;
+      transition:0.2s;
+    }
+
+    button:hover{
+      transform:scale(1.02);
+    }
+
+    .result{
+      margin-top:30px;
+      padding:20px;
+      border-radius:15px;
+      background:#fafafa;
+      display:none;
+      animation:fade 0.4s;
+    }
+
+    @keyframes fade{
+      from{
+        opacity:0;
+        transform:translateY(10px);
+      }
+      to{
+        opacity:1;
+        transform:translateY(0);
+      }
+    }
+
+    .score{
+      font-size:45px;
+      font-weight:bold;
+      text-align:center;
+      margin-bottom:20px;
+    }
+
+    .line{
+      margin-bottom:10px;
+      font-size:17px;
+    }
+
+    .comment{
+      margin-top:20px;
+      padding:15px;
+      border-radius:10px;
+      background:white;
+      border:1px solid #eee;
+      line-height:1.6;
+    }
+
+    .footer{
+      margin-top:20px;
+      text-align:center;
+      color:gray;
+      font-size:13px;
+    }
+  </style>
+</head>
+<body>
+
+  <div class="container">
+
+    <h1>友情破壊診断</h1>
+    <p class="sub">あなた、本当に親友？</p>
+
+    <input type="text" id="name1" placeholder="あなたの名前">
+    <input type="text" id="name2" placeholder="友達の名前">
+
+    <button onclick="diagnose()">
+      診断する
+    </button>
+
+    <div class="result" id="result">
+
+      <div class="score" id="score">
+        0%
+      </div>
+
+      <div class="line" id="trust"></div>
+      <div class="line" id="betray"></div>
+      <div class="line" id="danger"></div>
+
+      <div class="comment" id="comment"></div>
+
+    </div>
+
+    <div class="footer">
+      スクショして友達に送りつけよう
+    </div>
+
+  </div>
+
+  <script>
+
+    function diagnose(){
+
+      const name1 = document.getElementById("name1").value;
+      const name2 = document.getElementById("name2").value;
+
+      if(name1 === "" || name2 === ""){
+        alert("名前を入力してください");
+        return;
+      }
+
+      const score = Math.floor(Math.random() * 101);
+
+      const trustList = [
+        "SSS",
+        "SS",
+        "S",
+        "A",
+        "B",
+        "C",
+        "終"
+      ];
+
+      const comments = [
+        "この2人、深夜テンションだけで繋がってます。",
+        "多分どっちか既読無視してる。",
+        "友情はある。でも金の貸し借りは危険。",
+        "通話したら6時間コース。",
+        "クラス替えしたら終わるタイプ。",
+        "片方がツッコミ役で成立してます。",
+        "普通に仲良くて草。",
+        "どっちか絶対待ち合わせ遅れる。",
+        "Discordが本体。",
+        "文化祭だけ異様に仲良い。"
+      ];
+
+      const dangerList = [
+        "危険度：0%",
+        "危険度：12%",
+        "危険度：38%",
+        "危険度：67%",
+        "危険度：89%",
+        "危険度：99%"
+      ];
+
+      const betray = Math.floor(Math.random() * 100);
+
+      document.getElementById("score").innerText =
+        score + "%";
+
+      document.getElementById("trust").innerText =
+        "親友レベル：" +
+        trustList[Math.floor(Math.random() * trustList.length)];
+
+      document.getElementById("betray").innerText =
+        "裏切り確率：" + betray + "%";
+
+      document.getElementById("danger").innerText =
+        dangerList[Math.floor(Math.random() * dangerList.length)];
+
+      document.getElementById("comment").innerText =
+        comments[Math.floor(Math.random() * comments.length)];
+
+      document.getElementById("result").style.display = "block";
+    }
+
+  </script>
+
+</body>
+</html>
