@@ -1,0 +1,149 @@
+
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Shimekiri</title>
+
+<style>
+body{
+  font-family:Arial,sans-serif;
+  background:#f4f7ff;
+  padding:20px;
+  max-width:500px;
+  margin:auto;
+}
+
+h1{
+  font-size:40px;
+}
+
+.card{
+  background:white;
+  padding:20px;
+  border-radius:20px;
+  margin-bottom:20px;
+  box-shadow:0 4px 10px rgba(0,0,0,0.08);
+}
+
+input{
+  width:100%;
+  padding:12px;
+  margin-bottom:10px;
+  border:none;
+  border-radius:12px;
+  background:#eef2ff;
+}
+
+button{
+  width:100%;
+  padding:14px;
+  border:none;
+  border-radius:14px;
+  background:#6c7cff;
+  color:white;
+  font-size:16px;
+}
+
+.task{
+  background:#f6f8ff;
+  padding:12px;
+  border-radius:14px;
+  margin-bottom:10px;
+  display:flex;
+  justify-content:space-between;
+  align-items:center;
+}
+</style>
+</head>
+
+<body>
+
+<h1>Shimekiri</h1>
+
+<div class="card">
+  <h2>宿題追加</h2>
+
+  <input type="text" id="taskInput" placeholder="宿題を入力">
+  <input type="date" id="dateInput">
+
+  <button onclick="addTask()">追加</button>
+</div>
+
+<div class="card">
+  <h2>今日やること</h2>
+
+  <div id="taskList"></div>
+</div>
+
+<script>
+let tasks = JSON.parse(localStorage.getItem("tasks")) || [];
+
+function saveTasks(){
+  localStorage.setItem("tasks", JSON.stringify(tasks));
+}
+
+function renderTasks(){
+
+  const taskList = document.getElementById("taskList");
+
+  taskList.innerHTML = "";
+
+  tasks.forEach((task,index)=>{
+
+    const div = document.createElement("div");
+
+    div.className = "task";
+
+    div.innerHTML = `
+      <div>
+        <b>${task.name}</b><br>
+        ${task.date}
+      </div>
+
+      <button onclick="deleteTask(${index})"
+      style="width:auto;padding:8px 10px;">
+      ✕
+      </button>
+    `;
+
+    taskList.appendChild(div);
+  });
+}
+
+function addTask(){
+
+  const taskInput = document.getElementById("taskInput");
+  const dateInput = document.getElementById("dateInput");
+
+  if(taskInput.value === ""){
+    alert("入力して");
+    return;
+  }
+
+  tasks.unshift({
+    name:taskInput.value,
+    date:dateInput.value
+  });
+
+  saveTasks();
+  renderTasks();
+
+  taskInput.value = "";
+  dateInput.value = "";
+}
+
+function deleteTask(index){
+
+  tasks.splice(index,1);
+
+  saveTasks();
+  renderTasks();
+}
+
+renderTasks();
+</script>
+
+</body>
+</html>
