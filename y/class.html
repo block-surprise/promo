@@ -142,13 +142,59 @@ button:hover{
   color:gray;
   font-size:13px;
 }
+.navbar{
+  width:100%;
+  background:white;
+  padding:18px 25px;
+  border-radius:18px;
+  display:flex;
+  justify-content:space-between;
+  align-items:center;
+  margin-bottom:25px;
+  border:1px solid #eee;
+}
 
+.logo{
+  font-size:22px;
+  font-weight:bold;
+}
+
+.nav-links{
+  display:flex;
+  gap:15px;
+  flex-wrap:wrap;
+}
+
+.nav-links a{
+  text-decoration:none;
+  color:#222;
+  padding:10px 14px;
+  border-radius:10px;
+  transition:0.2s;
+}
+
+.nav-links a:hover{
+  background:#f2f2f2;
+}
 </style>
 </head>
 
 <body>
+  <div class="container">
+<nav class="navbar">
 
-<div class="container">
+  <div class="logo">
+    終わり診断
+  </div>
+
+  <div class="nav-links">
+    <a href="home.html">ホーム</a>
+    <a href="friend.html">友情破壊診断</a>
+    <a href="class.html">クラス崩壊診断</a>
+  </div>
+
+</nav>
+
 
   <h1>クラス崩壊診断</h1>
 
