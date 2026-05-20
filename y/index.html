@@ -1,231 +1,290 @@
 <!DOCTYPE html>
 <html lang="ja">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>友情破壊診断</title>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
 
-  <style>
-    *{
-      margin:0;
-      padding:0;
-      box-sizing:border-box;
-      font-family:sans-serif;
-    }
+<title>友情破壊診断</title>
 
-    body{
-      background:#f5f5f5;
-      color:#222;
-      min-height:100vh;
-      display:flex;
-      justify-content:center;
-      align-items:center;
-      padding:20px;
-    }
+<style>
 
-    .container{
-      width:100%;
-      max-width:500px;
-      background:white;
-      border-radius:20px;
-      padding:30px;
-      box-shadow:0 10px 30px rgba(0,0,0,0.1);
-    }
+*{
+  margin:0;
+  padding:0;
+  box-sizing:border-box;
+  font-family:sans-serif;
+}
 
-    h1{
-      text-align:center;
-      margin-bottom:10px;
-      font-size:32px;
-    }
+body{
+  background:#f3f3f3;
+  min-height:100vh;
+  display:flex;
+  justify-content:center;
+  align-items:center;
+  padding:20px;
+  color:#222;
+}
 
-    .sub{
-      text-align:center;
-      color:gray;
-      margin-bottom:30px;
-    }
+.container{
+  width:100%;
+  max-width:650px;
+  background:white;
+  border-radius:25px;
+  padding:30px;
+  box-shadow:0 10px 30px rgba(0,0,0,0.08);
+}
 
-    input{
-      width:100%;
-      padding:15px;
-      border:2px solid #ddd;
-      border-radius:12px;
-      margin-bottom:15px;
-      font-size:16px;
-      outline:none;
-      transition:0.2s;
-    }
+h1{
+  text-align:center;
+  margin-bottom:10px;
+  font-size:36px;
+}
 
-    input:focus{
-      border-color:#666;
-    }
+.sub{
+  text-align:center;
+  color:gray;
+  margin-bottom:30px;
+}
 
-    button{
-      width:100%;
-      padding:15px;
-      border:none;
-      border-radius:12px;
-      background:black;
-      color:white;
-      font-size:17px;
-      cursor:pointer;
-      transition:0.2s;
-    }
+.box{
+  margin-bottom:30px;
+  padding:20px;
+  border-radius:20px;
+  background:#fafafa;
+  border:1px solid #eee;
+}
 
-    button:hover{
-      transform:scale(1.02);
-    }
+.box h2{
+  margin-bottom:15px;
+}
 
-    .result{
-      margin-top:30px;
-      padding:20px;
-      border-radius:15px;
-      background:#fafafa;
-      display:none;
-      animation:fade 0.4s;
-    }
+input{
+  width:100%;
+  padding:14px;
+  border-radius:12px;
+  border:2px solid #ddd;
+  margin-bottom:15px;
+  font-size:16px;
+}
 
-    @keyframes fade{
-      from{
-        opacity:0;
-        transform:translateY(10px);
-      }
-      to{
-        opacity:1;
-        transform:translateY(0);
-      }
-    }
+label{
+  display:block;
+  margin-bottom:12px;
+  cursor:pointer;
+}
 
-    .score{
-      font-size:45px;
-      font-weight:bold;
-      text-align:center;
-      margin-bottom:20px;
-    }
+button{
+  width:100%;
+  padding:16px;
+  border:none;
+  border-radius:14px;
+  background:black;
+  color:white;
+  font-size:17px;
+  cursor:pointer;
+  transition:0.2s;
+}
 
-    .line{
-      margin-bottom:10px;
-      font-size:17px;
-    }
+button:hover{
+  transform:scale(1.02);
+}
 
-    .comment{
-      margin-top:20px;
-      padding:15px;
-      border-radius:10px;
-      background:white;
-      border:1px solid #eee;
-      line-height:1.6;
-    }
+.result{
+  margin-top:30px;
+  background:#fafafa;
+  border-radius:20px;
+  padding:25px;
+  display:none;
+  animation:fade 0.3s;
+}
 
-    .footer{
-      margin-top:20px;
-      text-align:center;
-      color:gray;
-      font-size:13px;
-    }
-  </style>
+@keyframes fade{
+  from{
+    opacity:0;
+    transform:translateY(10px);
+  }
+  to{
+    opacity:1;
+    transform:translateY(0);
+  }
+}
+
+.score{
+  font-size:55px;
+  font-weight:bold;
+  text-align:center;
+  margin-bottom:20px;
+}
+
+.line{
+  margin-bottom:12px;
+  font-size:18px;
+}
+
+.comment{
+  margin-top:20px;
+  background:white;
+  padding:15px;
+  border-radius:12px;
+  line-height:1.7;
+  border:1px solid #eee;
+}
+
+.footer{
+  margin-top:20px;
+  text-align:center;
+  color:gray;
+  font-size:13px;
+}
+
+</style>
 </head>
+
 <body>
 
-  <div class="container">
+<div class="container">
 
-    <h1>友情破壊診断</h1>
-    <p class="sub">あなた、本当に親友？</p>
+  <h1>友情破壊診断</h1>
+  <p class="sub">
+    お前ら、どっちが先に裏切る？
+  </p>
 
-    <input type="text" id="name1" placeholder="あなたの名前">
-    <input type="text" id="name2" placeholder="友達の名前">
+  <div class="box">
 
-    <button onclick="diagnose()">
-      診断する
-    </button>
+    <h2>あなた</h2>
 
-    <div class="result" id="result">
+    <input type="text" id="yourName" placeholder="あなたの名前">
 
-      <div class="score" id="score">
-        0%
-      </div>
-
-      <div class="line" id="trust"></div>
-      <div class="line" id="betray"></div>
-      <div class="line" id="danger"></div>
-
-      <div class="comment" id="comment"></div>
-
-    </div>
-
-    <div class="footer">
-      スクショして友達に送りつけよう
-    </div>
+    <label><input type="checkbox" class="you" value="20"> 返信が遅い</label>
+    <label><input type="checkbox" class="you" value="15"> 集合時間に遅れる</label>
+    <label><input type="checkbox" class="you" value="-10"> ノリが良い</label>
+    <label><input type="checkbox" class="you" value="25"> 既読無視する</label>
+    <label><input type="checkbox" class="you" value="-15"> 通話に付き合う</label>
+    <label><input type="checkbox" class="you" value="30"> 金欠の時だけ連絡する</label>
 
   </div>
 
-  <script>
+  <div class="box">
 
-    function diagnose(){
+    <h2>友達</h2>
 
-      const name1 = document.getElementById("name1").value;
-      const name2 = document.getElementById("name2").value;
+    <input type="text" id="friendName" placeholder="友達の名前">
 
-      if(name1 === "" || name2 === ""){
-        alert("名前を入力してください");
-        return;
-      }
+    <label><input type="checkbox" class="friend" value="20"> 空気を読まない</label>
+    <label><input type="checkbox" class="friend" value="25"> 約束を忘れる</label>
+    <label><input type="checkbox" class="friend" value="-15"> めっちゃ優しい</label>
+    <label><input type="checkbox" class="friend" value="35"> 急に通話切る</label>
+    <label><input type="checkbox" class="friend" value="-10"> おもしろい</label>
+    <label><input type="checkbox" class="friend" value="30"> 返信が雑</label>
 
-      const score = Math.floor(Math.random() * 101);
+  </div>
 
-      const trustList = [
-        "SSS",
-        "SS",
-        "S",
-        "A",
-        "B",
-        "C",
-        "終"
-      ];
+  <button onclick="diagnose()">
+    診断開始
+  </button>
 
-      const comments = [
-        "この2人、深夜テンションだけで繋がってます。",
-        "多分どっちか既読無視してる。",
-        "友情はある。でも金の貸し借りは危険。",
-        "通話したら6時間コース。",
-        "クラス替えしたら終わるタイプ。",
-        "片方がツッコミ役で成立してます。",
-        "普通に仲良くて草。",
-        "どっちか絶対待ち合わせ遅れる。",
-        "Discordが本体。",
-        "文化祭だけ異様に仲良い。"
-      ];
+  <div class="result" id="result">
 
-      const dangerList = [
-        "危険度：0%",
-        "危険度：12%",
-        "危険度：38%",
-        "危険度：67%",
-        "危険度：89%",
-        "危険度：99%"
-      ];
+    <div class="score" id="score">
+      0%
+    </div>
 
-      const betray = Math.floor(Math.random() * 100);
+    <div class="line" id="friendship"></div>
+    <div class="line" id="betray"></div>
+    <div class="line" id="future"></div>
 
-      document.getElementById("score").innerText =
-        score + "%";
+    <div class="comment" id="comment"></div>
 
-      document.getElementById("trust").innerText =
-        "親友レベル：" +
-        trustList[Math.floor(Math.random() * trustList.length)];
+  </div>
 
-      document.getElementById("betray").innerText =
-        "裏切り確率：" + betray + "%";
+  <div class="footer">
+    スクショして送りつけろ
+  </div>
 
-      document.getElementById("danger").innerText =
-        dangerList[Math.floor(Math.random() * dangerList.length)];
+</div>
 
-      document.getElementById("comment").innerText =
-        comments[Math.floor(Math.random() * comments.length)];
+<script>
 
-      document.getElementById("result").style.display = "block";
-    }
+function diagnose(){
 
-  </script>
+  const yourName = document.getElementById("yourName").value;
+  const friendName = document.getElementById("friendName").value;
+
+  if(yourName === "" || friendName === ""){
+    alert("名前を入力してください");
+    return;
+  }
+
+  let score = 100;
+
+  const youChecks = document.querySelectorAll(".you:checked");
+  const friendChecks = document.querySelectorAll(".friend:checked");
+
+  youChecks.forEach(item => {
+    score -= Number(item.value);
+  });
+
+  friendChecks.forEach(item => {
+    score -= Number(item.value);
+  });
+
+  if(score < 0){
+    score = 0;
+  }
+
+  if(score > 100){
+    score = 100;
+  }
+
+  let rank = "";
+  let future = "";
+  let comment = "";
+
+  if(score >= 80){
+    rank = "親友レベル：SS";
+    future = "縁切れ確率：3%";
+    comment = "普通に仲良くて草。多分ずっと一緒にいる。";
+  }
+  else if(score >= 60){
+    rank = "親友レベル：A";
+    future = "縁切れ確率：27%";
+    comment = "ギリ健全な友情。金の貸し借りは危険。";
+  }
+  else if(score >= 40){
+    rank = "親友レベル：B";
+    future = "縁切れ確率：58%";
+    comment = "クラス替えで自然消滅するタイプ。";
+  }
+  else if(score >= 20){
+    rank = "親友レベル：C";
+    future = "縁切れ確率：82%";
+    comment = "片方かなり我慢してます。";
+  }
+  else{
+    rank = "親友レベル：終";
+    future = "縁切れ確率：99%";
+    comment = "もう友情というより事故。";
+  }
+
+  document.getElementById("score").innerText =
+    score + "%";
+
+  document.getElementById("friendship").innerText =
+    rank;
+
+  document.getElementById("betray").innerText =
+    "裏切り危険度：" + (100 - score) + "%";
+
+  document.getElementById("future").innerText =
+    future;
+
+  document.getElementById("comment").innerText =
+    yourName + " と " + friendName + " の診断結果：\n\n" + comment;
+
+  document.getElementById("result").style.display = "block";
+}
+
+</script>
 
 </body>
 </html>
