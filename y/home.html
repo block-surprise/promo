@@ -1,0 +1,268 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+
+<title>終わり診断</title>
+
+<style>
+
+*{
+  margin:0;
+  padding:0;
+  box-sizing:border-box;
+  font-family:sans-serif;
+}
+
+body{
+  background:#f3f3f3;
+  color:#222;
+  padding:20px;
+}
+
+.container{
+  width:100%;
+  max-width:900px;
+  margin:auto;
+}
+
+.navbar{
+  background:white;
+  border-radius:20px;
+  padding:18px 25px;
+  display:flex;
+  justify-content:space-between;
+  align-items:center;
+  margin-bottom:30px;
+  border:1px solid #eee;
+  box-shadow:0 5px 20px rgba(0,0,0,0.05);
+}
+
+.logo{
+  font-size:28px;
+  font-weight:bold;
+}
+
+.nav-links{
+  display:flex;
+  gap:12px;
+  flex-wrap:wrap;
+}
+
+.nav-links a{
+  text-decoration:none;
+  color:#222;
+  padding:10px 14px;
+  border-radius:10px;
+  transition:0.2s;
+}
+
+.nav-links a:hover{
+  background:#f2f2f2;
+}
+
+.hero{
+  background:white;
+  border-radius:25px;
+  padding:50px 30px;
+  text-align:center;
+  margin-bottom:30px;
+  border:1px solid #eee;
+  box-shadow:0 5px 20px rgba(0,0,0,0.05);
+}
+
+.hero h1{
+  font-size:55px;
+  margin-bottom:15px;
+}
+
+.hero p{
+  color:gray;
+  font-size:18px;
+  line-height:1.7;
+}
+
+.section-title{
+  font-size:30px;
+  margin-bottom:20px;
+}
+
+.cards{
+  display:grid;
+  grid-template-columns:repeat(auto-fit,minmax(260px,1fr));
+  gap:20px;
+}
+
+.card{
+  background:white;
+  border-radius:22px;
+  padding:25px;
+  border:1px solid #eee;
+  transition:0.25s;
+  box-shadow:0 5px 20px rgba(0,0,0,0.04);
+}
+
+.card:hover{
+  transform:translateY(-5px);
+}
+
+.card h2{
+  margin-bottom:10px;
+  font-size:26px;
+}
+
+.card p{
+  color:gray;
+  line-height:1.7;
+  margin-bottom:20px;
+}
+
+.card a{
+  display:inline-block;
+  text-decoration:none;
+  background:black;
+  color:white;
+  padding:12px 18px;
+  border-radius:12px;
+  transition:0.2s;
+}
+
+.card a:hover{
+  transform:scale(1.03);
+}
+
+.footer{
+  text-align:center;
+  margin-top:40px;
+  color:gray;
+  font-size:14px;
+}
+
+.badge{
+  display:inline-block;
+  background:#f1f1f1;
+  padding:6px 10px;
+  border-radius:999px;
+  font-size:13px;
+  margin-bottom:15px;
+}
+
+@media(max-width:700px){
+
+  .navbar{
+    flex-direction:column;
+    gap:15px;
+  }
+
+  .hero h1{
+    font-size:42px;
+  }
+
+}
+
+</style>
+</head>
+
+<body>
+
+<div class="container">
+
+  <nav class="navbar">
+
+    <div class="logo">
+      終わり診断
+    </div>
+
+    <div class="nav-links">
+      <a href="home.html">ホーム</a>
+      <a href="friend.html">友情破壊診断</a>
+      <a href="class.html">クラス崩壊診断</a>
+    </div>
+
+  </nav>
+
+  <section class="hero">
+
+    <div class="badge">
+      深夜テンションで作られています
+    </div>
+
+    <h1>
+      終わり診断
+    </h1>
+
+    <p>
+      ネット人格、友情、クラス、人生。<br>
+      全部まとめて終わってるか診断します。
+    </p>
+
+  </section>
+
+  <h2 class="section-title">
+    人気の診断
+  </h2>
+
+  <div class="cards">
+
+    <div class="card">
+
+      <h2>
+        友情破壊診断
+      </h2>
+
+      <p>
+        お前ら本当に親友？<br>
+        裏切り危険度を分析します。
+      </p>
+
+      <a href="friend.html">
+        診断する
+      </a>
+
+    </div>
+
+    <div class="card">
+
+      <h2>
+        クラス崩壊診断
+      </h2>
+
+      <p>
+        担任のストレス値まで測定。<br>
+        お前のクラスはもう手遅れかも。
+      </p>
+
+      <a href="class.html">
+        診断する
+      </a>
+
+    </div>
+
+    <div class="card">
+
+      <h2>
+        ネット人格診断
+      </h2>
+
+      <p>
+        深夜テンション、ROM専度、<br>
+        Discord依存度を測定予定。
+      </p>
+
+      <a href="#">
+        準備中
+      </a>
+
+    </div>
+
+  </div>
+
+  <div class="footer">
+    © 終わり診断
+  </div>
+
+</div>
+
+</body>
+</html>
