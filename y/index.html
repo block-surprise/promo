@@ -306,102 +306,31 @@ button:hover{
 <script>
 
 const siteURL = "https://promo.blocksurprise.f5.si/y/";
-function diagnose(){
-
-  const yourName = document.getElementById("yourName").value;
-  const friendName = document.getElementById("friendName").value;
-
-  if(yourName === "" || friendName === ""){
-    alert("名前を入力してください");
-    return;
-  }
-
-  let score = 100;
-
-  const youChecks = document.querySelectorAll(".you:checked");
-  const friendChecks = document.querySelectorAll(".friend:checked");
-
-  youChecks.forEach(item => {
-    score -= Number(item.value);
-  });
-
-  friendChecks.forEach(item => {
-    score -= Number(item.value);
-  });
-
-  if(score < 0){
-    score = 0;
-  }
-
-  if(score > 100){
-    score = 100;
-  }
-
-  let rank = "";
-  let future = "";
-  let comment = "";
-
-  if(score >= 80){
-    rank = "親友レベル：SS";
-    future = "縁切れ確率：3%";
-    comment = "普通に仲良くて草。多分ずっと一緒にいる。";
-  }
-  else if(score >= 60){
-    rank = "親友レベル：A";
-    future = "縁切れ確率：27%";
-    comment = "ギリ健全な友情。金の貸し借りは危険。";
-  }
-  else if(score >= 40){
-    rank = "親友レベル：B";
-    future = "縁切れ確率：58%";
-    comment = "クラス替えで自然消滅するタイプ。";
-  }
-  else if(score >= 20){
-    rank = "親友レベル：C";
-    future = "縁切れ確率：82%";
-    comment = "片方かなり我慢してます。";
-  }
-  else{
-    rank = "親友レベル：終";
-    future = "縁切れ確率：99%";
-    comment = "もう友情というより事故。";
-  }
-
-  document.getElementById("score").innerText =
-    score + "%";
-
-  document.getElementById("friendship").innerText =
-    rank;
-
-  document.getElementById("betray").innerText =
-    "裏切り危険度：" + (100 - score) + "%";
-
-  document.getElementById("future").innerText =
-    future;
-
-  document.getElementById("comment").innerText =
-    yourName + " と " + friendName + " の診断結果：\n\n" + comment;
-
-  document.getElementById("result").style.display = "block";
-}
-<!--  ↓ -->
 
 let resultText = "";
 
 function diagnose(){
 
-  const yourName = document.getElementById("yourName").value;
-  const friendName = document.getElementById("friendName").value;
+  const yourName =
+    document.getElementById("yourName").value;
+
+  const friendName =
+    document.getElementById("friendName").value;
 
   if(yourName === "" || friendName === ""){
+
     alert("名前を入力してください");
     return;
+
   }
 
   let score = 100;
 
-  const youChecks = document.querySelectorAll(".you:checked");
-  const friendChecks = document.querySelectorAll(".friend:checked");
+  const youChecks =
+    document.querySelectorAll(".you:checked");
+
+  const friendChecks =
+    document.querySelectorAll(".friend:checked");
 
   youChecks.forEach(item => {
     score -= Number(item.value);
@@ -424,29 +353,53 @@ function diagnose(){
   let comment = "";
 
   if(score >= 80){
+
     rank = "親友レベル：SS";
     future = "縁切れ確率：3%";
-    comment = "普通に仲良くて草。多分ずっと一緒にいる。";
+
+    comment =
+      "普通に仲良くて草。多分ずっと一緒にいる。";
+
   }
+
   else if(score >= 60){
+
     rank = "親友レベル：A";
     future = "縁切れ確率：27%";
-    comment = "ギリ健全な友情。金の貸し借りは危険。";
+
+    comment =
+      "ギリ健全な友情。金の貸し借りは危険。";
+
   }
+
   else if(score >= 40){
+
     rank = "親友レベル：B";
     future = "縁切れ確率：58%";
-    comment = "クラス替えで自然消滅するタイプ。";
+
+    comment =
+      "クラス替えで自然消滅するタイプ。";
+
   }
+
   else if(score >= 20){
+
     rank = "親友レベル：C";
     future = "縁切れ確率：82%";
-    comment = "片方かなり我慢してます。";
+
+    comment =
+      "片方かなり我慢してます。";
+
   }
+
   else{
+
     rank = "親友レベル：終";
     future = "縁切れ確率：99%";
-    comment = "もう友情というより事故。";
+
+    comment =
+      "もう友情というより事故。";
+
   }
 
   document.getElementById("score").innerText =
@@ -464,18 +417,16 @@ function diagnose(){
   document.getElementById("comment").innerText =
     yourName + " と " + friendName + " の診断結果：\n\n" + comment;
 
-  document.getElementById("result").style.display = "block";
+  document.getElementById("result").style.display =
+    "block";
 
-  
-
-<!-- ↓ resultText の部分をこれに変更 ↓ -->
-
-resultText =
+  resultText =
 `【友情破壊診断】
 
 ${yourName} × ${friendName}
 
 友情スコア：${score}%
+
 ${rank}
 ${future}
 
@@ -485,33 +436,32 @@ ${comment}
 ${siteURL}
 
 #友情破壊診断`;
+
 }
-
-
-// コピー機能
 
 function copyResult(){
 
   navigator.clipboard.writeText(resultText);
 
   alert("結果をコピーしました！");
+
 }
-
-
-// 共有機能
 
 async function shareResult(){
 
   if(navigator.share){
 
     try{
+
       await navigator.share({
-        title: "友情破壊診断",
-        text: resultText
+        title:"友情破壊診断",
+        text:resultText
       });
-    }
-    catch(err){
+
+    }catch(err){
+
       console.log(err);
+
     }
 
   }else{
@@ -521,6 +471,7 @@ async function shareResult(){
   }
 
 }
+
 </script>
 
 </body>
