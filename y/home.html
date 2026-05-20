@@ -23,102 +23,178 @@ body{
 
 .container{
   width:100%;
-  max-width:900px;
+  max-width:1000px;
   margin:auto;
 }
 
+/* ナビゲーション */
+
 .navbar{
-  background:white;
-  border-radius:20px;
-  padding:18px 25px;
+  position:sticky;
+  top:15px;
+  z-index:1000;
+
   display:flex;
   justify-content:space-between;
   align-items:center;
-  margin-bottom:30px;
-  border:1px solid #eee;
-  box-shadow:0 5px 20px rgba(0,0,0,0.05);
+
+  padding:14px 18px;
+
+  background:rgba(255,255,255,0.8);
+
+  backdrop-filter:blur(12px);
+
+  border-radius:20px;
+
+  border:1px solid rgba(0,0,0,0.06);
+
+  margin-bottom:25px;
 }
 
 .logo{
-  font-size:28px;
-  font-weight:bold;
-}
-
-.nav-links{
-  display:flex;
-  gap:12px;
-  flex-wrap:wrap;
-}
-
-.nav-links a{
   text-decoration:none;
-  color:#222;
+  color:#111;
+  font-size:28px;
+  font-weight:800;
+}
+
+.nav-menu{
+  display:flex;
+  gap:10px;
+}
+
+.nav-menu a{
+  text-decoration:none;
+  color:#333;
+  background:#f4f4f4;
   padding:10px 14px;
-  border-radius:10px;
+  border-radius:12px;
   transition:0.2s;
 }
 
-.nav-links a:hover{
-  background:#f2f2f2;
+.nav-menu a:hover{
+  background:black;
+  color:white;
+  transform:translateY(-2px);
 }
+
+/* ヒーロー */
 
 .hero{
   background:white;
-  border-radius:25px;
-  padding:50px 30px;
+  border-radius:30px;
+  padding:60px 30px;
   text-align:center;
+  position:relative;
+  overflow:hidden;
   margin-bottom:30px;
   border:1px solid #eee;
-  box-shadow:0 5px 20px rgba(0,0,0,0.05);
+}
+
+.hero::before{
+  content:"";
+  position:absolute;
+  width:300px;
+  height:300px;
+  background:#e8e8e8;
+  border-radius:50%;
+  top:-100px;
+  right:-100px;
 }
 
 .hero h1{
-  font-size:55px;
+  position:relative;
+  font-size:65px;
   margin-bottom:15px;
 }
 
 .hero p{
+  position:relative;
   color:gray;
+  line-height:1.8;
   font-size:18px;
-  line-height:1.7;
 }
 
+.badges{
+  margin-top:25px;
+  display:flex;
+  justify-content:center;
+  gap:10px;
+  flex-wrap:wrap;
+}
+
+.badge{
+  background:#f4f4f4;
+  padding:10px 15px;
+  border-radius:999px;
+  font-size:14px;
+}
+
+/* お知らせ */
+
+.notice{
+  background:black;
+  color:white;
+  padding:18px;
+  border-radius:20px;
+  margin-bottom:30px;
+  text-align:center;
+  font-size:15px;
+}
+
+/* カード */
+
 .section-title{
-  font-size:30px;
+  font-size:32px;
   margin-bottom:20px;
 }
 
 .cards{
   display:grid;
-  grid-template-columns:repeat(auto-fit,minmax(260px,1fr));
+  grid-template-columns:repeat(auto-fit,minmax(280px,1fr));
   gap:20px;
 }
 
 .card{
   background:white;
-  border-radius:22px;
+  border-radius:25px;
   padding:25px;
   border:1px solid #eee;
   transition:0.25s;
-  box-shadow:0 5px 20px rgba(0,0,0,0.04);
+  position:relative;
+  overflow:hidden;
 }
 
 .card:hover{
   transform:translateY(-5px);
 }
 
+.card::before{
+  content:"";
+  position:absolute;
+  width:150px;
+  height:150px;
+  background:#f5f5f5;
+  border-radius:50%;
+  top:-50px;
+  right:-50px;
+}
+
 .card h2{
+  position:relative;
+  font-size:28px;
   margin-bottom:10px;
-  font-size:26px;
 }
 
 .card p{
+  position:relative;
   color:gray;
   line-height:1.7;
   margin-bottom:20px;
 }
 
 .card a{
+  position:relative;
   display:inline-block;
   text-decoration:none;
   background:black;
@@ -129,23 +205,50 @@ body{
 }
 
 .card a:hover{
-  transform:scale(1.03);
+  transform:scale(1.04);
 }
 
-.footer{
-  text-align:center;
+/* ランキング */
+
+.ranking{
   margin-top:40px;
-  color:gray;
-  font-size:14px;
+  background:white;
+  border-radius:25px;
+  padding:25px;
+  border:1px solid #eee;
 }
 
-.badge{
-  display:inline-block;
-  background:#f1f1f1;
-  padding:6px 10px;
+.rank-item{
+  display:flex;
+  justify-content:space-between;
+  align-items:center;
+  padding:15px 0;
+  border-bottom:1px solid #f1f1f1;
+}
+
+.rank-item:last-child{
+  border-bottom:none;
+}
+
+.rank-name{
+  font-size:18px;
+  font-weight:bold;
+}
+
+.rank-fire{
+  background:#f4f4f4;
+  padding:8px 12px;
   border-radius:999px;
   font-size:13px;
-  margin-bottom:15px;
+}
+
+/* フッター */
+
+.footer{
+  margin-top:40px;
+  text-align:center;
+  color:gray;
+  font-size:14px;
 }
 
 @media(max-width:700px){
@@ -156,7 +259,7 @@ body{
   }
 
   .hero h1{
-    font-size:42px;
+    font-size:48px;
   }
 
 }
@@ -168,36 +271,60 @@ body{
 
 <div class="container">
 
+  <!-- ナビ -->
+
   <nav class="navbar">
 
-    <div class="logo">
+    <a href="home.html" class="logo">
       終わり診断
-    </div>
+    </a>
 
-    <div class="nav-links">
-      <a href="home.html">ホーム</a>
-      <a href="friend.html">友情破壊診断</a>
-      <a href="class.html">クラス崩壊診断</a>
+    <div class="nav-menu">
+      <a href="friend.html">友情</a>
+      <a href="class.html">クラス</a>
+      <a href="#">ネット</a>
     </div>
 
   </nav>
 
-  <section class="hero">
+  <!-- ヒーロー -->
 
-    <div class="badge">
-      深夜テンションで作られています
-    </div>
+  <section class="hero">
 
     <h1>
       終わり診断
     </h1>
 
     <p>
-      ネット人格、友情、クラス、人生。<br>
+      ネット人格、友情、クラス、人間関係。<br>
       全部まとめて終わってるか診断します。
     </p>
 
+    <div class="badges">
+
+      <div class="badge">
+        深夜テンション対応
+      </div>
+
+      <div class="badge">
+        友情破壊済み
+      </div>
+
+      <div class="badge">
+        クラスLINE推奨
+      </div>
+
+    </div>
+
   </section>
+
+  <!-- お知らせ -->
+
+  <div class="notice">
+    🔥 新作「クラス崩壊診断」が公開されました
+  </div>
+
+  <!-- カード -->
 
   <h2 class="section-title">
     人気の診断
@@ -208,7 +335,7 @@ body{
     <div class="card">
 
       <h2>
-        友情破壊診断
+        💀 友情破壊診断
       </h2>
 
       <p>
@@ -225,7 +352,7 @@ body{
     <div class="card">
 
       <h2>
-        クラス崩壊診断
+        🏫 クラス崩壊診断
       </h2>
 
       <p>
@@ -242,12 +369,12 @@ body{
     <div class="card">
 
       <h2>
-        ネット人格診断
+        🌐 ネット人格診断
       </h2>
 
       <p>
-        深夜テンション、ROM専度、<br>
-        Discord依存度を測定予定。
+        Discord依存度、ROM専度、<br>
+        深夜テンションを分析予定。
       </p>
 
       <a href="#">
@@ -257,6 +384,48 @@ body{
     </div>
 
   </div>
+
+  <!-- ランキング -->
+
+  <div class="ranking">
+
+    <h2 class="section-title">
+      今日の人気
+    </h2>
+
+    <div class="rank-item">
+      <div class="rank-name">
+        1位 友情破壊診断
+      </div>
+
+      <div class="rank-fire">
+        🔥 バズ中
+      </div>
+    </div>
+
+    <div class="rank-item">
+      <div class="rank-name">
+        2位 クラス崩壊診断
+      </div>
+
+      <div class="rank-fire">
+        📈 急上昇
+      </div>
+    </div>
+
+    <div class="rank-item">
+      <div class="rank-name">
+        3位 ネット人格診断
+      </div>
+
+      <div class="rank-fire">
+        👀 開発中
+      </div>
+    </div>
+
+  </div>
+
+  <!-- フッター -->
 
   <div class="footer">
     © 終わり診断
