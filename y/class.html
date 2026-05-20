@@ -1,0 +1,378 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+
+<title>クラス崩壊診断</title>
+
+<style>
+
+*{
+  margin:0;
+  padding:0;
+  box-sizing:border-box;
+  font-family:sans-serif;
+}
+
+body{
+  background:#f2f2f2;
+  color:#222;
+  min-height:100vh;
+  display:flex;
+  justify-content:center;
+  align-items:center;
+  padding:20px;
+}
+
+.container{
+  width:100%;
+  max-width:700px;
+  background:white;
+  border-radius:25px;
+  padding:30px;
+  box-shadow:0 10px 30px rgba(0,0,0,0.08);
+}
+
+h1{
+  text-align:center;
+  margin-bottom:10px;
+  font-size:40px;
+}
+
+.sub{
+  text-align:center;
+  color:gray;
+  margin-bottom:30px;
+}
+
+.section{
+  margin-bottom:30px;
+  padding:20px;
+  border-radius:20px;
+  background:#fafafa;
+  border:1px solid #eee;
+}
+
+.section h2{
+  margin-bottom:20px;
+}
+
+label{
+  display:block;
+  margin-bottom:15px;
+  font-size:16px;
+  cursor:pointer;
+}
+
+input[type="checkbox"]{
+  margin-right:8px;
+}
+
+button{
+  width:100%;
+  padding:16px;
+  border:none;
+  border-radius:14px;
+  background:black;
+  color:white;
+  font-size:18px;
+  cursor:pointer;
+  transition:0.2s;
+}
+
+button:hover{
+  transform:scale(1.02);
+}
+
+.result{
+  margin-top:30px;
+  background:#fafafa;
+  border-radius:20px;
+  padding:25px;
+  display:none;
+  animation:fade 0.3s;
+}
+
+@keyframes fade{
+  from{
+    opacity:0;
+    transform:translateY(10px);
+  }
+  to{
+    opacity:1;
+    transform:translateY(0);
+  }
+}
+
+.score{
+  text-align:center;
+  font-size:60px;
+  font-weight:bold;
+  margin-bottom:20px;
+}
+
+.line{
+  margin-bottom:14px;
+  font-size:18px;
+}
+
+.comment{
+  margin-top:20px;
+  background:white;
+  border:1px solid #eee;
+  border-radius:12px;
+  padding:18px;
+  line-height:1.8;
+}
+
+.share{
+  margin-top:20px;
+  display:flex;
+  gap:10px;
+}
+
+.share button{
+  flex:1;
+}
+
+.footer{
+  text-align:center;
+  margin-top:20px;
+  color:gray;
+  font-size:13px;
+}
+
+</style>
+</head>
+
+<body>
+
+<div class="container">
+
+  <h1>クラス崩壊診断</h1>
+
+  <p class="sub">
+    お前のクラス、本当に大丈夫？
+  </p>
+
+  <div class="section">
+
+    <h2>クラスの特徴</h2>
+
+    <label><input type="checkbox" value="20" class="check"> 授業中うるさい奴がいる</label>
+
+    <label><input type="checkbox" value="15" class="check"> 寝てる奴が多い</label>
+
+    <label><input type="checkbox" value="25" class="check"> 先生がよくキレる</label>
+
+    <label><input type="checkbox" value="10" class="check"> 陽キャが騒いでる</label>
+
+    <label><input type="checkbox" value="35" class="check"> 学級崩壊寸前</label>
+
+    <label><input type="checkbox" value="15" class="check"> 提出物出さない奴が多い</label>
+
+    <label><input type="checkbox" value="20" class="check"> 休み時間だけ元気</label>
+
+    <label><input type="checkbox" value="30" class="check"> 担任が毎日ため息ついてる</label>
+
+    <label><input type="checkbox" value="25" class="check"> 授業より雑談がメイン</label>
+
+    <label><input type="checkbox" value="-10" class="check"> なぜか文化祭だけ団結する</label>
+
+  </div>
+
+  <button onclick="diagnose()">
+    崩壊診断スタート
+  </button>
+
+  <div class="result" id="result">
+
+    <div class="score" id="score">
+      0%
+    </div>
+
+    <div class="line" id="danger"></div>
+    <div class="line" id="teacher"></div>
+    <div class="line" id="future"></div>
+    <div class="line" id="type"></div>
+
+    <div class="comment" id="comment"></div>
+
+    <div class="share">
+
+      <button onclick="copyResult()">
+        コピー
+      </button>
+
+      <button onclick="shareResult()">
+        共有
+      </button>
+
+    </div>
+
+  </div>
+
+  <div class="footer">
+    スクショしてクラスLINEに送れ
+  </div>
+
+</div>
+
+<script>
+
+const siteURL = "https://example.com";
+
+let resultText = "";
+
+function diagnose(){
+
+  let score = 0;
+
+  const checks = document.querySelectorAll(".check:checked");
+
+  checks.forEach(item => {
+    score += Number(item.value);
+  });
+
+  if(score < 0){
+    score = 0;
+  }
+
+  if(score > 100){
+    score = 100;
+  }
+
+  let danger = "";
+  let teacher = "";
+  let future = "";
+  let type = "";
+  let comment = "";
+
+  if(score >= 80){
+
+    danger = "崩壊危険度：MAX";
+    teacher = "担任ストレス値：99%";
+    future = "未来：先生が転職を考えています";
+    type = "クラス分類：動物園";
+
+    comment =
+    "授業成立率がかなり危険。\n" +
+    "休み時間のテンションで全てを乗り切っています。";
+
+  }
+
+  else if(score >= 60){
+
+    danger = "崩壊危険度：高";
+    teacher = "担任ストレス値：76%";
+    future = "未来：文化祭だけ団結";
+    type = "クラス分類：ギリ制御可能";
+
+    comment =
+    "一見平和そうに見えるが、\n" +
+    "裏でかなり終わっています。";
+
+  }
+
+  else if(score >= 40){
+
+    danger = "崩壊危険度：中";
+    teacher = "担任ストレス値：54%";
+    future = "未来：席替えで運命が変わる";
+    type = "クラス分類：普通っぽい何か";
+
+    comment =
+    "たまに騒がしいが、\n" +
+    "まだ社会性は残っています。";
+
+  }
+
+  else{
+
+    danger = "崩壊危険度：低";
+    teacher = "担任ストレス値：12%";
+    future = "未来：平和";
+    type = "クラス分類：優等生集団";
+
+    comment =
+    "かなり平和。\n" +
+    "逆に怖いレベルです。";
+
+  }
+
+  document.getElementById("score").innerText =
+    score + "%";
+
+  document.getElementById("danger").innerText =
+    danger;
+
+  document.getElementById("teacher").innerText =
+    teacher;
+
+  document.getElementById("future").innerText =
+    future;
+
+  document.getElementById("type").innerText =
+    type;
+
+  document.getElementById("comment").innerText =
+    comment;
+
+  document.getElementById("result").style.display =
+    "block";
+
+  resultText =
+`【クラス崩壊診断】
+
+崩壊率：${score}%
+
+${danger}
+${teacher}
+${future}
+${type}
+
+${comment}
+
+↓ お前のクラスも診断しろ
+${siteURL}
+
+#クラス崩壊診断`;
+
+}
+
+function copyResult(){
+
+  navigator.clipboard.writeText(resultText);
+
+  alert("結果をコピーしました！");
+
+}
+
+async function shareResult(){
+
+  if(navigator.share){
+
+    try{
+
+      await navigator.share({
+        title:"クラス崩壊診断",
+        text:resultText
+      });
+
+    }catch(err){
+      console.log(err);
+    }
+
+  }else{
+
+    alert("この端末は共有に対応してません");
+
+  }
+
+}
+
+</script>
+
+</body>
+</html>
