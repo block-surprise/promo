@@ -177,6 +177,8 @@ button:hover{
   border-radius:12px;
 
   transition:0.2s;
+
+  white-space:nowrap;
 }
 
 .nav-menu a:hover{
@@ -184,8 +186,14 @@ button:hover{
   color:white;
   transform:translateY(-2px);
 }
-  .nav-menu a{
-  white-space:nowrap;
+ 
+  @media(max-width:700px){
+
+  .navbar{
+    flex-direction:column;
+    gap:15px;
+  }
+
 }
 </style>
 </head>
