@@ -232,6 +232,7 @@ button:hover{
 
 <script>
 
+const siteURL = "https://promo.blocksurprise.f5.si/y/";
 function diagnose(){
 
   const yourName = document.getElementById("yourName").value;
@@ -310,7 +311,7 @@ function diagnose(){
 
   document.getElementById("result").style.display = "block";
 }
-<!-- ↓ scriptに追加 ↓ -->
+<!--  ↓ -->
 
 let resultText = "";
 
@@ -394,7 +395,9 @@ function diagnose(){
 
   
 
-  resultText =
+<!-- ↓ resultText の部分をこれに変更 ↓ -->
+
+resultText =
 `【友情破壊診断】
 
 ${yourName} × ${friendName}
@@ -404,6 +407,9 @@ ${rank}
 ${future}
 
 ${comment}
+
+↓ お前も診断しろ
+${siteURL}
 
 #友情破壊診断`;
 }
