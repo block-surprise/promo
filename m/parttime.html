@@ -1,0 +1,226 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<title>バイト収入計算機 | おかねノート</title>
+
+<style>
+
+*{
+margin:0;
+padding:0;
+box-sizing:border-box;
+}
+
+body{
+font-family:sans-serif;
+background:#f5f7fa;
+padding:20px;
+}
+
+.container{
+max-width:700px;
+margin:auto;
+background:white;
+padding:30px;
+border-radius:15px;
+box-shadow:0 2px 10px rgba(0,0,0,.1);
+}
+
+h1{
+margin-bottom:20px;
+}
+
+input{
+width:100%;
+padding:12px;
+margin:10px 0;
+border:1px solid #ddd;
+border-radius:8px;
+}
+
+button{
+width:100%;
+padding:12px;
+border:none;
+background:#3498db;
+color:white;
+border-radius:8px;
+font-size:16px;
+cursor:pointer;
+}
+
+.result{
+margin-top:20px;
+padding:20px;
+background:#eef7ff;
+border-radius:10px;
+display:none;
+}
+
+.card{
+margin-top:15px;
+padding:15px;
+background:white;
+border-radius:10px;
+border:1px solid #ddd;
+}
+
+.back{
+display:inline-block;
+margin-top:20px;
+text-decoration:none;
+}
+
+</style>
+</head>
+<body>
+
+<div class="container">
+
+<h1>💵 バイト収入計算機</h1>
+
+<input
+type="number"
+id="wage"
+placeholder="時給（円）">
+
+<input
+type="number"
+id="hours"
+placeholder="1日の勤務時間">
+
+<input
+type="number"
+id="days"
+placeholder="週の勤務日数">
+
+<input
+type="number"
+id="saveRate"
+placeholder="貯金割合（%）">
+
+<button onclick="calculate()">
+計算する
+</button>
+
+<div
+class="result"
+id="result">
+
+<div class="card">
+<h3>月収</h3>
+<p id="monthlyIncome"></p>
+</div>
+
+<div class="card">
+<h3>年収</h3>
+<p id="yearlyIncome"></p>
+</div>
+
+<div class="card">
+<h3>1年間の予想貯金額</h3>
+<p id="yearlySaving"></p>
+</div>
+
+<div class="card">
+<h3>時給100円アップした場合</h3>
+<p id="raiseIncome"></p>
+</div>
+
+</div>
+
+<a
+class="back"
+href="index.html">
+← トップへ戻る
+</a>
+
+</div>
+
+<script>
+
+window.onload = () => {
+
+wage.value =
+localStorage.getItem("wage") || "";
+
+hours.value =
+localStorage.getItem("hours") || "";
+
+days.value =
+localStorage.getItem("days") || "";
+
+saveRate.value =
+localStorage.getItem("saveRate") || "";
+
+};
+
+function calculate(){
+
+const wageValue =
+Number(wage.value);
+
+const hoursValue =
+Number(hours.value);
+
+const daysValue =
+Number(days.value);
+
+const saveRateValue =
+Number(saveRate.value);
+
+if(
+wageValue <= 0 ||
+hoursValue <= 0 ||
+daysValue <= 0
+){
+alert("正しい値を入力してください");
+return;
+}
+
+localStorage.setItem("wage", wageValue);
+localStorage.setItem("hours", hoursValue);
+localStorage.setItem("days", daysValue);
+localStorage.setItem("saveRate", saveRateValue);
+
+const weekly =
+wageValue * hoursValue * daysValue;
+
+const monthly =
+weekly * 4.33;
+
+const yearly =
+monthly * 12;
+
+const saving =
+yearly * (saveRateValue / 100);
+
+const raisedMonthly =
+(wageValue + 100) *
+hoursValue *
+daysValue *
+4.33;
+
+result.style.display = "block";
+
+monthlyIncome.innerHTML =
+`${Math.round(monthly).toLocaleString()} 円`;
+
+yearlyIncome.innerHTML =
+`${Math.round(yearly).toLocaleString()} 円`;
+
+yearlySaving.innerHTML =
+`${Math.round(saving).toLocaleString()} 円`;
+
+raiseIncome.innerHTML =
+`月収 約 ${Math.round(raisedMonthly).toLocaleString()} 円`;
+
+}
+
+</script>
+
+</body>
+</html>
