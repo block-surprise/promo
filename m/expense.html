@@ -1,0 +1,275 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<title>支出分析 | おかねノート</title>
+
+<style>
+
+*{
+margin:0;
+padding:0;
+box-sizing:border-box;
+}
+
+body{
+font-family:sans-serif;
+background:#f5f7fa;
+padding:20px;
+}
+
+.container{
+max-width:800px;
+margin:auto;
+background:white;
+padding:30px;
+border-radius:15px;
+box-shadow:0 2px 10px rgba(0,0,0,.1);
+}
+
+h1{
+margin-bottom:20px;
+}
+
+input{
+width:100%;
+padding:12px;
+margin:10px 0;
+border:1px solid #ddd;
+border-radius:8px;
+}
+
+button{
+width:100%;
+padding:12px;
+border:none;
+background:#3498db;
+color:white;
+font-size:16px;
+border-radius:8px;
+cursor:pointer;
+}
+
+.result{
+margin-top:20px;
+display:none;
+}
+
+.card{
+margin-top:15px;
+padding:15px;
+background:#eef7ff;
+border-radius:10px;
+}
+
+.back{
+display:inline-block;
+margin-top:20px;
+text-decoration:none;
+}
+
+.rank-item{
+padding:8px 0;
+border-bottom:1px solid #ddd;
+}
+
+</style>
+</head>
+<body>
+
+<div class="container">
+
+<h1>📊 支出分析</h1>
+
+<input type="number" id="food" placeholder="食費">
+
+<input type="number" id="transport" placeholder="交通費">
+
+<input type="number" id="hobby" placeholder="趣味">
+
+<input type="number" id="internet" placeholder="通信費">
+
+<input type="number" id="other" placeholder="その他">
+
+<button onclick="analyze()">
+分析する
+</button>
+
+<div id="result" class="result">
+
+<div class="card">
+<h3>合計支出</h3>
+<p id="total"></p>
+</div>
+
+<div class="card">
+<h3>支出割合</h3>
+<p id="percentages"></p>
+</div>
+
+<div class="card">
+<h3>支出ランキング</h3>
+<div id="ranking"></div>
+</div>
+
+<div class="card">
+<h3>節約アドバイス</h3>
+<p id="advice"></p>
+</div>
+
+</div>
+
+<a class="back" href="index.html">
+← トップへ戻る
+</a>
+
+</div>
+
+<script>
+
+window.onload = () => {
+
+food.value =
+localStorage.getItem("food") || "";
+
+transport.value =
+localStorage.getItem("transport") || "";
+
+hobby.value =
+localStorage.getItem("hobby") || "";
+
+internet.value =
+localStorage.getItem("internet") || "";
+
+other.value =
+localStorage.getItem("other") || "";
+
+};
+
+function analyze(){
+
+const data = [
+{
+name:"食費",
+value:Number(food.value)||0
+},
+{
+name:"交通費",
+value:Number(transport.value)||0
+},
+{
+name:"趣味",
+value:Number(hobby.value)||0
+},
+{
+name:"通信費",
+value:Number(internet.value)||0
+},
+{
+name:"その他",
+value:Number(other.value)||0
+}
+];
+
+localStorage.setItem("food", food.value);
+localStorage.setItem("transport", transport.value);
+localStorage.setItem("hobby", hobby.value);
+localStorage.setItem("internet", internet.value);
+localStorage.setItem("other", other.value);
+
+const totalValue =
+data.reduce((sum,item)=>sum+item.value,0);
+
+if(totalValue <= 0){
+alert("支出を入力してください");
+return;
+}
+
+result.style.display = "block";
+
+document.getElementById("total")
+.innerHTML =
+`${totalValue.toLocaleString()} 円`;
+
+let percentHtml = "";
+
+data.forEach(item=>{
+
+const percent =
+Math.round(
+(item.value/totalValue)*100
+);
+
+percentHtml +=
+`${item.name}：
+${percent}%<br>`;
+
+});
+
+document.getElementById("percentages")
+.innerHTML = percentHtml;
+
+const sorted =
+[...data].sort((a,b)=>b.value-a.value);
+
+let rankingHtml = "";
+
+sorted.forEach((item,index)=>{
+
+rankingHtml += `
+<div class="rank-item">
+${index+1}位：
+${item.name}
+（${item.value.toLocaleString()}円）
+</div>
+`;
+
+});
+
+document.getElementById("ranking")
+.innerHTML = rankingHtml;
+
+const top =
+sorted[0];
+
+let adviceText = "";
+
+switch(top.name){
+
+case "食費":
+adviceText =
+"外食回数を見直すと支出を減らしやすいです。";
+break;
+
+case "趣味":
+adviceText =
+"趣味予算の上限を決めると管理しやすくなります。";
+break;
+
+case "通信費":
+adviceText =
+"格安SIMへの乗り換えを検討してみましょう。";
+break;
+
+case "交通費":
+adviceText =
+"定期券や割引サービスを確認してみましょう。";
+break;
+
+default:
+adviceText =
+"支出内容を細かく分類すると改善点が見つかります。";
+
+}
+
+document.getElementById("advice")
+.innerHTML = adviceText;
+
+}
+
+</script>
+
+</body>
+</html>
