@@ -3,64 +3,281 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>貯金目標シミュレーター</title>
+<title>おかねノート</title>
 
 <style>
+*{
+    margin:0;
+    padding:0;
+    box-sizing:border-box;
+}
+
 body{
     font-family:sans-serif;
-    max-width:500px;
+    background:#f4f6f8;
+    color:#333;
+}
+
+header{
+    background:#2c3e50;
+    color:white;
+    text-align:center;
+    padding:30px;
+}
+
+header p{
+    margin-top:10px;
+}
+
+.container{
+    max-width:1200px;
     margin:auto;
     padding:20px;
 }
 
-input,button{
+.grid{
+    display:grid;
+    grid-template-columns:repeat(auto-fit,minmax(320px,1fr));
+    gap:20px;
+}
+
+.card{
+    background:white;
+    padding:20px;
+    border-radius:12px;
+    box-shadow:0 2px 10px rgba(0,0,0,.1);
+}
+
+h2{
+    margin-bottom:15px;
+}
+
+input{
     width:100%;
     padding:10px;
     margin:8px 0;
 }
 
-#result{
-    margin-top:20px;
-    font-size:20px;
+button{
+    width:100%;
+    padding:12px;
+    border:none;
+    background:#3498db;
+    color:white;
+    border-radius:8px;
+    cursor:pointer;
+}
+
+button:hover{
+    opacity:.9;
+}
+
+.result{
+    margin-top:15px;
     font-weight:bold;
+    font-size:18px;
+}
+
+li{
+    margin:8px 0;
 }
 </style>
 </head>
 <body>
 
-<h1>貯金目標シミュレーター</h1>
+<header>
+    <h1>📒 おかねノート</h1>
+    <p>貯める、学ぶ、増やすをひとつに。</p>
+</header>
 
-<label>目標金額（円）</label>
-<input type="number" id="goal">
+<div class="container">
 
-<label>現在の貯金（円）</label>
-<input type="number" id="current">
+<div class="grid">
 
-<label>毎月貯金する金額（円）</label>
-<input type="number" id="monthly">
+<!-- 貯金 -->
+<div class="card">
+<h2>💰 貯金シミュレーター</h2>
 
-<button onclick="calc()">計算する</button>
+<input type="number" id="goal" placeholder="目標金額">
 
-<div id="result"></div>
+<input type="number" id="current" placeholder="現在の貯金">
+
+<input type="number" id="monthlySave" placeholder="毎月の貯金額">
+
+<button onclick="savingCalc()">
+計算する
+</button>
+
+<div id="savingResult" class="result"></div>
+</div>
+
+<!-- バイト -->
+<div class="card">
+<h2>💵 バイト収入計算機</h2>
+
+<input type="number" id="wage" placeholder="時給">
+
+<input type="number" id="hours" placeholder="1日の勤務時間">
+
+<input type="number" id="days" placeholder="月の勤務日数">
+
+<button onclick="partTimeCalc()">
+計算する
+</button>
+
+<div id="partResult" class="result"></div>
+</div>
+
+<!-- 積立 -->
+<div class="card">
+<h2>📈 積立シミュレーター</h2>
+
+<input type="number" id="investMonthly"
+placeholder="毎月の積立額">
+
+<input type="number" id="investYears"
+placeholder="積立年数">
+
+<input type="number" id="investRate"
+placeholder="利回り（%）">
+
+<button onclick="investCalc()">
+計算する
+</button>
+
+<div id="investResult" class="result"></div>
+</div>
+
+<!-- サブスク -->
+<div class="card">
+<h2>🎬 サブスク管理</h2>
+
+<input id="subName"
+placeholder="サービス名">
+
+<input id="subPrice"
+type="number"
+placeholder="月額料金">
+
+<button onclick="addSub()">
+追加
+</button>
+
+<ul id="subList"></ul>
+
+<div id="subTotal" class="result">
+合計：0円
+</div>
+</div>
+
+</div>
+
+</div>
 
 <script>
-function calc(){
 
-    const goal = Number(document.getElementById("goal").value);
-    const current = Number(document.getElementById("current").value);
-    const monthly = Number(document.getElementById("monthly").value);
+// 貯金
+function savingCalc(){
 
-    if(monthly <= 0){
-        document.getElementById("result").innerText =
-        "毎月の貯金額を入力してください";
-        return;
-    }
+const goal =
+Number(document.getElementById("goal").value);
 
-    const months = Math.ceil((goal - current) / monthly);
+const current =
+Number(document.getElementById("current").value);
 
-    document.getElementById("result").innerText =
-    `目標達成まで約 ${months} か月です！`;
+const monthly =
+Number(document.getElementById("monthlySave").value);
+
+if(monthly <= 0){
+document.getElementById("savingResult")
+.innerHTML = "毎月の貯金額を入力してください";
+return;
 }
+
+const months =
+Math.ceil((goal-current)/monthly);
+
+document.getElementById("savingResult")
+.innerHTML =
+`目標達成まで 約 ${months} ヶ月`;
+}
+
+// バイト
+function partTimeCalc(){
+
+const wage =
+Number(document.getElementById("wage").value);
+
+const hours =
+Number(document.getElementById("hours").value);
+
+const days =
+Number(document.getElementById("days").value);
+
+const month =
+wage*hours*days;
+
+const year =
+month*12;
+
+document.getElementById("partResult")
+.innerHTML =
+`
+月収：${month.toLocaleString()}円<br>
+年収：${year.toLocaleString()}円
+`;
+}
+
+// 積立
+function investCalc(){
+
+const monthly =
+Number(document.getElementById("investMonthly").value);
+
+const years =
+Number(document.getElementById("investYears").value);
+
+const rate =
+Number(document.getElementById("investRate").value)/100;
+
+let total = 0;
+
+for(let i=0;i<years*12;i++){
+total=(total+monthly)*(1+rate/12);
+}
+
+document.getElementById("investResult")
+.innerHTML =
+`将来資産：約 ${Math.round(total).toLocaleString()}円`;
+}
+
+// サブスク
+let totalPrice = 0;
+
+function addSub(){
+
+const name =
+document.getElementById("subName").value;
+
+const price =
+Number(document.getElementById("subPrice").value);
+
+if(!name || !price) return;
+
+totalPrice += price;
+
+document.getElementById("subList")
+.innerHTML +=
+`<li>${name} - ${price.toLocaleString()}円</li>`;
+
+document.getElementById("subTotal")
+.innerHTML =
+`合計：${totalPrice.toLocaleString()}円`;
+
+document.getElementById("subName").value="";
+document.getElementById("subPrice").value="";
+}
+
 </script>
 
 </body>
