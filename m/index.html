@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>貯金目標シミュレーター</title>
+
+<style>
+body{
+    font-family:sans-serif;
+    max-width:500px;
+    margin:auto;
+    padding:20px;
+}
+
+input,button{
+    width:100%;
+    padding:10px;
+    margin:8px 0;
+}
+
+#result{
+    margin-top:20px;
+    font-size:20px;
+    font-weight:bold;
+}
+</style>
+</head>
+<body>
+
+<h1>貯金目標シミュレーター</h1>
+
+<label>目標金額（円）</label>
+<input type="number" id="goal">
+
+<label>現在の貯金（円）</label>
+<input type="number" id="current">
+
+<label>毎月貯金する金額（円）</label>
+<input type="number" id="monthly">
+
+<button onclick="calc()">計算する</button>
+
+<div id="result"></div>
+
+<script>
+function calc(){
+
+    const goal = Number(document.getElementById("goal").value);
+    const current = Number(document.getElementById("current").value);
+    const monthly = Number(document.getElementById("monthly").value);
+
+    if(monthly <= 0){
+        document.getElementById("result").innerText =
+        "毎月の貯金額を入力してください";
+        return;
+    }
+
+    const months = Math.ceil((goal - current) / monthly);
+
+    document.getElementById("result").innerText =
+    `目標達成まで約 ${months} か月です！`;
+}
+</script>
+
+</body>
+</html>
