@@ -1,0 +1,256 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<title>積立投資シミュレーター | おかねノート</title>
+
+<style>
+
+*{
+margin:0;
+padding:0;
+box-sizing:border-box;
+}
+
+body{
+font-family:sans-serif;
+background:#f5f7fa;
+padding:20px;
+}
+
+.container{
+max-width:800px;
+margin:auto;
+background:white;
+padding:30px;
+border-radius:15px;
+box-shadow:0 2px 10px rgba(0,0,0,.1);
+}
+
+h1{
+margin-bottom:20px;
+}
+
+input{
+width:100%;
+padding:12px;
+margin:10px 0;
+border:1px solid #ddd;
+border-radius:8px;
+}
+
+button{
+width:100%;
+padding:12px;
+border:none;
+background:#27ae60;
+color:white;
+border-radius:8px;
+font-size:16px;
+cursor:pointer;
+}
+
+.result{
+margin-top:20px;
+display:none;
+}
+
+.card{
+margin-top:15px;
+padding:15px;
+background:#eef7ff;
+border-radius:10px;
+}
+
+.back{
+display:inline-block;
+margin-top:20px;
+text-decoration:none;
+}
+
+</style>
+</head>
+<body>
+
+<div class="container">
+
+<h1>📈 積立投資シミュレーター</h1>
+
+<input
+type="number"
+id="monthly"
+placeholder="毎月の積立額（円）">
+
+<input
+type="number"
+id="years"
+placeholder="積立年数">
+
+<input
+type="number"
+id="rate"
+placeholder="年利（%）">
+
+<input
+type="number"
+id="fire"
+placeholder="年間支出（FIRE計算用）">
+
+<button onclick="calculate()">
+計算する
+</button>
+
+<div
+class="result"
+id="result">
+
+<div class="card">
+<h3>将来資産額</h3>
+<p id="totalAsset"></p>
+</div>
+
+<div class="card">
+<h3>元本</h3>
+<p id="principal"></p>
+</div>
+
+<div class="card">
+<h3>運用益</h3>
+<p id="profit"></p>
+</div>
+
+<div class="card">
+<h3>FIRE達成率</h3>
+<p id="fireResult"></p>
+</div>
+
+</div>
+
+<a
+class="back"
+href="index.html">
+← トップへ戻る
+</a>
+
+</div>
+
+<script>
+
+window.onload = () => {
+
+monthly.value =
+localStorage.getItem("investMonthly") || "";
+
+years.value =
+localStorage.getItem("investYears") || "";
+
+rate.value =
+localStorage.getItem("investRate") || "";
+
+fire.value =
+localStorage.getItem("fireCost") || "";
+
+};
+
+function calculate(){
+
+const monthlyValue =
+Number(monthly.value);
+
+const yearsValue =
+Number(years.value);
+
+const rateValue =
+Number(rate.value)/100;
+
+const fireValue =
+Number(fire.value);
+
+if(
+monthlyValue <= 0 ||
+yearsValue <= 0
+){
+alert("正しい値を入力してください");
+return;
+}
+
+localStorage.setItem(
+"investMonthly",
+monthlyValue
+);
+
+localStorage.setItem(
+"investYears",
+yearsValue
+);
+
+localStorage.setItem(
+"investRate",
+rate.value
+);
+
+localStorage.setItem(
+"fireCost",
+fireValue
+);
+
+let total = 0;
+
+for(let i=0;i<yearsValue*12;i++){
+
+total =
+(total + monthlyValue)
+*
+(1 + rateValue/12);
+
+}
+
+const principalValue =
+monthlyValue *
+12 *
+yearsValue;
+
+const profitValue =
+total - principalValue;
+
+const fireTarget =
+fireValue * 25;
+
+let fireText = "未設定";
+
+if(fireValue > 0){
+
+const percent =
+Math.round(
+(total / fireTarget)
+* 100
+);
+
+fireText =
+`${percent}% 達成
+（目標 ${fireTarget.toLocaleString()}円）`;
+
+}
+
+result.style.display="block";
+
+totalAsset.innerHTML =
+`${Math.round(total).toLocaleString()} 円`;
+
+principal.innerHTML =
+`${principalValue.toLocaleString()} 円`;
+
+profit.innerHTML =
+`${Math.round(profitValue).toLocaleString()} 円`;
+
+fireResult.innerHTML =
+fireText;
+
+}
+
+</script>
+
+</body>
+</html>
