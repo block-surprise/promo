@@ -1,0 +1,170 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Web Piano</title>
+
+<style>
+body {
+    font-family: Arial, sans-serif;
+    text-align: center;
+    background: #f0f0f0;
+    margin: 0;
+    padding: 30px;
+}
+
+h1 {
+    margin-bottom: 20px;
+}
+
+.piano {
+    position: relative;
+    display: inline-flex;
+}
+
+.key {
+    cursor: pointer;
+    user-select: none;
+}
+
+.white {
+    width: 70px;
+    height: 280px;
+    background: white;
+    border: 1px solid black;
+    display: flex;
+    align-items: flex-end;
+    justify-content: center;
+    padding-bottom: 15px;
+    box-sizing: border-box;
+}
+
+.black {
+    width: 40px;
+    height: 170px;
+    background: black;
+    color: white;
+    position: absolute;
+    z-index: 2;
+    display: flex;
+    align-items: flex-end;
+    justify-content: center;
+    padding-bottom: 10px;
+    box-sizing: border-box;
+}
+
+.active {
+    background: #ffd54f !important;
+}
+</style>
+</head>
+
+<body>
+
+<h1>🎹 Web Piano</h1>
+
+<div class="piano">
+
+    <div class="key white" data-note="C4">A</div>
+    <div class="key white" data-note="D4">S</div>
+    <div class="key white" data-note="E4">D</div>
+    <div class="key white" data-note="F4">F</div>
+    <div class="key white" data-note="G4">G</div>
+    <div class="key white" data-note="A4">H</div>
+    <div class="key white" data-note="B4">J</div>
+
+    <div class="key black" data-note="C#4" style="left:50px;">W</div>
+    <div class="key black" data-note="D#4" style="left:120px;">E</div>
+
+    <div class="key black" data-note="F#4" style="left:260px;">T</div>
+    <div class="key black" data-note="G#4" style="left:330px;">Y</div>
+    <div class="key black" data-note="A#4" style="left:400px;">U</div>
+
+</div>
+
+<script>
+const AudioContext = window.AudioContext || window.webkitAudioContext;
+const audioCtx = new AudioContext();
+
+const frequencies = {
+    "C4": 261.63,
+    "C#4": 277.18,
+    "D4": 293.66,
+    "D#4": 311.13,
+    "E4": 329.63,
+    "F4": 349.23,
+    "F#4": 369.99,
+    "G4": 392.00,
+    "G#4": 415.30,
+    "A4": 440.00,
+    "A#4": 466.16,
+    "B4": 493.88
+};
+
+function playNote(note) {
+    const osc = audioCtx.createOscillator();
+    const gain = audioCtx.createGain();
+
+    osc.frequency.value = frequencies[note];
+    osc.type = "triangle";
+
+    osc.connect(gain);
+    gain.connect(audioCtx.destination);
+
+    gain.gain.setValueAtTime(0.3, audioCtx.currentTime);
+    gain.gain.exponentialRampToValueAtTime(
+        0.001,
+        audioCtx.currentTime + 1
+    );
+
+    osc.start();
+    osc.stop(audioCtx.currentTime + 1);
+}
+
+document.querySelectorAll(".key").forEach(key => {
+    key.addEventListener("mousedown", () => {
+        playNote(key.dataset.note);
+        key.classList.add("active");
+
+        setTimeout(() => {
+            key.classList.remove("active");
+        }, 100);
+    });
+});
+
+const keyboardMap = {
+    a: "C4",
+    w: "C#4",
+    s: "D4",
+    e: "D#4",
+    d: "E4",
+    f: "F4",
+    t: "F#4",
+    g: "G4",
+    y: "G#4",
+    h: "A4",
+    u: "A#4",
+    j: "B4"
+};
+
+document.addEventListener("keydown", e => {
+    const note = keyboardMap[e.key.toLowerCase()];
+    if (!note) return;
+
+    playNote(note);
+
+    const key = document.querySelector(
+        `[data-note="${note}"]`
+    );
+
+    key.classList.add("active");
+
+    setTimeout(() => {
+        key.classList.remove("active");
+    }, 100);
+});
+</script>
+
+</body>
+</html>
