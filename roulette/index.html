@@ -1,0 +1,213 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<title>高機能Webルーレット</title>
+
+<style>
+body {
+  font-family: sans-serif;
+  text-align: center;
+  background: #f4f4f4;
+}
+
+#wrapper {
+  position: relative;
+  width: 320px;
+  margin: 20px auto;
+}
+
+canvas {
+  background: white;
+  border-radius: 50%;
+  box-shadow: 0 0 10px rgba(0,0,0,0.2);
+}
+
+#pointer {
+  position: absolute;
+  top: -10px;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 0;
+  height: 0;
+  border-left: 12px solid transparent;
+  border-right: 12px solid transparent;
+  border-bottom: 20px solid red;
+}
+
+button {
+  margin-top: 10px;
+  padding: 10px 20px;
+  font-size: 16px;
+}
+
+/* 🎉 紙吹雪 */
+.confetti {
+  position: fixed;
+  width: 8px;
+  height: 8px;
+  top: -10px;
+  animation: fall 3s linear forwards;
+  z-index: 9999;
+}
+
+@keyframes fall {
+  to {
+    transform: translateY(100vh) rotate(720deg);
+    opacity: 0;
+  }
+}
+
+/* 🎊 当たりポップ */
+#popup {
+  position: fixed;
+  top: 40%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  font-size: 40px;
+  font-weight: bold;
+  color: #ff006e;
+  display: none;
+  z-index: 10000;
+}
+</style>
+</head>
+
+<body>
+
+<h2>🎡 高機能webルーレット</h2>
+
+<div id="wrapper">
+  <div id="pointer"></div>
+  <canvas id="wheel" width="300" height="300"></canvas>
+</div>
+
+<button onclick="spin()">回す！</button>
+
+<div id="popup">🎉 大当たり！ 🎉</div>
+
+<script>
+let items = [
+  { name: "当たり", weight: 5, type: "win" },
+  { name: "ハズレ", weight: 20, type: "lose" },
+  { name: "もう一回", weight: 10, type: "normal" },
+  { name: "大当たり", weight: 2, type: "win" },
+  { name: "普通", weight: 15, type: "normal" },
+  { name: "ラッキー", weight: 8, type: "win" }
+];
+
+const canvas = document.getElementById("wheel");
+const ctx = canvas.getContext("2d");
+const radius = canvas.width / 2;
+
+let angle = 0;
+
+// 重み付き抽選
+function pickIndex() {
+  let sum = items.reduce((a, b) => a + b.weight, 0);
+  let r = Math.random() * sum;
+
+  for (let i = 0; i < items.length; i++) {
+    if (r < items[i].weight) return i;
+    r -= items[i].weight;
+  }
+}
+
+// 描画
+function drawWheel() {
+  const arc = (2 * Math.PI) / items.length;
+
+  ctx.clearRect(0, 0, 300, 300);
+
+  for (let i = 0; i < items.length; i++) {
+    ctx.beginPath();
+    ctx.fillStyle = i % 2 === 0 ? "#ffd166" : "#06d6a0";
+
+    ctx.moveTo(radius, radius);
+    ctx.arc(radius, radius, radius, arc * i, arc * (i + 1));
+    ctx.fill();
+
+    ctx.save();
+    ctx.translate(radius, radius);
+    ctx.rotate(arc * i + arc / 2);
+    ctx.fillStyle = "#000";
+    ctx.font = "14px sans-serif";
+    ctx.textAlign = "right";
+    ctx.fillText(items[i].name, radius - 10, 10);
+    ctx.restore();
+  }
+}
+
+// 🎊 紙吹雪生成
+function confettiBurst() {
+  for (let i = 0; i < 60; i++) {
+    const div = document.createElement("div");
+    div.className = "confetti";
+    div.style.left = Math.random() * 100 + "vw";
+    div.style.background = `hsl(${Math.random() * 360}, 100%, 50%)`;
+    div.style.animationDuration = (Math.random() * 2 + 2) + "s";
+
+    document.body.appendChild(div);
+
+    setTimeout(() => div.remove(), 4000);
+  }
+}
+
+// 🎉 ポップアップ
+function showPopup() {
+  const popup = document.getElementById("popup");
+  popup.style.display = "block";
+  setTimeout(() => popup.style.display = "none", 2000);
+}
+
+// 回転
+function spin() {
+  const target = pickIndex();
+  const arc = 360 / items.length;
+
+  const targetAngle = 360 * 5 + (360 - target * arc);
+
+  let start = null;
+  const duration = 3000;
+
+  function animate(time) {
+    if (!start) start = time;
+    let progress = time - start;
+    let t = Math.min(progress / duration, 1);
+
+    let ease = 1 - Math.pow(1 - t, 3);
+
+    angle = targetAngle * ease;
+
+    ctx.save();
+    ctx.clearRect(0, 0, 300, 300);
+    ctx.translate(radius, radius);
+    ctx.rotate((angle * Math.PI) / 180);
+    ctx.translate(-radius, -radius);
+
+    drawWheel();
+
+    ctx.restore();
+
+    if (t < 1) {
+      requestAnimationFrame(animate);
+    } else {
+      const result = items[target];
+
+      if (result.type === "win") {
+        confettiBurst();
+        showPopup();
+      }
+
+      alert("結果：" + result.name);
+    }
+  }
+
+  requestAnimationFrame(animate);
+}
+
+drawWheel();
+</script>
+
+</body>
+</html>
