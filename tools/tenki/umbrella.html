@@ -1,0 +1,135 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>☔ 今日、傘いる？</title>
+<style>
+body {
+  font-family: sans-serif;
+  text-align: center;
+  background: #f0f4f8;
+  margin: 0;
+  padding: 40px 20px;
+  color: #333;
+}
+
+.card {
+  max-width: 400px;
+  margin: 0 auto;
+  background: white;
+  padding: 30px 20px;
+  border-radius: 16px;
+  box-shadow: 0 4px 15px rgba(0,0,0,0.05);
+}
+
+h1 {
+  font-size: 24px;
+  margin-top: 0;
+  color: #4a5568;
+}
+
+#result-icon {
+  font-size: 72px;
+  margin: 20px 0;
+}
+
+#result-text {
+  font-size: 28px;
+  font-weight: bold;
+  margin-bottom: 10px;
+}
+
+#result-detail {
+  font-size: 14px;
+  color: #718096;
+  margin-bottom: 25px;
+  line-height: 1.5;
+}
+
+button {
+  background: #3182ce;
+  color: white;
+  border: none;
+  padding: 12px 24px;
+  font-size: 16px;
+  font-weight: bold;
+  border-radius: 8px;
+  cursor: pointer;
+  transition: background 0.2s;
+  width: 100%;
+}
+
+button:hover {
+  background: #2b6cb0;
+}
+
+button:disabled {
+  background: #cbd5e0;
+  cursor: not-allowed;
+}
+</style>
+</head>
+<body>
+
+<div class="card">
+  <h1>☔ 今日、傘いる？</h1>
+  
+  <!-- 結果表示エリア -->
+  <div id="result-icon">🤔</div>
+  <div id="result-text">ボタンを押してね</div>
+  <div id="result-detail">今日の降水確率をチェックします</div>
+
+  <!-- 判定ボタン -->
+  <button id="check-btn" onclick="checkWeather()">調べる</button>
+</div>
+
+<script>
+async function checkWeather() {
+  const btn = document.getElementById('check-btn');
+  const icon = document.getElementById('result-icon');
+  const text = document.getElementById('result-text');
+  const detail = document.getElementById('result-detail');
+
+  btn.disabled = true;
+  text.innerText = "確認中...";
+  icon.innerText = "☁️";
+
+  try {
+    // 気象庁の公開APIから埼玉県の天気予報を取得
+    const res = await fetch('https://www.jma.go.jp/bosai/forecast/data/forecast/110000.json');
+    const data = await res.json();
+
+    // 本日の降水確率の配列を取得
+    const timeSeries = data[0].timeSeries[1]; 
+    const pops = timeSeries.areas[0].pops; // 降水確率のリスト（期間ごと）
+
+    // 直近の降水確率の最大値を探す
+    const maxPop = Math.max(...pops.map(Number));
+
+    // 傘が必要か判定（降水確率30%以上なら傘を推奨）
+    if (maxPop >= 30) {
+      icon.innerText = "☔";
+      text.innerText = "傘、いる！";
+      text.style.color = "#e53e3e";
+      detail.innerText = `今日の最高降水確率は ${maxPop}% です。\n折りたたみ傘などがあると安心！`;
+    } else {
+      icon.innerText = "☀️";
+      text.innerText = "傘、いらない！";
+      text.style.color = "#3182ce";
+      detail.innerText = `今日の最高降水確率は ${maxPop}% です。\n安心して手ぶらでお出かけしてください。`;
+    }
+
+  } catch (error) {
+    icon.innerText = "❌";
+    text.innerText = "エラー";
+    text.style.color = "#718096";
+    detail.innerText = "天気データの取得に失敗しました。\nネットの接続を確認してみてね。";
+  } finally {
+    btn.disabled = false;
+  }
+}
+</script>
+
+</body>
+</html>
