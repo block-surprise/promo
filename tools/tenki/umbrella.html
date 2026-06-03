@@ -9,20 +9,50 @@
 <style>
 body {
   font-family: sans-serif;
-  text-align: center;
   background: #f0f4f8;
   margin: 0;
   padding: 40px 20px;
   color: #333;
 }
 
-.card {
-  max-width: 400px;
+/* --- 追加・変更：レイアウト用のコンテナ --- */
+.container {
+  display: flex;
+  justify-content: center; /* 中央寄せ */
+  align-items: flex-start; /* 上揃え */
+  max-width: 1200px;       /* 全体の最大幅 */
   margin: 0 auto;
+  gap: 20px;               /* メインと広告の隙間 */
+}
+
+/* --- 追加：自作のサイド広告枠 --- */
+.side-ad {
+  width: 160px;            /* 一般的なスカイスクレイパー広告の幅 */
+  flex-shrink: 0;          /* 画面が狭くなっても潰れないようにする */
+  background: white;
+  padding: 10px;
+  border-radius: 12px;
+  box-shadow: 0 4px 15px rgba(0,0,0,0.05);
+  box-sizing: border-box;
+}
+
+/* スマホなど画面幅が狭い時（900px未満）はサイド広告を隠す */
+@media (max-width: 900px) {
+  .side-ad {
+    display: none;
+  }
+}
+/* -------------------------------------- */
+
+.card {
+  width: 100%;
+  max-width: 400px;
   background: white;
   padding: 30px 20px;
   border-radius: 16px;
   box-shadow: 0 4px 15px rgba(0,0,0,0.05);
+  text-align: center;      /* 文字の中央寄せをここに移動 */
+  box-sizing: border-box;
 }
 
 h1 {
@@ -97,35 +127,99 @@ button:disabled {
   border-top: 1px dashed #e2e8f0; /* 境界線を入れて上品に見せる */
   min-height: 100px; /* 広告読み込み前のガタつき防止 */
 }
+  .my-promo {
+  background: white;
+  padding: 15px 10px;
+  border-radius: 12px;
+  box-shadow: 0 4px 15px rgba(0,0,0,0.05);
+  text-align: center;
+}
+.my-promo img {
+  max-width: 100%;         /* 枠幅に合わせて画像を自動縮小 */
+  height: auto;
+  border-radius: 6px;
+  margin-bottom: 10px;
+}
+.my-promo-title {
+  font-size: 14px;
+  font-weight: bold;
+  color: #2d3748;
+  margin: 5px 0;
+}
+.my-promo-text {
+  font-size: 11px;
+  color: #718096;
+  line-height: 1.4;
+  margin-bottom: 10px;
+}
+.my-promo-btn {
+  display: inline-block;
+  background: #e53e3e;     
+  color: white;
+  text-decoration: none;
+  font-size: 12px;
+  font-weight: bold;
+  padding: 8px 12px;
+  border-radius: 6px;
+  width: 80%;
+  transition: background 0.2s;
+}
+.my-promo-btn:hover {
+  background: #c53030;
+}
 </style>
 </head>
 <body>
 
-<div class="card">
-  <h1>☔ 今日、傘いる？</h1>
-  
-  <div id="result-icon">🤔</div>
-  <div id="result-text">ボタンを押してね</div>
-  <div id="result-detail">GPSで現在地の降水確率をチェックします</div>
+<div class="container">
 
-  <button id="check-btn" onclick="getLocation()">現在地を調べて判定</button>
-  <a id="detail-link-btn" href="https://promo.blocksurprise.f5.si/tools/tenki/" target="_blank">🔍 詳しい天気を知る</a>
+  <div class="side-space my-promo">
+    <p style="font-size:11px; color:#aaa; margin:0 0 8px 0;">RECOMMEND</p>
+    
+    <div class="my-promo-title">ブログも運営中！</div>
+    <div class="my-promo-text">お役立ちツールや最新のガジェット情報を発信しています。</div>
+    
+    <a class="my-promo-btn" href="https://nandemo-block.hateblo.jp" target="_blank">見に行く ➔</a>
+  </div>
 
-  <div class="ad-space">
+  <div class="card">
+    <h1>☔ 今日、傘いる？</h1>
+    
+    <div id="result-icon">🤔</div>
+    <div id="result-text">ボタンを押してね</div>
+    <div id="result-detail">GPSで現在地の降水確率をチェックします</div>
+
+    <button id="check-btn" onclick="getLocation()">現在地を調べて判定</button>
+    <a id="detail-link-btn" href="https://promo.blocksurprise.f5.si/tools/tenki/" target="_blank">🔍 詳しい天気を知る</a>
+
+    <div class="ad-space">
+      <ins class="adsbygoogle"
+           style="display:block"
+           data-ad-client="ca-pub-3571574988222927"
+           data-ad-slot="9197531458"
+           data-ad-format="auto"
+           data-full-width-responsive="true"></ins>
+      <script>
+           (adsbygoogle = window.adsbygoogle || []).push({});
+      </script>
+    </div>
+  </div>
+
+  <div class="side-ad">
 <ins class="adsbygoogle"
      style="display:block"
+     data-ad-format="autorelaxed"
      data-ad-client="ca-pub-3571574988222927"
-     data-ad-slot="9197531458"
-     data-ad-format="auto"
-     data-full-width-responsive="true"></ins>
+     data-ad-slot="3115869062"></ins>
 <script>
      (adsbygoogle = window.adsbygoogle || []).push({});
 </script>
-    </div>
+  </div>
 
 </div>
 
 <script>
+// （JavaScriptの処理は変更ないため省略しません。そのまま動作します）
 function getLocation() {
   const btn = document.getElementById('check-btn');
   const icon = document.getElementById('result-icon');
