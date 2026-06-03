@@ -9,20 +9,103 @@
 <style>
 body {
   font-family: sans-serif;
-  text-align: center;
   background: #f7fafc;
   margin: 0;
   padding: 40px 20px;
   color: #2d3748;
 }
 
-.card {
-  max-width: 400px;
+/* --- レイアウト用のコンテナ --- */
+.container {
+  display: flex;
+  justify-content: center; /* 中央寄せ */
+  align-items: flex-start; /* 上揃え */
+  max-width: 1200px;       /* 全体の最大幅 */
   margin: 0 auto;
+  gap: 20px;               /* メインと左右エリアの隙間 */
+}
+
+/* --- 左右のサイドバー全体の共通設定 --- */
+.side-sidebar {
+  width: 160px;            /* 幅160px */
+  flex-shrink: 0;          /* 画面が縮んでも潰れないように */
+  display: flex;
+  flex-direction: column;  /* 中身を縦に並べる */
+  gap: 15px;               /* 縦に並んだ宣伝同士の隙間 */
+  box-sizing: border-box;
+}
+
+/* 左側：自社サイト宣伝枠の個別の装飾 */
+.my-promo {
+  background: white;
+  padding: 15px 10px;
+  border-radius: 12px;
+  box-shadow: 0 4px 15px rgba(0,0,0,0.05);
+  text-align: center;
+  box-sizing: border-box;
+}
+.my-promo img {
+  max-width: 100%;
+  height: auto;
+  border-radius: 6px;
+  margin-bottom: 10px;
+}
+.my-promo-title {
+  font-size: 14px;
+  font-weight: bold;
+  color: #2d3748;
+  margin: 5px 0;
+}
+.my-promo-text {
+  font-size: 11px;
+  color: #718096;
+  line-height: 1.4;
+  margin-bottom: 10px;
+}
+.my-promo-btn {
+  display: inline-block;
+  background: #e53e3e;     
+  color: white;
+  text-decoration: none;
+  font-size: 12px;
+  font-weight: bold;
+  padding: 8px 12px;
+  border-radius: 6px;
+  width: 80%;
+  transition: background 0.2s;
+}
+.my-promo-btn:hover {
+  background: #c53030;
+}
+
+/* 右側：Google AdSense広告枠の装飾 */
+.side-ad {
+  width: 160px;            /* 右側も幅を統一 */
+  flex-shrink: 0;
+  background: white;
+  padding: 10px;
+  border-radius: 12px;
+  box-shadow: 0 4px 15px rgba(0,0,0,0.05);
+  box-sizing: border-box;
+}
+
+/* スマホなど画面幅が狭い時（900px未満）は左右のサイドバーごと隠す */
+@media (max-width: 900px) {
+  .side-sidebar, .side-ad {
+    display: none;
+  }
+}
+
+/* --- 中央カードの装飾 --- */
+.card {
+  width: 100%;
+  max-width: 400px;
   background: white;
   padding: 30px 20px;
   border-radius: 16px;
   box-shadow: 0 4px 15px rgba(0,0,0,0.05);
+  text-align: center;      /* bodyからこちらに移動させて中央カード内をセンタリング */
+  box-sizing: border-box;
 }
 
 h1 {
@@ -87,29 +170,83 @@ button:disabled {
   background: #cbd5e0;
   cursor: not-allowed;
 }
+
+/* 追加：カード内広告エリアの余白設定 */
+.ad-space {
+  margin-top: 25px;
+  padding-top: 20px;
+  border-top: 1px dashed #e2e8f0;
+  min-height: 100px;
+}
 </style>
 </head>
 <body>
 
-<div class="card">
-  <h1>☀️ 今日の天気は？</h1>
+<div class="container">
+
+  <div class="side-sidebar">
   
-  <div class="weather-box">
-    <div id="weather-text">ボタンを押してね</div>
+    <div class="my-promo">
+      <p style="font-size:11px; color:#aaa; margin:0 0 8px 0;">RECOMMEND</p>
+      <div class="my-promo-title">ブログも運営中！</div>
+      <div class="my-promo-text">お役立ちツールや最新のガジェット情報を発信しています。</div>
+      <a class="my-promo-btn" href="https://nandemo-block.hateblo.jp" target="_blank">見に行く ➔</a>
+    </div>
+
+    <div class="my-promo">
+      <p style="font-size:11px; color:#aaa; margin:0 0 8px 0;">RECOMMEND</p>
+      <div class="my-promo-title">便利なツール、サイト運営！</div>
+      <div class="my-promo-text">役に立つツールや最新の情報を発信してるサイト一覧</div>
+      <a class="my-promo-btn" href="https://promo.blocksurprise.f5.si/" target="_blank">見に行く ➔</a>
+    </div>
+    
   </div>
 
-  <table class="temp-table">
-    <tr>
-      <td>最高気温</td>
-      <td>最低気温</td>
-    </tr>
-    <tr>
-      <td id="high-val" class="high-temp temp-val">--</td>
-      <td id="low-val" class="low-temp temp-val">--</td>
-    </tr>
-  </table>
+  <div class="card">
+    <h1>☀️ 今日の天気は？</h1>
+    
+    <div class="weather-box">
+      <div id="weather-text">ボタンを押してね</div>
+    </div>
 
-  <button id="check-btn" onclick="getLocation()">現在地の天気をチェック</button>
+    <table class="temp-table">
+      <tr>
+        <td>最高気温</td>
+        <td>最低気温</td>
+      </tr>
+      <tr>
+        <td id="high-val" class="high-temp temp-val">--</td>
+        <td id="low-val" class="low-temp temp-val">--</td>
+      </tr>
+    </table>
+
+    <button id="check-btn" onclick="getLocation()">現在地の天気をチェック</button>
+
+    <div class="ad-space">
+      <ins class="adsbygoogle"
+           style="display:block"
+           data-ad-client="ca-pub-3571574988222927"
+           data-ad-slot="9197531458"
+           data-ad-format="auto"
+           data-full-width-responsive="true"></ins>
+      <script>
+           (adsbygoogle = window.adsbygoogle || []).push({});
+      </script>
+    </div>
+  </div>
+
+  <div class="side-ad">
+    <p style="font-size:11px; color:#aaa; margin:0 0 8px 0; text-align:center;">SPONSOR</p>
+    <ins class="adsbygoogle"
+         style="display:block"
+         data-ad-format="autorelaxed"
+         data-ad-client="ca-pub-3571574988222927"
+         data-ad-slot="3115869062"></ins>
+    <script>
+         (adsbygoogle = window.adsbygoogle || []).push({});
+    </script>
+  </div>
+
 </div>
 
 <script>
@@ -149,21 +286,16 @@ async function getWeather(lat, lon) {
   weatherText.innerText = "天気予報データを取得中...";
 
   try {
-    // Open-Meteo API（世界中の天気・気温・天気コードを1回で取れる）
     const url = `https://api.open-meteo.com/v1/forecast?latitude=${lat}&longitude=${lon}&daily=weather_code,temperature_2m_max,temperature_2m_min&timezone=Asia%2FTokyo`;
     const res = await fetch(url);
     const data = await res.json();
 
-    // 今日の天気コードを取得して分かりやすい日本語に変換
     const code = data.daily.weather_code[0];
     const todayWeather = convertWeatherCode(code);
     
-    // 文字列をキレイに整える処理（変な空白をリプレイス）
-    // 気象庁ではないので基本キレイですが、念のため余計な連続スペースを1つにまとめて読みやすくします
     const cleanWeather = todayWeather.replace(/[\s　]+/g, ' ').trim();
     weatherText.innerText = cleanWeather;
 
-    // 最高・最低気温をセット
     const maxTemp = data.daily.temperature_2m_max[0];
     const minTemp = data.daily.temperature_2m_min[0];
     
@@ -180,7 +312,6 @@ async function getWeather(lat, lon) {
   }
 }
 
-// WMO天気コードを綺麗で見やすい日本語テキストに変換する関数
 function convertWeatherCode(code) {
   const codes = {
     0: "快晴（気持ちよく晴れます）",
