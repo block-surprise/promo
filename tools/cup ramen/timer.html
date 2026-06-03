@@ -1,0 +1,287 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<title>🍜 カップ麺タイマー付き一覧表</title>
+<style>
+body {
+  font-family: sans-serif;
+  text-align: center;
+  background: #f4f4f4;
+  margin: 0;
+  padding: 20px;
+}
+
+#container {
+  max-width: 500px;
+  margin: 0 auto;
+  background: white;
+  padding: 20px;
+  border-radius: 12px;
+  box-shadow: 0 4px 10px rgba(0,0,0,0.1);
+}
+
+h2 {
+  margin-top: 0;
+  color: #333;
+}
+
+/* タイマー表示エリア */
+#timerDisplay {
+  background: #222;
+  color: #06d6a0;
+  font-family: monospace;
+  font-size: 48px;
+  padding: 15px;
+  border-radius: 8px;
+  margin-bottom: 20px;
+  font-weight: bold;
+}
+
+#timerStatus {
+  font-size: 16px;
+  color: #fff;
+  margin-bottom: 5px;
+}
+
+/* 一覧表のスタイル */
+table {
+  width: 100%;
+  border-collapse: collapse;
+  margin-top: 20px;
+}
+
+th, td {
+  border-bottom: 1px solid #ddd;
+  padding: 10px;
+  text-align: left;
+}
+
+th {
+  background: #f9f9f9;
+  color: #555;
+}
+
+/* ボタン類のスタイル */
+button {
+  border: none;
+  padding: 6px 12px;
+  border-radius: 4px;
+  cursor: pointer;
+  font-weight: bold;
+}
+
+.btn-time {
+  background: #118ab2;
+  color: white;
+}
+
+.btn-time:hover {
+  background: #0f789d;
+}
+
+.btn-delete {
+  background: #ff4757;
+  color: white;
+  padding: 4px 8px;
+  font-size: 12px;
+}
+
+.btn-add {
+  background: #06d6a0;
+  color: white;
+  padding: 8px 16px;
+  margin-top: 15px;
+  width: 100%;
+}
+
+/* 入力エリア */
+.add-form {
+  margin-top: 20px;
+  padding-top: 20px;
+  border-top: 20px solid #f4f4f4;
+  text-align: left;
+}
+
+.add-form input {
+  width: 100%;
+  padding: 8px;
+  margin: 5px 0 12px 0;
+  box-sizing: border-box;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+}
+</style>
+</head>
+<body>
+
+<div id="container">
+  <h2>🍜 カップ麺待ち時間一覧表</h2>
+
+  <div id="timerDisplay">
+    <div id="timerStatus">タイマー停止中</div>
+    <span id="minutes">00</span>:<span id="seconds">00</span>
+    <div style="margin-top: 10px;">
+      <button onclick="stopTimer()" style="background:#ff4757; color:white; font-size:14px; padding:5px 10px;">止める</button>
+    </div>
+  </div>
+
+  <table>
+    <thead>
+      <tr>
+        <th>商品名</th>
+        <th>待ち時間</th>
+        <th>操作</th>
+      </tr>
+    </thead>
+    <tbody id="ramenTableBody">
+      </tbody>
+  </table>
+
+  <div class="add-form">
+    <h3 style="margin:0 0 10px 0; font-size:16px; color:#555;">➕ 新しいラーメンを追加</h3>
+    <label>商品名（例：カップヌードル）</label>
+    <input type="text" id="inputName" placeholder="商品名を入力">
+    
+    <label>待ち時間（分単位、例：3）</label>
+    <input type="number" id="inputTime" min="1" max="10" value="3">
+    
+    <button class="btn-add" onclick="addRamen()">表に追加する</button>
+  </div>
+</div>
+
+<script>
+// 初期データ（何も保存されていない場合のデフォルト）
+const defaultList = [
+  { name: "カップヌードル", time: 3 },
+  { name: "どん兵衛 きつねうどん", time: 5 },
+  { name: "日清焼そばU.F.O.", time: 3 },
+  { name: "サッポロ一番 塩らーめんミニ", time: 2 }
+];
+
+let ramenList = JSON.parse(localStorage.getItem("ramenList")) || defaultList;
+let countdownInterval = null;
+
+// 表の描画
+function renderTable() {
+  const tbody = document.getElementById("ramenTableBody");
+  tbody.innerHTML = "";
+
+  ramenList.forEach((ramen, i) => {
+    const row = document.createElement("tr");
+
+    row.innerHTML = `
+      <td style="font-weight: bold; color: #333;">${ramen.name}</td>
+      <td>
+        <button class="btn-time" onclick="startTimer('${ramen.name}', ${ramen.time})">
+          ⏱️ ${ramen.time}分
+        </button>
+      </td>
+      <td>
+        <button class="btn-delete" onclick="deleteRamen(${i})">削除</button>
+      </td>
+    `;
+
+    tbody.appendChild(row);
+  });
+}
+
+// タイマーの開始
+function startTimer(name, minutes) {
+  clearInterval(countdownInterval);
+  document.getElementById("timerStatus").innerText = `【${name}】計測中...`;
+  
+  let totalSeconds = minutes * 60;
+  updateTimerDisplay(totalSeconds);
+
+  countdownInterval = setInterval(() => {
+    totalSeconds--;
+    updateTimerDisplay(totalSeconds);
+
+    if (totalSeconds <= 0) {
+      clearInterval(countdownInterval);
+      document.getElementById("timerStatus").innerText = "出来上がり！";
+      
+      // ブラウザ標準の通知音の代わりにビープ音を鳴らす（マナーモード等に注意）
+      playAlarmSound();
+      alert(`時間です！「${name}」が完成しました！`);
+    }
+  }, 1000);
+}
+
+// タイマー表示の更新
+function updateTimerDisplay(totalSeconds) {
+  const mins = Math.floor(totalSeconds / 60);
+  const secs = totalSeconds % 60;
+  document.getElementById("minutes").innerText = String(mins).padStart(2, '0');
+  document.getElementById("seconds").innerText = String(secs).padStart(2, '0');
+}
+
+// タイマーを止める
+function stopTimer() {
+  clearInterval(countdownInterval);
+  document.getElementById("timerStatus").innerText = "タイマー停止中";
+  document.getElementById("minutes").innerText = "00";
+  document.getElementById("seconds").innerText = "00";
+}
+
+// データの追加
+function addRamen() {
+  const nameInput = document.getElementById("inputName");
+  const timeInput = document.getElementById("inputTime");
+
+  if (!nameInput.value.trim()) {
+    alert("商品名を入力してください！");
+    return;
+  }
+
+  ramenList.push({
+    name: nameInput.value,
+    time: parseInt(timeInput.value) || 3
+  });
+
+  saveData();
+  renderTable();
+
+  // 入力欄をクリア
+  nameInput.value = "";
+  timeInput.value = "3";
+}
+
+// データの削除
+function deleteRamen(i) {
+  ramenList.splice(i, 1);
+  saveData();
+  renderTable();
+}
+
+// LocalStorageに保存
+function saveData() {
+  localStorage.setItem("ramenList", JSON.stringify(ramenList));
+}
+
+// アラーム音（電子音）を鳴らす関数
+function playAlarmSound() {
+  const audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+  
+  // 短いピピッという音を3回鳴らす
+  [0, 0.3, 0.6].forEach(delay => {
+    const osc = audioCtx.createOscillator();
+    const gain = audioCtx.createGain();
+    osc.type = 'sine';
+    osc.frequency.setValueAtTime(880, audioCtx.currentTime + delay); // 音の高さ
+    gain.gain.setValueAtTime(0.3, audioCtx.currentTime + delay);
+    gain.gain.exponentialRampToValueAtTime(0.01, audioCtx.currentTime + delay + 0.2);
+    osc.connect(gain);
+    gain.connect(audioCtx.destination);
+    osc.start(audioCtx.currentTime + delay);
+    osc.stop(audioCtx.currentTime + delay + 0.2);
+  });
+}
+
+// 初回描画
+renderTable();
+</script>
+
+</body>
+</html>
