@@ -1,0 +1,318 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<title>高機能Webワードウルフ</title>
+<style>
+body {
+  font-family: sans-serif;
+  text-align: center;
+  background: #f4f4f4;
+  margin: 0;
+  padding: 20px;
+}
+
+#container {
+  max-width: 450px;
+  margin: 10px auto;
+  background: white;
+  padding: 25px;
+  border-radius: 12px;
+  box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+}
+
+h2 {
+  color: #333;
+  margin-top: 0;
+}
+
+.section {
+  display: none;
+}
+
+.section.active {
+  display: block;
+}
+
+button {
+  background: #06d6a0;
+  color: white;
+  border: none;
+  padding: 12px 24px;
+  font-size: 16px;
+  border-radius: 6px;
+  cursor: pointer;
+  margin: 10px 0;
+  font-weight: bold;
+  transition: background 0.2s;
+}
+
+button:hover {
+  background: #05b88a;
+}
+
+button:disabled {
+  background: #ccc;
+  cursor: not-allowed;
+}
+
+.setting-group {
+  margin: 15px 0;
+  text-align: left;
+}
+
+label {
+  display: block;
+  font-weight: bold;
+  margin-bottom: 5px;
+  color: #555;
+}
+
+select, input {
+  width: 100%;
+  padding: 8px;
+  font-size: 16px;
+  border-radius: 4px;
+  border: 1px solid #ccc;
+  box-sizing: border-box;
+}
+
+/* お題確認画面のカード演出 */
+.card {
+  background: #ffd166;
+  padding: 30px;
+  border-radius: 8px;
+  font-size: 24px;
+  font-weight: bold;
+  margin: 20px 0;
+  min-height: 36px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  box-shadow: inset 0 0 10px rgba(0,0,0,0.1);
+}
+
+.alert-text {
+  color: #ff4757;
+  font-weight: bold;
+  font-size: 14px;
+}
+</style>
+</head>
+<body>
+
+<div id="container">
+  <h2>🐺 Webワードウルフ</h2>
+  <hr style="border: 0; border-top: 1px solid #eee; margin-bottom: 20px;">
+
+  <div id="setupSec" class="section active">
+    <div class="setting-group">
+      <label>参加人数</label>
+      <select id="playerCount" onchange="updateWolfOptions()">
+        <option value="3">3人</option>
+        <option value="4" selected>4人</option>
+        <option value="5">5人</option>
+        <option value="6">6人</option>
+        <option value="7">7人</option>
+        <option value="8">8人</option>
+      </select>
+    </div>
+
+    <div class="setting-group">
+      <label>ワードウルフ（少数派）の人数</label>
+      <select id="wolfCount"></select>
+    </div>
+
+    <button onclick="startGame()">ゲーム開始！</button>
+  </div>
+
+  <div id="distributeSec" class="section">
+    <h3 id="playerTurnTitle">プレイヤー 1 さんの番です</h3>
+    <p class="alert-text">※周りの人に見られないように注意してください！</p>
+    
+    <button id="secretBtn" 
+            onmousedown="showWord()" onmouseup="hideWord()" 
+            ontouchstart="showWord()" ontouchend="hideWord()">
+      長押ししてお題を確認
+    </button>
+
+    <div id="wordCard" class="card" style="visibility: hidden;">???</div>
+    
+    <button id="nextPlayerBtn" onclick="nextPlayer()" disabled>次の人へ進む</button>
+  </div>
+
+  <div id="discussionSec" class="section">
+    <h3>🤫 話し合いタイム！</h3>
+    <p>全員お題の確認が完了しました。</p>
+    <p>正体を隠しながら、みんなで雑談をしてください。</p>
+    <p>制限時間が切れるか、話し合いが終わったら下のボタンを押して答え合わせをしましょう！</p>
+    
+    <button onclick="showResult()" style="background: #ff4757;">結果発表（答え合わせ）</button>
+  </div>
+
+  <div id="resultSec" class="section">
+    <h3>🎉 結果発表</h3>
+    <div id="resultOutput" style="text-align: left; background: #f9f9f9; padding: 15px; border-radius: 6px; margin-bottom: 20px;"></div>
+    
+    <button onclick="resetGame()" style="background: #118ab2;">もう一度遊ぶ</button>
+  </div>
+</div>
+
+<script>
+// お題のリスト（[市民ワード, ウルフワード]）
+const presetWords = [
+  ["リンゴ", "ナシ"],
+  ["焼肉", "すき焼き"],
+  ["回転寿司", "高級寿司"],
+  ["新幹線", "飛行機"],
+  ["コンビニ", "スーパー"],
+  ["マクドナルド", "モスバーガー"],
+  ["教科書", "ノート"],
+  ["映画館", "YouTube"],
+  ["水族館", "動物園"],
+  ["東京", "大阪"],
+  ["富士山", "エベレスト"],
+  ["犬", "猫"],
+  ["ラーメン", "うどん"],
+  ["SURGE PRO", "普通の扇風機"] // 英語の固有表現ルールを適用
+];
+
+let gameState = {
+  totalPlayers: 4,
+  wolfCount: 1,
+  currentIdx: 0,
+  playerAssignments: [], // 各プレイヤーのお題
+  citizenWord: "",
+  wolfWord: "",
+  wolfIndices: [] // 誰がウルフかのインデックス
+};
+
+// ウルフの人数選択肢を人数の変更に合わせて更新
+function updateWolfOptions() {
+  const pCount = parseInt(document.getElementById("playerCount").value);
+  const wSelect = document.getElementById("wolfCount");
+  wSelect.innerHTML = "";
+
+  // プレイヤー人数の半分未満までウルフを設定可能にする
+  const maxWolves = Math.floor((pCount - 1) / 2) || 1;
+  for (let i = 1; i <= maxWolves; i++) {
+    const opt = document.createElement("option");
+    opt.value = i;
+    opt.innerText = `${i}人`;
+    wSelect.appendChild(opt);
+  }
+}
+
+// ゲームのセットアップと割り当て
+function startGame() {
+  gameState.totalPlayers = parseInt(document.getElementById("playerCount").value);
+  gameState.wolfCount = parseInt(document.getElementById("wolfCount").value);
+  gameState.currentIdx = 0;
+
+  // お題をランダムに選定
+  const randomPair = presetWords[Math.floor(Math.random() * presetWords.length)];
+  // 50%の確率でどっちが市民・ウルフになるかをシャッフル
+  if (Math.random() < 0.5) {
+    gameState.citizenWord = randomPair[0];
+    gameState.wolfWord = randomPair[1];
+  } else {
+    gameState.citizenWord = randomPair[1];
+    gameState.wolfWord = randomPair[0];
+  }
+
+  // プレイヤー配列を作ってウルフをランダム配置
+  let roles = new Array(gameState.totalPlayers).fill("citizen");
+  let wolfLeft = gameState.wolfCount;
+  gameState.wolfIndices = [];
+
+  while (wolfLeft > 0) {
+    let r = Math.floor(Math.random() * gameState.totalPlayers);
+    if (roles[r] === "citizen") {
+      roles[r] = "wolf";
+      gameState.wolfIndices.push(r);
+      wolfLeft--;
+    }
+  }
+
+  // それぞれにワードを割り当て
+  gameState.playerAssignments = roles.map(role => {
+    return role === "citizen" ? gameState.citizenWord : gameState.wolfWord;
+  });
+
+  // 画面切り替え
+  switchSection("distributeSec");
+  updateDistributePage();
+}
+
+// 配布画面の文字更新
+function updateDistributePage() {
+  document.getElementById("playerTurnTitle").innerText = `プレイヤー ${gameState.currentIdx + 1} さんの番です`;
+  const card = document.getElementById("wordCard");
+  card.style.visibility = "hidden";
+  card.innerText = "???";
+  document.getElementById("nextPlayerBtn").disabled = true;
+}
+
+// お題をのぞき見る（長押しイベント）
+function showWord() {
+  const card = document.getElementById("wordCard");
+  card.style.visibility = "visible";
+  card.innerText = gameState.playerAssignments[gameState.currentIdx];
+  document.getElementById("nextPlayerBtn").disabled = false;
+}
+
+// お題を隠す（指・マウスを離したイベント）
+function hideWord() {
+  const card = document.getElementById("wordCard");
+  card.style.visibility = "hidden";
+  card.innerText = "???";
+}
+
+// 次のプレイヤー、または話し合いへ
+function nextPlayer() {
+  gameState.currentIdx++;
+  if (gameState.currentIdx < gameState.totalPlayers) {
+    updateDistributePage();
+  } else {
+    switchSection("discussionSec");
+  }
+}
+
+// 結果の表示
+function showResult() {
+  switchSection("resultSec");
+  const output = document.getElementById("resultOutput");
+  
+  let html = `<p><strong>【市民（多数派）のお題】</strong> <span style="color:#06d6a0;">${gameState.citizenWord}</span></p>`;
+  html += `<p><strong>【ワードウルフ（少数派）のお題】</strong> <span style="color:#ff4757;">${gameState.wolfWord}</span></p>`;
+  html += `<hr style="border:0; border-top:1px solid #ccc; margin:15px 0;">`;
+  html += `<p><strong>【各プレイヤーの正体】</strong></p><ul>`;
+
+  gameState.playerAssignments.forEach((word, i) => {
+    const isWolf = gameState.wolfIndices.includes(i);
+    const roleName = isWolf ? "🐺 ワードウルフ" : "👤 市民";
+    const color = isWolf ? "#ff4757" : "#333";
+    html += `<li>プレイヤー ${i + 1}: <strong style="color:${color};">${roleName}</strong> (お題: ${word})</li>`;
+  });
+  html += `</ul>`;
+
+  output.innerHTML = html;
+}
+
+// 初期状態に戻す
+function resetGame() {
+  switchSection("setupSec");
+}
+
+// セクション切り替えユーティリティ
+function switchSection(secId) {
+  document.querySelectorAll(".section").forEach(s => s.classList.remove("active"));
+  document.getElementById(secId).classList.add("active");
+}
+
+// 起動時の初期化
+updateWolfOptions();
+</script>
+
+</body>
+</html>
