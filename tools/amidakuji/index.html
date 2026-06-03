@@ -1,0 +1,310 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<title>高機能Webあみだくじ</title>
+<style>
+body {
+  font-family: sans-serif;
+  text-align: center;
+  background: #f4f4f4;
+  margin: 0;
+  padding: 20px;
+}
+
+h2 {
+  margin-bottom: 10px;
+}
+
+#container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  margin-top: 20px;
+}
+
+/* 入力エリアのスタイル */
+.input-group {
+  display: flex;
+  gap: 10px;
+  margin-bottom: 5px;
+}
+input {
+  padding: 5px;
+  width: 100px;
+  text-align: center;
+}
+
+/* キャンバスエリア */
+#stage {
+  position: relative;
+  background: white;
+  border-radius: 8px;
+  box-shadow: 0 0 10px rgba(0,0,0,0.1);
+  margin: 20px 0;
+}
+
+button {
+  margin: 5px;
+  padding: 8px 15px;
+  font-size: 14px;
+  cursor: pointer;
+}
+</style>
+</head>
+<body>
+
+<h2>🎋 高機能Webあみだくじ</h2>
+
+<div id="container">
+  <!-- 設定ボタン類 -->
+  <div>
+    <button onclick="addMember()">＋人数を増やす</button>
+    <button onclick="removeMember()">－人数を減らす</button>
+    <button onclick="initAmida()">くじを再生成</button>
+  </div>
+
+  <!-- 名前の入力欄（動的に増減） -->
+  <div id="namesContainer" style="display: flex; gap: 20px; margin-top: 15px;"></div>
+
+  <!-- あみだくじ描画キャンバス -->
+  <canvas id="stage" width="600" height="400"></canvas>
+
+  <!-- 景品（ゴール）の入力欄（動的に増減） -->
+  <div id="goalsContainer" style="display: flex; gap: 20px;"></div>
+
+  <!-- スタートボタン類 -->
+  <div id="actionButtons" style="margin-top: 20px;"></div>
+</div>
+
+<script>
+// 初期データ
+let members = [
+  { name: "プレイヤーA", goal: "当たり" },
+  { name: "プレイヤーB", goal: "ハズレ" },
+  { name: "プレイヤーC", goal: "ハズレ" },
+  { name: "プレイヤーD", goal: "SURGE PRO" } // 英語表記の指定に合わせて調整
+];
+
+const canvas = document.getElementById("stage");
+const ctx = canvas.getContext("2d");
+
+// あみだくじの構造データ
+let lines = []; // 横線の位置を記録する二次元配列
+const amidaRows = 15; // 縦を何分割して横線を配置するか
+
+let isAnimating = false;
+
+// 画面の初期化・入力欄の生成
+function initInputs() {
+  const namesDiv = document.getElementById("namesContainer");
+  const goalsDiv = document.getElementById("goalsContainer");
+  const buttonsDiv = document.getElementById("actionButtons");
+
+  namesDiv.innerHTML = "";
+  goalsDiv.innerHTML = "";
+  buttonsDiv.innerHTML = "";
+
+  // 各縦線のX座標を計算するための幅
+  const spacing = canvas.width / (members.length + 1);
+
+  members.forEach((m, i) => {
+    const xPos = spacing * (i + 1);
+
+    // 上部（名前）入力欄
+    const nameInput = document.createElement("input");
+    nameInput.value = m.name;
+    nameInput.style.position = "absolute";
+    nameInput.style.left = `${canvas.offsetLeft + xPos - 55}px`;
+    nameInput.style.top = `${canvas.offsetTop - 35}px`;
+    nameInput.onchange = (e) => { members[i].name = e.target.value; };
+    namesDiv.appendChild(nameInput);
+
+    // 下部（ゴール）入力欄
+    const goalInput = document.createElement("input");
+    goalInput.value = m.goal;
+    goalInput.style.position = "absolute";
+    goalInput.style.left = `${canvas.offsetLeft + xPos - 55}px`;
+    goalInput.style.top = `${canvas.offsetTop + canvas.height + 10}px`;
+    goalInput.onchange = (e) => { members[i].goal = e.target.value; };
+    goalsDiv.appendChild(goalInput);
+
+    // スタートボタン
+    const btn = document.createElement("button");
+    btn.innerText = `スタート`;
+    btn.style.position = "absolute";
+    btn.style.left = `${canvas.offsetLeft + xPos - 40}px`;
+    btn.style.top = `${canvas.offsetTop - 75}px`;
+    btn.onclick = () => startAmida(i);
+    buttonsDiv.appendChild(btn);
+  });
+}
+
+// あみだくじの線をランダム生成
+function generateAmidaLines() {
+  lines = [];
+  // 横線を配置できるグリッドを初期化
+  for (let r = 0; r < amidaRows; r++) {
+    lines[r] = new Array(members.length - 1).fill(false);
+    for (let c = 0; c < members.length - 1; c++) {
+      // 隣り合う線がつながらないように配慮しつつ、ランダム（約40%の確率）で横線を引く
+      if (c === 0 || !lines[r][c - 1]) {
+        lines[r][c] = Math.random() < 0.4;
+      }
+    }
+  }
+}
+
+// あみだくじの基本形を描画
+function drawBaseAmida() {
+  ctx.clearRect(0, 0, canvas.width, canvas.height);
+  ctx.strokeStyle = "#ccc";
+  ctx.lineWidth = 4;
+  ctx.lineCap = "round";
+
+  const spacing = canvas.width / (members.length + 1);
+  const rowHeight = canvas.height / (amidaRows + 1);
+
+  // 縦線を描画
+  for (let i = 0; i < members.length; i++) {
+    const x = spacing * (i + 1);
+    ctx.beginPath();
+    ctx.moveTo(x, rowHeight);
+    ctx.lineTo(x, canvas.height - rowHeight);
+    ctx.stroke();
+  }
+
+  // 横線を描画
+  for (let r = 0; r < amidaRows; r++) {
+    const y = rowHeight * (r + 1.5);
+    for (let c = 0; c < members.length - 1; c++) {
+      if (lines[r][c]) {
+        const x1 = spacing * (c + 1);
+        const x2 = spacing * (c + 2);
+        ctx.beginPath();
+        ctx.moveTo(x1, y);
+        ctx.lineTo(x2, y);
+        ctx.stroke();
+      }
+    }
+  }
+}
+
+// 人数を増やす
+function addMember() {
+  if (isAnimating) return;
+  members.push({ name: `プレイヤー${String.fromCharCode(65 + members.length)}`, goal: "ハズレ" });
+  initAmida();
+}
+
+// 人数を減らす
+function removeMember() {
+  if (isAnimating || members.length <= 2) return;
+  members.pop();
+  initAmida();
+}
+
+// 再生成・リセット
+function initAmida() {
+  if (isAnimating) return;
+  initInputs();
+  generateAmidaLines();
+  // 入力フォームの絶対配置をブラウザが計算し終えるのを入出力タイミングで待ってから描画
+  setTimeout(drawBaseAmida, 50);
+}
+
+// 選択した位置からあみだくじを辿るアニメーション
+function startAmida(startIndex) {
+  if (isAnimating) return;
+  isAnimating = true;
+
+  // ボタン類を一時的に無効化
+  document.querySelectorAll("button").forEach(b => b.disabled = true);
+
+  const spacing = canvas.width / (members.length + 1);
+  const rowHeight = canvas.height / (amidaRows + 1);
+
+  let currentLine = startIndex;
+  let currentY = rowHeight;
+  
+  // アニメーション用の経路ポイントをすべて計算して配列に格納する
+  let path = [{ x: spacing * (currentLine + 1), y: currentY }];
+
+  for (let r = 0; r < amidaRows; r++) {
+    const nextY = rowHeight * (r + 1.5);
+    
+    // 現在のステップの横線があるかチェック
+    if (currentLine > 0 && lines[r][currentLine - 1]) {
+      // 左に曲がる
+      path.push({ x: spacing * (currentLine + 1), y: nextY });
+      currentLine--;
+      path.push({ x: spacing * (currentLine + 1), y: nextY });
+    } else if (currentLine < members.length - 1 && lines[r][currentLine]) {
+      // 右に曲がる
+      path.push({ x: spacing * (currentLine + 1), y: nextY });
+      currentLine++;
+      path.push({ x: spacing * (currentLine + 1), y: nextY });
+    }
+  }
+  // 最後に一番下まで下ろす
+  path.push({ x: spacing * (currentLine + 1), y: canvas.height - rowHeight });
+
+  // 経路を少しずつ赤線で描画していく
+  let pathIndex = 0;
+  let currentPos = { x: path[0].x, y: path[0].y };
+
+  function animatePath() {
+    if (pathIndex >= path.length - 1) {
+      // アニメーション終了処理
+      isAnimating = false;
+      document.querySelectorAll("button").forEach(b => b.disabled = false);
+      
+      setTimeout(() => {
+        alert(`${members[startIndex].name} の結果は 【 ${members[currentLine].goal} 】 です！`);
+      }, 200);
+      return;
+    }
+
+    const target = path[pathIndex + 1];
+    const dx = target.x - currentPos.x;
+    const dy = target.y - currentPos.y;
+    const distance = Math.sqrt(dx * dx + dy * dy);
+    const speed = 6; // 赤線が走るスピード（数値を大きくすると速くなる）
+
+    if (distance <= speed) {
+      currentPos.x = target.x;
+      currentPos.y = target.y;
+      pathIndex++;
+    } else {
+      currentPos.x += (dx / distance) * speed;
+      currentPos.y += (dy / distance) * speed;
+    }
+
+    // 再描画して赤線を上書き
+    drawBaseAmida();
+    ctx.strokeStyle = "#ff4757";
+    ctx.lineWidth = 6;
+    ctx.beginPath();
+    ctx.moveTo(path[0].x, path[0].y);
+    
+    for (let i = 0; i <= pathIndex; i++) {
+      ctx.lineTo(path[i].x, path[i].y);
+    }
+    ctx.lineTo(currentPos.x, currentPos.y);
+    ctx.stroke();
+
+    requestAnimationFrame(animatePath);
+  }
+
+  animatePath();
+}
+
+// 画面サイズ変更時などに入力欄の位置がズレるのを防ぐ
+window.onresize = initInputs;
+
+// 初回実行
+initAmida();
+</script>
+
+</body>
+</html>
