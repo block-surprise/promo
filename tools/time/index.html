@@ -1,0 +1,217 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<title>🕰️ カスタム・インテリア時計</title>
+<style>
+/* 全体のリセットと中央配置 */
+html, body {
+  margin: 0;
+  padding: 0;
+  width: 100%;
+  height: 100%;
+  overflow: hidden;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  transition: background-color 0.3s ease;
+}
+
+/* 時計のコンテナ */
+#clock-container {
+  text-align: center;
+  cursor: default;
+  user-select: none;
+}
+
+/* 日付の表示 */
+#date-display {
+  font-size: 2.5rem;
+  letter-spacing: 0.1em;
+  margin-bottom: 10px;
+  opacity: 0.8;
+  font-weight: 300;
+}
+
+/* 時間の表示 */
+#time-display {
+  font-size: 7.5rem;
+  font-weight: bold;
+  line-height: 1;
+  letter-spacing: 0.05em;
+}
+
+/* 設定パネル（画面下部に隠し、マウスホバーやタップで表示） */
+#control-panel {
+  position: absolute;
+  bottom: 0;
+  left: 50%;
+  transform: translateX(-50%) translateY(85%);
+  background: rgba(255, 255, 255, 0.95);
+  color: #333;
+  padding: 15px 25px;
+  border-radius: 12px 12px 0 0;
+  box-shadow: 0 -4px 20px rgba(0,0,0,0.15);
+  transition: transform 0.3s ease;
+  display: flex;
+  gap: 20px;
+  align-items: center;
+  font-size: 14px;
+  font-family: sans-serif;
+  z-index: 100;
+}
+
+/* パネルにマウスを乗せたらひょっこり現れる */
+#control-panel:hover {
+  transform: translateX(-50%) translateY(0);
+}
+
+/* 設定項目のスタイル */
+.setting-item {
+  display: flex;
+  flex-direction: column;
+  gap: 5px;
+  align-items: flex-start;
+}
+
+.setting-item label {
+  font-weight: bold;
+  font-size: 12px;
+  color: #666;
+}
+
+input[type="color"] {
+  border: 1px solid #ccc;
+  background: none;
+  width: 50px;
+  height: 30px;
+  cursor: pointer;
+  border-radius: 4px;
+  padding: 0;
+}
+
+select {
+  padding: 5px;
+  border-radius: 4px;
+  border: 1px solid #ccc;
+  font-size: 14px;
+  outline: none;
+  cursor: pointer;
+}
+
+/* スマホ等での案内チップ */
+#panel-hint {
+  position: absolute;
+  top: -20px;
+  left: 50%;
+  transform: translateX(-50%);
+  background: rgba(0,0,0,0.6);
+  color: white;
+  padding: 2px 10px;
+  border-radius: 10px;
+  font-size: 10px;
+}
+</style>
+</head>
+<body>
+
+  <div id="clock-container">
+    <div id="date-display">2026/01/01 (THU)</div>
+    <div id="time-display">00:00:00</div>
+  </div>
+
+  <div id="control-panel">
+    <div id="panel-hint">⚙️ カスタマイズメニュー</div>
+
+    <div class="setting-item">
+      <label>背景の色</label>
+      <input type="color" id="bgColorPicker" value="#1a1a1a" oninput="applySettings()">
+    </div>
+
+    <div class="setting-item">
+      <label>文字の色</label>
+      <input type="color" id="textColorPicker" value="#ffffff" oninput="applySettings()">
+    </div>
+
+    <div class="setting-item">
+      <label>フォント（文字の形）</label>
+      <select id="fontSelect" onchange="applySettings()">
+        <option value="'Helvetica Neue', Arial, sans-serif">スタイリッシュ（無機質）</option>
+        <option value="'Courier New', Courier, monospace">レトロ・デジタル（等幅）</option>
+        <option value="'Georgia', serif">エレガント（高級ホテル風）</option>
+        <option value="'Hiragino Maru Gothic ProN', sans-serif">マイルド（かわいい）</option>
+      </select>
+    </div>
+  </div>
+
+<script>
+// 曜日の日本語・英語マッピング
+const weeks = ["SUN", "MON", "TUE", "WED", "THU", "FRI", "SAT"];
+
+// 時計をリアルタイムに更新する関数
+function updateClock() {
+  const now = new Date();
+
+  // 年・月・日・曜日を取得
+  const year = now.getFullYear();
+  const month = String(now.getMonth() + 1).padStart(2, '0');
+  const date = String(now.getDate()).padStart(2, '0');
+  const day = weeks[now.getDay()];
+
+  // 時・分・秒を取得
+  const hours = String(now.getHours()).padStart(2, '0');
+  const minutes = String(now.getMinutes()).padStart(2, '0');
+  const seconds = String(now.getSeconds()).padStart(2, '0');
+
+  // 画面に反映
+  document.getElementById("date-display").innerText = `${year} / ${month} / ${date} (${day})`;
+  document.getElementById("time-display").innerText = `${hours}:${minutes}:${seconds}`;
+}
+
+// ユーザーの設定を画面に適用＆保存する関数
+function applySettings() {
+  const bgColor = document.getElementById("bgColorPicker").value;
+  const textColor = document.getElementById("textColorPicker").value;
+  const fontStyle = document.getElementById("fontSelect").value;
+
+  // スタイルを適用
+  document.body.style.backgroundColor = bgColor;
+  document.getElementById("clock-container").style.color = textColor;
+  document.getElementById("clock-container").style.fontFamily = fontStyle;
+
+  // LocalStorageにデザイン設定を保存
+  const settings = { bgColor, textColor, fontStyle };
+  localStorage.setItem("clockSettings", JSON.stringify(settings));
+}
+
+// ページを開いたときに保存された設定を読み込む関数
+function loadSettings() {
+  const savedSettings = localStorage.getItem("clockSettings");
+  
+  if (savedSettings) {
+    const settings = JSON.parse(savedSettings);
+    
+    // フォームの値を書き換え
+    document.getElementById("bgColorPicker").value = settings.bgColor;
+    document.getElementById("textColorPicker").value = settings.textColor;
+    document.getElementById("fontSelect").value = settings.fontStyle;
+  } else {
+    // 初回起動時のデフォルト（シックな黒背景に白文字）
+    document.getElementById("bgColorPicker").value = "#1e1e24";
+    document.getElementById("textColorPicker").value = "#f4f4f9";
+    document.getElementById("fontSelect").value = "'Helvetica Neue', Arial, sans-serif";
+  }
+  
+  applySettings();
+}
+
+// タイマー起動（1秒ごとに時計を更新）
+setInterval(updateClock, 1000);
+updateClock(); // 起動時に一瞬遅れるのを防ぐために即座に実行
+
+// 設定の読み込み
+loadSettings();
+</script>
+
+</body>
+</html>
