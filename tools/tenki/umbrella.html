@@ -71,6 +71,32 @@ button:disabled {
   background: #cbd5e0;
   cursor: not-allowed;
 }
+
+/* 詳しい天気を知るリンクのボタン装飾 */
+#detail-link-btn {
+  display: block;
+  margin-top: 15px;
+  background: #4a5568;
+  text-decoration: none;
+  color: white;
+  padding: 12px 24px;
+  font-size: 15px;
+  font-weight: bold;
+  border-radius: 8px;
+  transition: background 0.2s;
+  box-sizing: border-box;
+}
+#detail-link-btn:hover {
+  background: #2d3748;
+}
+
+/* 追加：広告エリアの余白設定 */
+.ad-space {
+  margin-top: 25px;
+  padding-top: 20px;
+  border-top: 1px dashed #e2e8f0; /* 境界線を入れて上品に見せる */
+  min-height: 100px; /* 広告読み込み前のガタつき防止 */
+}
 </style>
 </head>
 <body>
@@ -84,10 +110,22 @@ button:disabled {
 
   <button id="check-btn" onclick="getLocation()">現在地を調べて判定</button>
   <a id="detail-link-btn" href="https://promo.blocksurprise.f5.si/tools/tenki/" target="_blank">🔍 詳しい天気を知る</a>
+
+  <div class="ad-space">
+<ins class="adsbygoogle"
+     style="display:block"
+     data-ad-client="ca-pub-3571574988222927"
+     data-ad-slot="9197531458"
+     data-ad-format="auto"
+     data-full-width-responsive="true"></ins>
+<script>
+     (adsbygoogle = window.adsbygoogle || []).push({});
+</script>
+    </div>
+
 </div>
 
 <script>
-// 1. まずブラウザのGPS機能（Geolocation API）を呼び出す
 function getLocation() {
   const btn = document.getElementById('check-btn');
   const icon = document.getElementById('result-icon');
@@ -103,13 +141,10 @@ function getLocation() {
   text.innerText = "位置情報を取得中...";
   icon.innerText = "📍";
 
-  // 位置情報の取得を開始
   navigator.geolocation.getCurrentPosition(
     (position) => {
-      const lat = position.coords.latitude;  // 緯度
-      const lon = position.coords.longitude; // 経度
-      
-      // 位置情報が取れたら天気データを取得しにいく
+      const lat = position.coords.latitude;
+      const lon = position.coords.longitude;
       checkWeather(lat, lon);
     },
     (error) => {
@@ -121,7 +156,6 @@ function getLocation() {
   );
 }
 
-// 2. 緯度・経度を使って無料の天気API（Open-Meteo）からデータを取得
 async function checkWeather(lat, lon) {
   const btn = document.getElementById('check-btn');
   const icon = document.getElementById('result-icon');
@@ -132,15 +166,12 @@ async function checkWeather(lat, lon) {
   icon.innerText = "☁️";
 
   try {
-    // 世界中で使える無料の天気API「Open-Meteo」を利用（緯度経度をそのまま渡せる）
     const url = `https://api.open-meteo.com/v1/forecast?latitude=${lat}&longitude=${lon}&daily=precipitation_probability_max&timezone=Asia%2FTokyo`;
     const res = await fetch(url);
     const data = await res.json();
 
-    // 今日の最高降水確率を取得
     const maxPop = data.daily.precipitation_probability_max[0];
 
-    // 傘が必要か判定
     if (maxPop >= 30) {
       icon.innerText = "☔";
       text.innerText = "傘、いる！";
