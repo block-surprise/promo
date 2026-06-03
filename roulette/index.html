@@ -31,6 +31,7 @@ canvas {
   border-left: 12px solid transparent;
   border-right: 12px solid transparent;
   border-bottom: 20px solid red;
+  z-index: 10; /* 針が最前面にくるように */
 }
 
 table {
@@ -59,7 +60,7 @@ button {
   <canvas id="wheel" width="300" height="300"></canvas>
 </div>
 
-<button onclick="spin()">回す</button>
+<button id="spinBtn" onclick="spin()">回す</button>
 <button onclick="addItem()">＋追加</button>
 <button onclick="update()">更新</button>
 
@@ -69,7 +70,7 @@ button {
 
 <script>
 let items = [
-  { name: "当たり", weight: 5 },
+  { name: "SURGE PRO", weight: 5 }, // 英語表記の指定に合わせて調整
   { name: "ハズレ", weight: 20 },
   { name: "大当たり", weight: 2 }
 ];
@@ -78,28 +79,30 @@ const canvas = document.getElementById("wheel");
 const ctx = canvas.getContext("2d");
 const radius = canvas.width / 2;
 
+// ルーレットの現在の回転角度（ラジアン）
+let currentAngle = 0;
+let isSpinning = false;
+
 // テーブル描画
 function renderTable() {
   const table = document.getElementById("table");
-
   table.innerHTML = `<tr><th>名前</th><th>確率</th><th>削除</th></tr>`;
 
   items.forEach((item, i) => {
     const row = document.createElement("tr");
-
     row.innerHTML = `
-      <td><input value="${item.name}" onchange="items[${i}].name=this.value"></td>
+      <td><input value="${item.name}" onchange="items[${i}].name=this.value; drawWheel();"></td>
       <td><input type="number" value="${item.weight}" min="1"
-        onchange="items[${i}].weight=parseInt(this.value)"></td>
+        onchange="items[${i}].weight=parseInt(this.value)||1; drawWheel();"></td>
       <td><button onclick="removeItem(${i})">❌</button></td>
     `;
-
     table.appendChild(row);
   });
 }
 
 // 削除
 function removeItem(i) {
+  if (items.length <= 1) return; // 残り1つの時は削除しない
   items.splice(i, 1);
   renderTable();
   drawWheel();
@@ -117,46 +120,111 @@ function update() {
   drawWheel();
 }
 
-// 重み抽選
+// 重みによる抽選（当選するインデックスを決定）
 function pickIndex() {
-  let sum = items.reduce((a,b)=>a+b.weight,0);
-  let r = Math.random()*sum;
+  let sum = items.reduce((a, b) => a + b.weight, 0);
+  let r = Math.random() * sum;
 
-  for (let i=0;i<items.length;i++){
+  for (let i = 0; i < items.length; i++) {
     if (r < items[i].weight) return i;
     r -= items[i].weight;
   }
+  return 0;
 }
 
-// 描画
+// 描画（現在の回転角度 currentAngle を考慮する）
 function drawWheel() {
-  const arc = (2*Math.PI)/items.length;
-  ctx.clearRect(0,0,300,300);
+  ctx.clearRect(0, 0, canvas.width, canvas.height);
+  
+  const totalWeight = items.reduce((a, b) => a + b.weight, 0);
+  if (totalWeight === 0) return;
 
-  for(let i=0;i<items.length;i++){
+  let startAngle = currentAngle;
+
+  for (let i = 0; i < items.length; i++) {
+    // 重みに比例した角度を計算
+    const arc = (items[i].weight / totalWeight) * (2 * Math.PI);
+
     ctx.beginPath();
-    ctx.fillStyle = i%2? "#06d6a0":"#ffd166";
+    ctx.fillStyle = i % 2 ? "#06d6a0" : "#ffd166";
 
-    ctx.moveTo(radius,radius);
-    ctx.arc(radius,radius,radius,arc*i,arc*(i+1));
+    ctx.moveTo(radius, radius);
+    ctx.arc(radius, radius, radius, startAngle, startAngle + arc);
     ctx.fill();
 
+    // テキストの描画
     ctx.save();
-    ctx.translate(radius,radius);
-    ctx.rotate(arc*i+arc/2);
-    ctx.fillStyle="#000";
-    ctx.textAlign="right";
-    ctx.fillText(items[i].name, radius-10,10);
+    ctx.translate(radius, radius);
+    ctx.rotate(startAngle + arc / 2);
+    ctx.fillStyle = "#000";
+    ctx.textAlign = "right";
+    ctx.font = "14px sans-serif";
+    ctx.fillText(items[i].name, radius - 20, 5);
     ctx.restore();
+
+    startAngle += arc;
   }
 }
 
-// 回転
-function spin(){
-  const target = pickIndex();
-  alert("結果：" + items[target].name);
+// 回転アニメーション処理
+function spin() {
+  if (isSpinning) return; // 連打防止
+  isSpinning = true;
+  document.getElementById("spinBtn").disabled = true;
+
+  const targetIndex = pickIndex(); // 事前に当選を決定
+  const totalWeight = items.reduce((a, b) => a + b.weight, 0);
+
+  // 当選項目のルーレット内での開始位置と終了位置の角度を計算
+  let weightSum = 0;
+  for (let i = 0; i < targetIndex; i++) {
+    weightSum += items[i].weight;
+  }
+  
+  // 針（真上 = -90度 = -PI/2）の位置に当選項目が来るように調整
+  const targetStartAngle = (weightSum / totalWeight) * (2 * Math.PI);
+  const targetEndAngle = ((weightSum + items[targetIndex].weight) / totalWeight) * (2 * Math.PI);
+  
+  // 当選エリアの真ん中に止まるターゲット角度（真上基準の逆算）
+  const centerOfTarget = (targetStartAngle + targetEndAngle) / 2;
+  const stopAngle = (3.5 * Math.PI) - centerOfTarget; // 最低でも1.5回転以上させて真上に合わせる
+
+  const startRotation = currentAngle % (2 * Math.PI);
+  // 最低5回転（10 * PI）させてから、目的の角度で止まるように総移動量を設定
+  const targetRotation = startRotation + (10 * Math.PI) + (stopAngle - startRotation) % (2 * Math.PI);
+  
+  let duration = 4000; // 4秒間かけて回る
+  let startTime = null;
+
+  function animate(timestamp) {
+    if (!startTime) startTime = timestamp;
+    let elapsed = timestamp - startTime;
+    let progress = Math.min(elapsed / duration, 1);
+
+    // イージング関数（OutCubic: 最初は速く、後半スムーズに減速）
+    let easeOut = 1 - Math.pow(1 - progress, 3);
+    
+    currentAngle = startRotation + (targetRotation - startRotation) * easeOut;
+    drawWheel();
+
+    if (progress < 1) {
+      requestAnimationFrame(animate);
+    } else {
+      // 停止後の処理
+      isSpinning = false;
+      document.getElementById("spinBtn").disabled = false;
+      
+      // ちょっとだけ遅らせて結果発表
+      setTimeout(() => {
+        alert("結果：" + items[targetIndex].name);
+      }, 200);
+    }
+  }
+
+  requestAnimationFrame(animate);
 }
 
+// 初期実行
 renderTable();
 drawWheel();
 </script>
