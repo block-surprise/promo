@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>☔ 今日、傘いる？</title>
+<title>☔ 今日、傘いる？(現在地連動版)</title>
 <style>
 body {
   font-family: sans-serif;
@@ -45,6 +45,7 @@ h1 {
   color: #718096;
   margin-bottom: 25px;
   line-height: 1.5;
+  white-space: pre-wrap;
 }
 
 button {
@@ -75,57 +76,86 @@ button:disabled {
 <div class="card">
   <h1>☔ 今日、傘いる？</h1>
   
-  <!-- 結果表示エリア -->
   <div id="result-icon">🤔</div>
   <div id="result-text">ボタンを押してね</div>
-  <div id="result-detail">今日の降水確率をチェックします</div>
+  <div id="result-detail">GPSで現在地の降水確率をチェックします</div>
 
-  <!-- 判定ボタン -->
-  <button id="check-btn" onclick="checkWeather()">調べる</button>
-   <button heaf="https://promo.blocksurprise.f5.si/tools/tenki/>詳しい天気を知る</button>
+  <button id="check-btn" onclick="getLocation()">現在地を調べて判定</button>
+  <a id="detail-link-btn" href="https://promo.blocksurprise.f5.si/tools/tenki/" target="_blank">🔍 詳しい天気を知る</a>
 </div>
 
 <script>
-async function checkWeather() {
+// 1. まずブラウザのGPS機能（Geolocation API）を呼び出す
+function getLocation() {
   const btn = document.getElementById('check-btn');
   const icon = document.getElementById('result-icon');
   const text = document.getElementById('result-text');
   const detail = document.getElementById('result-detail');
 
+  if (!navigator.geolocation) {
+    alert("お使いのブラウザはGPSに対応していません");
+    return;
+  }
+
   btn.disabled = true;
-  text.innerText = "確認中...";
+  text.innerText = "位置情報を取得中...";
+  icon.innerText = "📍";
+
+  // 位置情報の取得を開始
+  navigator.geolocation.getCurrentPosition(
+    (position) => {
+      const lat = position.coords.latitude;  // 緯度
+      const lon = position.coords.longitude; // 経度
+      
+      // 位置情報が取れたら天気データを取得しにいく
+      checkWeather(lat, lon);
+    },
+    (error) => {
+      btn.disabled = false;
+      icon.innerText = "❌";
+      text.innerText = "位置情報エラー";
+      detail.innerText = "位置情報の許可をしてから\nもう一度試してみてね。";
+    }
+  );
+}
+
+// 2. 緯度・経度を使って無料の天気API（Open-Meteo）からデータを取得
+async function checkWeather(lat, lon) {
+  const btn = document.getElementById('check-btn');
+  const icon = document.getElementById('result-icon');
+  const text = document.getElementById('result-text');
+  const detail = document.getElementById('result-detail');
+
+  text.innerText = "天気を取得中...";
   icon.innerText = "☁️";
 
   try {
-    // 気象庁の公開APIから埼玉県の天気予報を取得
-    const res = await fetch('https://www.jma.go.jp/bosai/forecast/data/forecast/110000.json');
+    // 世界中で使える無料の天気API「Open-Meteo」を利用（緯度経度をそのまま渡せる）
+    const url = `https://api.open-meteo.com/v1/forecast?latitude=${lat}&longitude=${lon}&daily=precipitation_probability_max&timezone=Asia%2FTokyo`;
+    const res = await fetch(url);
     const data = await res.json();
 
-    // 本日の降水確率の配列を取得
-    const timeSeries = data[0].timeSeries[1]; 
-    const pops = timeSeries.areas[0].pops; // 降水確率のリスト（期間ごと）
+    // 今日の最高降水確率を取得
+    const maxPop = data.daily.precipitation_probability_max[0];
 
-    // 直近の降水確率の最大値を探す
-    const maxPop = Math.max(...pops.map(Number));
-
-    // 傘が必要か判定（降水確率30%以上なら傘を推奨）
+    // 傘が必要か判定
     if (maxPop >= 30) {
       icon.innerText = "☔";
       text.innerText = "傘、いる！";
       text.style.color = "#e53e3e";
-      detail.innerText = `今日の最高降水確率は ${maxPop}% です。\n折りたたみ傘などがあると安心！`;
+      detail.innerText = `現在地周辺の今日の降水確率は ${maxPop}% です。\n折りたたみ傘などがあると安心！`;
     } else {
       icon.innerText = "☀️";
       text.innerText = "傘、いらない！";
       text.style.color = "#3182ce";
-      detail.innerText = `今日の最高降水確率は ${maxPop}% です。\n安心して手ぶらでお出かけしてください。`;
+      detail.innerText = `現在地周辺の今日の降水確率は ${maxPop}% です。\n安心して手ぶらでお出かけしてください。`;
     }
 
   } catch (error) {
     icon.innerText = "❌";
     text.innerText = "エラー";
-    text.style.color = "#718096";
-    detail.innerText = "天気データの取得に失敗しました。\nネットの接続を確認してみてね。";
+    detail.innerText = "天気データの取得に失敗しました。";
+    console.error(error);
   } finally {
     btn.disabled = false;
   }
