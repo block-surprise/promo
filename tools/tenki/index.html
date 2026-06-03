@@ -37,7 +37,7 @@ h1 {
 }
 
 #weather-text {
-  font-size: 18px;
+  font-size: 16px;
   font-weight: bold;
   color: #1a202c;
   line-height: 1.6;
@@ -107,51 +107,92 @@ button:disabled {
     </tr>
   </table>
 
-  <button id="check-btn" onclick="getWeather()">天力をチェック</button>
+  <button id="check-btn" onclick="getLocation()">現在地の天気をチェック</button>
 </div>
 
 <script>
-async function getWeather() {
+// 1. GPSの位置情報を取得する
+function getLocation() {
+  const btn = document.getElementById('check-btn');
+  const weatherText = document.getElementById('weather-text');
+
+  if (!navigator.geolocation) {
+    alert("お使いのブラウザは位置情報に対応していません");
+    return;
+  }
+
+  btn.disabled = true;
+  weatherText.innerText = "現在地を特定中...";
+
+  navigator.geolocation.getCurrentPosition(
+    (position) => {
+      const lat = position.coords.latitude;
+      const lon = position.coords.longitude;
+      getWeather(lat, lon);
+    },
+    (error) => {
+      btn.disabled = false;
+      weatherText.innerText = "位置情報の取得に失敗しました。許可設定を確認してください。";
+    }
+  );
+}
+
+// 2. 緯度・経度を使って世界共通の天気API（Open-Meteo）からデータを取得
+async function getWeather(lat, lon) {
   const btn = document.getElementById('check-btn');
   const weatherText = document.getElementById('weather-text');
   const highVal = document.getElementById('high-val');
   const lowVal = document.getElementById('low-val');
 
-  btn.disabled = true;
-  weatherText.innerText = "取得中...";
+  weatherText.innerText = "天気予報データを取得中...";
 
   try {
-    // 1. 天気予報データを取得（さいたま市が含まれる南部）
-    const res = await fetch('https://www.jma.go.jp/bosai/forecast/data/forecast/110000.json');
+    // Open-Meteo API（世界中の天気・気温・天気コードを1回で取れる）
+    const url = `https://api.open-meteo.com/v1/forecast?latitude=${lat}&longitude=${lon}&daily=weather_code,temperature_2m_max,temperature_2m_min&timezone=Asia%2FTokyo`;
+    const res = await fetch(url);
     const data = await res.json();
 
-    // 今日の天気テキスト
-    const todayWeather = data[0].timeSeries[0].areas[0].weathers[0];
-    weatherText.innerText = todayWeather;
-
-    // 2. 気温データを正確に取得
-    // 配列の中から気温データ（timeSeries[2]）にアクセス
-    const tempTimeSeries = data[0].timeSeries.find(s => s.areas[0].temps);
+    // 今日の天気コードを取得して分かりやすい日本語に変換
+    const code = data.daily.weather_code[0];
+    const todayWeather = convertWeatherCode(code);
     
-    if (tempTimeSeries) {
-      const temps = tempTimeSeries.areas[0].temps;
-      // 気象庁のデータ構成上、[0]が日中の最高（または最低）、[1]が次の気温になります
-      // 今日・明日のデータから本日の予想気温をセットします
-      highVal.innerText = temps[0] ? `${temps[0]}°C` : "--";
-      lowVal.innerText = temps[1] ? `${temps[1]}°C` : "--";
-    } else {
-      highVal.innerText = "取得失敗";
-      lowVal.innerText = "取得失敗";
-    }
+    // 文字列をキレイに整える処理（変な空白をリプレイス）
+    // 気象庁ではないので基本キレイですが、念のため余計な連続スペースを1つにまとめて読みやすくします
+    const cleanWeather = todayWeather.replace(/[\s　]+/g, ' ').trim();
+    weatherText.innerText = cleanWeather;
+
+    // 最高・最低気温をセット
+    const maxTemp = data.daily.temperature_2m_max[0];
+    const minTemp = data.daily.temperature_2m_min[0];
+    
+    highVal.innerText = maxTemp !== undefined ? `${Math.round(maxTemp)}°C` : "--";
+    lowVal.innerText = minTemp !== undefined ? `${Math.round(minTemp)}°C` : "--";
 
   } catch (error) {
     weatherText.innerText = "エラーが発生しました";
-    highVal.innerText = "求敗";
-    lowVal.innerText = "求敗";
+    highVal.innerText = "失敗";
+    lowVal.innerText = "失敗";
     console.error(error);
   } finally {
     btn.disabled = false;
   }
+}
+
+// WMO天気コードを綺麗で見やすい日本語テキストに変換する関数
+function convertWeatherCode(code) {
+  const codes = {
+    0: "快晴（気持ちよく晴れます）",
+    1: "晴れ（おおむね晴れ）", 2: "晴れ時々曇り", 3: "くもり",
+    45: "霧が発生中", 48: "濃霧に注意",
+    51: "弱い霧雨", 53: "霧雨", 55: "強い霧雨",
+    61: "弱い雨", 63: "雨（しっかり降ります）", 65: "激しい大雨",
+    71: "弱い雪", 73: "雪", 75: "大雪に注意",
+    77: "地吹雪",
+    80: "一時的な小雨", 81: "にわか雨", 82: "激しいにわか雨",
+    85: "にわか雪", 86: "激しい雪",
+    95: "雷雨（突風や雷に注意）", 96: "雷を伴う激しい雨", 99: "激しい雷雨・雹（ひょう）"
+  };
+  return codes[code] || "不明な天気（コード: " + code + "）";
 }
 </script>
 
