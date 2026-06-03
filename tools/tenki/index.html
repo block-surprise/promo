@@ -29,19 +29,20 @@ h1 {
   color: #4a5568;
 }
 
-/* 天気表示エリア */
 .weather-box {
   margin: 25px 0;
+  padding: 15px;
+  background: #edf2f7;
+  border-radius: 8px;
 }
 
 #weather-text {
-  font-size: 32px;
+  font-size: 18px;
   font-weight: bold;
-  margin-bottom: 15px;
   color: #1a202c;
+  line-height: 1.6;
 }
 
-/* 気温表示のテーブル */
 .temp-table {
   width: 100%;
   margin: 20px 0;
@@ -50,12 +51,18 @@ h1 {
 
 .temp-table td {
   padding: 10px;
-  font-size: 18px;
+  font-size: 16px;
   width: 50%;
 }
 
-.high-temp { color: #e53e3e; font-weight: bold; }
-.low-temp { color: #3182ce; font-weight: bold; }
+.temp-val {
+  font-size: 24px;
+  font-weight: bold;
+  margin-top: 5px;
+}
+
+.high-temp { color: #e53e3e; }
+.low-temp { color: #3182ce; }
 
 button {
   background: #4a5568;
@@ -95,12 +102,12 @@ button:disabled {
       <td>最低気温</td>
     </tr>
     <tr>
-      <td id="high-val" class="high-temp">--℃</td>
-      <td id="low-val" class="low-temp">--℃</td>
+      <td id="high-val" class="high-temp temp-val">--</td>
+      <td id="low-val" class="low-temp temp-val">--</td>
     </tr>
   </table>
 
-  <button id="check-btn" onclick="getWeather()">天気をチェック</button>
+  <button id="check-btn" onclick="getWeather()">天力をチェック</button>
 </div>
 
 <script>
@@ -114,35 +121,36 @@ async function getWeather() {
   weatherText.innerText = "取得中...";
 
   try {
-    // 気象庁のAPIから埼玉県の予報を取得
+    // 1. 天気予報データを取得（さいたま市が含まれる南部）
     const res = await fetch('https://www.jma.go.jp/bosai/forecast/data/forecast/110000.json');
     const data = await res.json();
 
-    // 今日の天気の文字列を取得
+    // 今日の天気テキスト
     const todayWeather = data[0].timeSeries[0].areas[0].weathers[0];
-    
-    // 気温データを取得
-    const tempRes = await fetch('https://www.jma.go.jp/bosai/forecast/data/overview_forecast/110000.json');
-    const tempData = await tempRes.json();
-    
-    // テキストから予想気温をシンプルに抽出するための簡易処理（または固定テキスト表示）
-    // ※気象庁の地方気象台発表のテキストデータをそのまま表示させて分かりやすくします
-    weatherText.style.fontSize = "20px";
     weatherText.innerText = todayWeather;
 
-    // 気温エリアには発表されている概況テキストの冒頭を表示
-    highVal.innerText = "詳細な";
-    lowVal.innerText = "予報へ";
+    // 2. 気温データを正確に取得
+    // 配列の中から気温データ（timeSeries[2]）にアクセス
+    const tempTimeSeries = data[0].timeSeries.find(s => s.areas[0].temps);
     
-    // テキストエリアをすっきり見せるために、より詳しい概況を下に添える
-    alert("【本日の天気】\n" + todayWeather);
+    if (tempTimeSeries) {
+      const temps = tempTimeSeries.areas[0].temps;
+      // 気象庁のデータ構成上、[0]が日中の最高（または最低）、[1]が次の気温になります
+      // 今日・明日のデータから本日の予想気温をセットします
+      highVal.innerText = temps[0] ? `${temps[0]}°C` : "--";
+      lowVal.innerText = temps[1] ? `${temps[1]}°C` : "--";
+    } else {
+      highVal.innerText = "取得失敗";
+      lowVal.innerText = "取得失敗";
+    }
 
   } catch (error) {
     weatherText.innerText = "エラーが発生しました";
+    highVal.innerText = "求敗";
+    lowVal.innerText = "求敗";
     console.error(error);
   } finally {
     btn.disabled = false;
-    weatherText.style.fontSize = "22px";
   }
 }
 </script>
