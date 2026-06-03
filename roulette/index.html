@@ -28,86 +28,101 @@ canvas {
   top: -10px;
   left: 50%;
   transform: translateX(-50%);
-  width: 0;
-  height: 0;
   border-left: 12px solid transparent;
   border-right: 12px solid transparent;
   border-bottom: 20px solid red;
 }
 
+table {
+  margin: 20px auto;
+  border-collapse: collapse;
+}
+
+td, th {
+  border: 1px solid #ccc;
+  padding: 5px;
+}
+
 button {
-  margin-top: 10px;
-  padding: 10px 20px;
-  font-size: 16px;
-}
-
-/* 🎉 紙吹雪 */
-.confetti {
-  position: fixed;
-  width: 8px;
-  height: 8px;
-  top: -10px;
-  animation: fall 3s linear forwards;
-  z-index: 9999;
-}
-
-@keyframes fall {
-  to {
-    transform: translateY(100vh) rotate(720deg);
-    opacity: 0;
-  }
-}
-
-/* 🎊 当たりポップ */
-#popup {
-  position: fixed;
-  top: 40%;
-  left: 50%;
-  transform: translate(-50%, -50%);
-  font-size: 40px;
-  font-weight: bold;
-  color: #ff006e;
-  display: none;
-  z-index: 10000;
+  margin: 5px;
+  padding: 8px 12px;
 }
 </style>
 </head>
 
 <body>
 
-<h2>🎡 高機能webルーレット</h2>
+<h2>🎡高機能Webルーレット</h2>
 
 <div id="wrapper">
   <div id="pointer"></div>
   <canvas id="wheel" width="300" height="300"></canvas>
 </div>
 
-<button onclick="spin()">回す！</button>
+<button onclick="spin()">回す</button>
+<button onclick="addItem()">＋追加</button>
+<button onclick="update()">更新</button>
 
-<div id="popup">🎉 大当たり！ 🎉</div>
+<table id="table">
+<tr><th>名前</th><th>確率</th><th>削除</th></tr>
+</table>
 
 <script>
 let items = [
-  { name: "当たり", weight: 5, type: "win" },
-  { name: "ハズレ", weight: 20, type: "lose" },
-  { name: "もう一回", weight: 10, type: "normal" },
-  { name: "大当たり", weight: 2, type: "win" },
-  { name: "普通", weight: 15, type: "normal" },
-  { name: "ラッキー", weight: 8, type: "win" }
+  { name: "当たり", weight: 5 },
+  { name: "ハズレ", weight: 20 },
+  { name: "大当たり", weight: 2 }
 ];
 
 const canvas = document.getElementById("wheel");
 const ctx = canvas.getContext("2d");
 const radius = canvas.width / 2;
 
-let angle = 0;
+// テーブル描画
+function renderTable() {
+  const table = document.getElementById("table");
 
-// 重み付き抽選
+  table.innerHTML = `<tr><th>名前</th><th>確率</th><th>削除</th></tr>`;
+
+  items.forEach((item, i) => {
+    const row = document.createElement("tr");
+
+    row.innerHTML = `
+      <td><input value="${item.name}" onchange="items[${i}].name=this.value"></td>
+      <td><input type="number" value="${item.weight}" min="1"
+        onchange="items[${i}].weight=parseInt(this.value)"></td>
+      <td><button onclick="removeItem(${i})">❌</button></td>
+    `;
+
+    table.appendChild(row);
+  });
+}
+
+// 削除
+function removeItem(i) {
+  items.splice(i, 1);
+  renderTable();
+  drawWheel();
+}
+
+// 追加
+function addItem() {
+  items.push({ name: "新しい項目", weight: 1 });
+  renderTable();
+  drawWheel();
+}
+
+// 更新
+function update() {
+  drawWheel();
+}
+
+// 重み抽選
 function pickIndex() {
-  let sum = items.reduce((a, b) => a + b.weight, 0);
-  let r = Math.random() * sum;
+  let sum = items.reduce((a,b)=>a+b.weight,0);
+  let r = Math.random()*sum;
 
-  for (let i = 0; i < items.length; i++) {
+  for (let i=0;i<items.length;i++){
     if (r < items[i].weight) return i;
     r -= items[i].weight;
   }
@@ -115,97 +130,34 @@ function pickIndex() {
 
 // 描画
 function drawWheel() {
-  const arc = (2 * Math.PI) / items.length;
+  const arc = (2*Math.PI)/items.length;
+  ctx.clearRect(0,0,300,300);
 
-  ctx.clearRect(0, 0, 300, 300);
-
-  for (let i = 0; i < items.length; i++) {
+  for(let i=0;i<items.length;i++){
     ctx.beginPath();
-    ctx.fillStyle = i % 2 === 0 ? "#ffd166" : "#06d6a0";
+    ctx.fillStyle = i%2? "#06d6a0":"#ffd166";
 
-    ctx.moveTo(radius, radius);
-    ctx.arc(radius, radius, radius, arc * i, arc * (i + 1));
+    ctx.moveTo(radius,radius);
+    ctx.arc(radius,radius,radius,arc*i,arc*(i+1));
     ctx.fill();
 
     ctx.save();
-    ctx.translate(radius, radius);
-    ctx.rotate(arc * i + arc / 2);
-    ctx.fillStyle = "#000";
-    ctx.font = "14px sans-serif";
-    ctx.textAlign = "right";
-    ctx.fillText(items[i].name, radius - 10, 10);
+    ctx.translate(radius,radius);
+    ctx.rotate(arc*i+arc/2);
+    ctx.fillStyle="#000";
+    ctx.textAlign="right";
+    ctx.fillText(items[i].name, radius-10,10);
     ctx.restore();
   }
-}
-
-// 🎊 紙吹雪生成
-function confettiBurst() {
-  for (let i = 0; i < 60; i++) {
-    const div = document.createElement("div");
-    div.className = "confetti";
-    div.style.left = Math.random() * 100 + "vw";
-    div.style.background = `hsl(${Math.random() * 360}, 100%, 50%)`;
-    div.style.animationDuration = (Math.random() * 2 + 2) + "s";
-
-    document.body.appendChild(div);
-
-    setTimeout(() => div.remove(), 4000);
-  }
-}
-
-// 🎉 ポップアップ
-function showPopup() {
-  const popup = document.getElementById("popup");
-  popup.style.display = "block";
-  setTimeout(() => popup.style.display = "none", 2000);
 }
 
 // 回転
-function spin() {
+function spin(){
   const target = pickIndex();
-  const arc = 360 / items.length;
-
-  const targetAngle = 360 * 5 + (360 - target * arc);
-
-  let start = null;
-  const duration = 3000;
-
-  function animate(time) {
-    if (!start) start = time;
-    let progress = time - start;
-    let t = Math.min(progress / duration, 1);
-
-    let ease = 1 - Math.pow(1 - t, 3);
-
-    angle = targetAngle * ease;
-
-    ctx.save();
-    ctx.clearRect(0, 0, 300, 300);
-    ctx.translate(radius, radius);
-    ctx.rotate((angle * Math.PI) / 180);
-    ctx.translate(-radius, -radius);
-
-    drawWheel();
-
-    ctx.restore();
-
-    if (t < 1) {
-      requestAnimationFrame(animate);
-    } else {
-      const result = items[target];
-
-      if (result.type === "win") {
-        confettiBurst();
-        showPopup();
-      }
-
-      alert("結果：" + result.name);
-    }
-  }
-
-  requestAnimationFrame(animate);
+  alert("結果：" + items[target].name);
 }
 
+renderTable();
 drawWheel();
 </script>
 
