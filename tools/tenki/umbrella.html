@@ -15,20 +15,73 @@ body {
   color: #333;
 }
 
-/* --- 追加・変更：レイアウト用のコンテナ --- */
+/* レイアウト用のコンテナ */
 .container {
   display: flex;
   justify-content: center; /* 中央寄せ */
   align-items: flex-start; /* 上揃え */
   max-width: 1200px;       /* 全体の最大幅 */
   margin: 0 auto;
-  gap: 20px;               /* メインと広告の隙間 */
+  gap: 20px;               /* メインと左右エリアの隙間 */
 }
 
-/* --- 追加：自作のサイド広告枠 --- */
+/* --- 【変更】左右のサイドバー全体の共通設定 --- */
+.side-sidebar {
+  width: 160px;            /* 幅160px */
+  flex-shrink: 0;          /* 画面が縮んでも潰れないように */
+  display: flex;
+  flex-direction: column;  /* 中身を【縦に並べる】設定 */
+  gap: 15px;               /* 縦に並んだ宣伝同士の隙間 */
+  box-sizing: border-box;
+}
+
+/* 左側：自社サイト宣伝枠の個別の装飾 */
+.my-promo {
+  background: white;
+  padding: 15px 10px;
+  border-radius: 12px;
+  box-shadow: 0 4px 15px rgba(0,0,0,0.05);
+  text-align: center;
+  box-sizing: border-box;
+}
+.my-promo img {
+  max-width: 100%;
+  height: auto;
+  border-radius: 6px;
+  margin-bottom: 10px;
+}
+.my-promo-title {
+  font-size: 14px;
+  font-weight: bold;
+  color: #2d3748;
+  margin: 5px 0;
+}
+.my-promo-text {
+  font-size: 11px;
+  color: #718096;
+  line-height: 1.4;
+  margin-bottom: 10px;
+}
+.my-promo-btn {
+  display: inline-block;
+  background: #e53e3e;     
+  color: white;
+  text-decoration: none;
+  font-size: 12px;
+  font-weight: bold;
+  padding: 8px 12px;
+  border-radius: 6px;
+  width: 80%;
+  transition: background 0.2s;
+}
+.my-promo-btn:hover {
+  background: #c53030;
+}
+
+/* 右側：Google AdSense広告枠の装飾 */
 .side-ad {
-  width: 160px;            /* 一般的なスカイスクレイパー広告の幅 */
-  flex-shrink: 0;          /* 画面が狭くなっても潰れないようにする */
+  width: 160px;            /* 右側も幅を統一 */
+  flex-shrink: 0;
   background: white;
   padding: 10px;
   border-radius: 12px;
@@ -36,13 +89,12 @@ body {
   box-sizing: border-box;
 }
 
-/* スマホなど画面幅が狭い時（900px未満）はサイド広告を隠す */
+/* スマホなど画面幅が狭い時（900px未満）は左右のサイドバーごと隠す */
 @media (max-width: 900px) {
-  .side-ad {
+  .side-sidebar, .side-ad {
     display: none;
   }
 }
-/* -------------------------------------- */
 
 .card {
   width: 100%;
@@ -51,7 +103,7 @@ body {
   padding: 30px 20px;
   border-radius: 16px;
   box-shadow: 0 4px 15px rgba(0,0,0,0.05);
-  text-align: center;      /* 文字の中央寄せをここに移動 */
+  text-align: center;
   box-sizing: border-box;
 }
 
@@ -102,7 +154,6 @@ button:disabled {
   cursor: not-allowed;
 }
 
-/* 詳しい天気を知るリンクのボタン装飾 */
 #detail-link-btn {
   display: block;
   margin-top: 15px;
@@ -120,52 +171,11 @@ button:disabled {
   background: #2d3748;
 }
 
-/* 追加：広告エリアの余白設定 */
 .ad-space {
   margin-top: 25px;
   padding-top: 20px;
-  border-top: 1px dashed #e2e8f0; /* 境界線を入れて上品に見せる */
-  min-height: 100px; /* 広告読み込み前のガタつき防止 */
-}
-  .my-promo {
-  background: white;
-  padding: 15px 10px;
-  border-radius: 12px;
-  box-shadow: 0 4px 15px rgba(0,0,0,0.05);
-  text-align: center;
-}
-.my-promo img {
-  max-width: 100%;         /* 枠幅に合わせて画像を自動縮小 */
-  height: auto;
-  border-radius: 6px;
-  margin-bottom: 10px;
-}
-.my-promo-title {
-  font-size: 14px;
-  font-weight: bold;
-  color: #2d3748;
-  margin: 5px 0;
-}
-.my-promo-text {
-  font-size: 11px;
-  color: #718096;
-  line-height: 1.4;
-  margin-bottom: 10px;
-}
-.my-promo-btn {
-  display: inline-block;
-  background: #e53e3e;     
-  color: white;
-  text-decoration: none;
-  font-size: 12px;
-  font-weight: bold;
-  padding: 8px 12px;
-  border-radius: 6px;
-  width: 80%;
-  transition: background 0.2s;
-}
-.my-promo-btn:hover {
-  background: #c53030;
+  border-top: 1px dashed #e2e8f0;
+  min-height: 100px;
 }
 </style>
 </head>
@@ -173,22 +183,22 @@ button:disabled {
 
 <div class="container">
 
-  <div class="side-space my-promo">
-    <p style="font-size:11px; color:#aaa; margin:0 0 8px 0;">RECOMMEND</p>
-    
-    <div class="my-promo-title">ブログも運営中！</div>
-    <div class="my-promo-text">お役立ちツールや最新のガジェット情報を発信しています。</div>
-    
-    <a class="my-promo-btn" href="https://nandemo-block.hateblo.jp" target="_blank">見に行く ➔</a>
-  </div>
+  <div class="side-sidebar">
+  
+    <div class="my-promo">
+      <p style="font-size:11px; color:#aaa; margin:0 0 8px 0;">RECOMMEND</p>
+      <div class="my-promo-title">ブログも運営中！</div>
+      <div class="my-promo-text">お役立ちツールや最新のガジェット情報を発信しています。</div>
+      <a class="my-promo-btn" href="https://nandemo-block.hateblo.jp" target="_blank">見に行く ➔</a>
+    </div>
 
-    <div class="side-space my-promo">
-    <p style="font-size:11px; color:#aaa; margin:0 0 8px 0;">RECOMMEND</p>
+    <div class="my-promo">
+      <p style="font-size:11px; color:#aaa; margin:0 0 8px 0;">RECOMMEND</p>
+      <div class="my-promo-title">便利なツール、サイト運営！</div>
+      <div class="my-promo-text">役に立つツールや最新の情報を発信してるサイト一覧</div>
+      <a class="my-promo-btn" href="https://promo.blocksurprise.f5.si/" target="_blank">見に行く ➔</a>
+    </div>
     
-    <div class="my-promo-title">便利なツール、サイト運営！</div>
-    <div class="my-promo-text">役に立つツールや最新の情報を発信してるサイト一覧</div>
-    
-    <a class="my-promo-btn" href="https://promo.blocksurprise.f5.si/" target="_blank">見に行く ➔</a>
   </div>
 
   <div class="card">
@@ -215,20 +225,20 @@ button:disabled {
   </div>
 
   <div class="side-ad">
-<ins class="adsbygoogle"
-     style="display:block"
-     data-ad-format="autorelaxed"
-     data-ad-client="ca-pub-3571574988222927"
-     data-ad-slot="3115869062"></ins>
-<script>
-     (adsbygoogle = window.adsbygoogle || []).push({});
-</script>
+    <p style="font-size:11px; color:#aaa; margin:0 0 8px 0; text-align:center;">SPONSOR</p>
+    <ins class="adsbygoogle"
+         style="display:block"
+         data-ad-format="autorelaxed"
+         data-ad-client="ca-pub-3571574988222927"
+         data-ad-slot="3115869062"></ins>
+    <script>
+         (adsbygoogle = window.adsbygoogle || []).push({});
+    </script>
   </div>
 
 </div>
 
 <script>
-// （JavaScriptの処理は変更ないため省略しません。そのまま動作します）
 function getLocation() {
   const btn = document.getElementById('check-btn');
   const icon = document.getElementById('result-icon');
