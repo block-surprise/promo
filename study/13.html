@@ -1,0 +1,536 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>中1地理：南アメリカ州 クイズ</title>
+    <style>
+        :root {
+            --primary-color: #d35400;
+            --accent-color: #27ae60;
+            --success-color: #2ecc71;
+            --error-color: #e74c3c;
+            --bg-color: #fdf2e9;
+            --card-bg: #ffffff;
+            --text-color: #2c3e50;
+        }
+
+        body {
+            font-family: 'Helvetica Neue', Arial, 'Hiragino Kaku Gothic ProN', 'Hiragino Sans', Meiryo, sans-serif;
+            background-color: var(--bg-color);
+            color: var(--text-color);
+            margin: 0;
+            padding: 20px;
+            line-height: 1.6;
+        }
+
+        .container {
+            max-width: 800px;
+            margin: 0 auto;
+        }
+
+        header {
+            text-align: center;
+            margin-bottom: 30px;
+            padding: 20px;
+            background: linear-gradient(135deg, #e67e22, #d35400);
+            color: white;
+            border-radius: 10px;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+            border-bottom: 5px solid var(--accent-color);
+        }
+
+        header h1 {
+            margin: 0 0 10px 0;
+            font-size: 24px;
+        }
+
+        header p {
+            margin: 0;
+            font-size: 14px;
+            opacity: 0.9;
+        }
+
+        .quiz-card {
+            background-color: var(--card-bg);
+            border-radius: 10px;
+            padding: 25px;
+            margin-bottom: 25px;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.05);
+        }
+
+        .question-num {
+            font-weight: bold;
+            color: var(--primary-color);
+            font-size: 14px;
+            text-transform: uppercase;
+            margin-bottom: 5px;
+            display: block;
+        }
+
+        .question-text {
+            font-size: 18px;
+            font-weight: bold;
+            margin-top: 0;
+            margin-bottom: 20px;
+        }
+
+        .options-list {
+            list-style: none;
+            padding: 0;
+            margin: 0 0 15px 0;
+        }
+
+        .option-item {
+            margin-bottom: 10px;
+        }
+
+        .option-btn {
+            width: 100%;
+            text-align: left;
+            padding: 12px 15px;
+            background-color: #f8f9fa;
+            border: 2px solid #e9ecef;
+            border-radius: 6px;
+            cursor: pointer;
+            font-size: 15px;
+            transition: all 0.2s ease;
+        }
+
+        .option-btn:hover:not(:disabled) {
+            background-color: #e9ecef;
+            border-color: #ced4da;
+        }
+
+        .option-btn:disabled {
+            cursor: not-allowed;
+            color: #6c757d;
+        }
+
+        .option-btn.correct {
+            background-color: #d4edda;
+            border-color: var(--success-color);
+            color: #155724;
+            font-weight: bold;
+        }
+
+        .option-btn.incorrect {
+            background-color: #f8d7da;
+            border-color: var(--error-color);
+            color: #721c24;
+        }
+
+        .hint-block {
+            margin-bottom: 15px;
+        }
+
+        .hint-btn {
+            background: none;
+            border: none;
+            color: #7f8c8d;
+            cursor: pointer;
+            font-size: 13px;
+            text-decoration: underline;
+            padding: 0;
+        }
+
+        .hint-text {
+            display: none;
+            background-color: #fff3cd;
+            color: #856404;
+            padding: 10px;
+            border-radius: 5px;
+            font-size: 13px;
+            margin-top: 5px;
+            border-left: 4px solid #ffc107;
+        }
+
+        .result-box {
+            display: none;
+            margin-top: 15px;
+            padding: 15px;
+            border-radius: 6px;
+            font-size: 14px;
+        }
+
+        .result-box.show {
+            display: block;
+        }
+
+        .result-box.correct-box {
+            background-color: #e2f0d9;
+            color: #2c5217;
+            border: 1px solid #c5e1b2;
+        }
+
+        .result-box.incorrect-box {
+            background-color: #fbe5e5;
+            color: #631c1c;
+            border: 1px solid #f3c2c2;
+        }
+
+        .result-title {
+            font-weight: bold;
+            margin-bottom: 5px;
+            font-size: 15px;
+        }
+
+        .score-section {
+            text-align: center;
+            background-color: var(--primary-color);
+            color: white;
+            padding: 30px;
+            border-radius: 10px;
+            margin-top: 30px;
+            display: none;
+        }
+
+        .score-num {
+            font-size: 48px;
+            font-weight: bold;
+            color: #f1c40f;
+            margin: 10px 0;
+        }
+
+        .restart-btn {
+            background-color: var(--accent-color);
+            color: white;
+            border: none;
+            padding: 12px 25px;
+            font-size: 16px;
+            border-radius: 5px;
+            cursor: pointer;
+            font-weight: bold;
+            margin-top: 15px;
+        }
+
+        .submit-all-btn {
+            display: block;
+            width: 100%;
+            background-color: var(--primary-color);
+            color: white;
+            border: none;
+            padding: 15px;
+            font-size: 18px;
+            font-weight: bold;
+            border-radius: 8px;
+            cursor: pointer;
+            margin-top: 20px;
+        }
+
+        .submit-all-btn:hover {
+            background-color: #b3391b;
+        }
+
+        .ad-container {
+            text-align: center;
+            margin: 20px 0 35px 0;
+            min-height: 90px;
+        }
+    </style>
+</head>
+<body>
+
+<div class="container">
+    <header>
+        <h1>中1地理：南アメリカ州 クイズ</h1>
+        <p>アマゾン川やアンデス山脈の大自然、ヨーロッパとの歴史的つながり、そして発展する産業と環境問題をチェック！</p>
+    </header>
+
+    <div id="quiz-container">
+        <div class="quiz-card" id="card-0">
+            <span class="question-num">第 1 問</span>
+            <p class="question-text">南アメリカ大陸の西側に沿って、南北に約7000kmにわたってそびえ立つ、世界最長の険しい山脈を何といいますか？</p>
+            <div class="hint-block">
+                <button class="hint-btn" onclick="toggleHint(0)">💡 ヒントを表示</button>
+                <div class="hint-text" id="hint-0">カタカナ4文字の山脈です。標高6000mを超える高い山々が連なり、かつてはこの山岳地帯にマチュピチュ遺跡で有名な「インカ帝国」が栄えました。</div>
+            </div>
+            <ul class="options-list">
+                <li class="option-item"><button class="option-btn" id="btn-0-0" onclick="selectOption(0, 0)">A: ロッキー山脈</button></li>
+                <li class="option-item"><button class="option-btn" id="btn-0-1" onclick="selectOption(0, 1)">B: アルプス山脈</button></li>
+                <li class="option-item"><button class="option-btn" id="btn-0-2" onclick="selectOption(0, 2)">C: アンデス山脈</button></li>
+                <li class="option-item"><button class="option-btn" id="btn-0-3" onclick="selectOption(0, 3)">D: ヒマラヤ山脈</button></li>
+            </ul>
+            <div class="result-box" id="result-0"></div>
+        </div>
+
+        <div class="quiz-card" id="card-1">
+            <span class="question-num">第 2 問</span>
+            <p class="question-text">赤道付近を流れ、流域面積（川が水をあつめる面積）が世界最大である、広大な熱帯雨林（セルバ）を育てている大河の名前は何でしょう？</p>
+            <div class="hint-block">
+                <button class="hint-btn" onclick="toggleHint(1)">💡 ヒントを表示</button>
+                <div class="hint-text" id="hint-1">カタカナ4文字の川です。長さではエジプトを流れるナイル川に次いで世界第2位ですが、流れる水の量は世界ダントツの1位です。</div>
+            </div>
+            <ul class="options-list">
+                <li class="option-item"><button class="option-btn" id="btn-1-0" onclick="selectOption(1, 0)">A: ミシシッピ川</button></li>
+                <li class="option-item"><button class="option-btn" id="btn-1-1" onclick="selectOption(1, 1)">B: アマゾン川</button></li>
+                <li class="option-item"><button class="option-btn" id="btn-1-2" onclick="selectOption(1, 2)">C: ラプラタ川</button></li>
+                <li class="option-item"><button class="option-btn" id="btn-1-3" onclick="selectOption(1, 3)">D: コンゴ川</button></li>
+            </ul>
+            <div class="result-box" id="result-1"></div>
+        </div>
+
+        <div class="quiz-card" id="card-2">
+            <span class="question-num">第 3 問</span>
+            <p class="question-text">アルゼンチンなどの中緯度地域に広がる、牛の放牧や小麦・大豆の栽培が盛んな、広大な「温帯草原」を何といいますか？</p>
+            <div class="hint-block">
+                <button class="hint-btn" onclick="toggleHint(2)">💡 ヒントを表示</button>
+                <div class="hint-text" id="hint-2">カタカナ3文字の言葉です。ここを舞台にした大規模な牧畜によって、アルゼンチンは世界有数の牛肉の輸出大国となっています。</div>
+            </div>
+            <ul class="options-list">
+                <li class="option-item"><button class="option-btn" id="btn-2-0" onclick="selectOption(2, 0)">A: パンパ</button></li>
+                <li class="option-item"><button class="option-btn" id="btn-2-1" onclick="selectOption(2, 1)">B: サバナ</button></li>
+                <li class="option-item"><button class="option-btn" id="btn-2-2" onclick="selectOption(2, 2)">C: ステップ</button></li>
+                <li class="option-item"><button class="option-btn" id="btn-2-3" onclick="selectOption(2, 3)">D: セルバ</button></li>
+            </ul>
+            <div class="result-box" id="result-2"></div>
+        </div>
+
+        <div class="ad-container">
+            <script src="https://adm.shinobi.jp/s/8883b8c96c219279b7215cf3521e8aed"></script>
+            </div>
+
+        <div class="quiz-card" id="card-3">
+            <span class="question-num">第 4 問</span>
+            <p class="question-text">南アメリカ州の大半の国ではスペイン語が話されていますが、最大の面積を持つ「ブラジル」だけで公用語として話されているヨーロッパの言語はどれでしょう？</p>
+            <div class="hint-block">
+                <button class="hint-btn" onclick="toggleHint(3)">💡 ヒントを表示</button>
+                <div class="hint-text" id="hint-3">大航海時代に、ブラジルがどの国の植民地だったかが関係しています。ブラジル以外のほとんどの国（ペルー、チリ、アルゼンチンなど）はスペインの植民地でした。</div>
+            </div>
+            <ul class="options-list">
+                <li class="option-item"><button class="option-btn" id="btn-3-0" onclick="selectOption(3, 0)">A: 英語</button></li>
+                <li class="option-item"><button class="option-btn" id="btn-3-1" onclick="selectOption(3, 1)">B: フランス語</button></li>
+                <li class="option-item"><button class="option-btn" id="btn-3-2" onclick="selectOption(3, 2)">C: ポルトガル語</button></li>
+                <li class="option-item"><button class="option-btn" id="btn-3-3" onclick="selectOption(3, 3)">D: オランダ語</button></li>
+            </ul>
+            <div class="result-box" id="result-3"></div>
+        </div>
+
+        <div class="quiz-card" id="card-4">
+            <span class="question-num">第 5 問</span>
+            <p class="question-text">南アメリカ州の歴史的な背景から、現地で広く信仰されているキリスト教の「宗派」はどれでしょう？</p>
+            <div class="hint-block">
+                <button class="hint-btn" onclick="toggleHint(4)">💡 ヒントを表示</button>
+                <div class="hint-text" id="hint-4">植民地支配を行ったスペインやポルトガル（南ヨーロッパの国々）で盛んだった宗派と同じです。ブラジルのリオのカーニバルも、この宗派の行事（謝肉祭）が由来です。</div>
+            </div>
+            <ul class="options-list">
+                <li class="option-item"><button class="option-btn" id="btn-4-0" onclick="selectOption(4, 0)">A: プロテスタント</button></li>
+                <li class="option-item"><button class="option-btn" id="btn-4-1" onclick="selectOption(4, 1)">B: カトリック</button></li>
+                <li class="option-item"><button class="option-btn" id="btn-4-2" onclick="selectOption(4, 2)">C: 東方正教（とうほうせいきょう）</button></li>
+                <li class="option-item"><button class="option-btn" id="btn-4-3" onclick="selectOption(4, 3)">D: イスラム教</button></li>
+            </ul>
+            <div class="result-box" id="result-4"></div>
+        </div>
+
+        <div class="quiz-card" id="card-5">
+            <span class="question-num">第 6 問</span>
+            <p class="question-text">南アメリカ州における「人口の構成」について、インカ帝国の流れをくむ先住民（ネイティブアメリカン）と、あとから渡来したヨーロッパ系（白人）との間に生まれた「混血の人々」を何と呼びますか？</p>
+            <div class="hint-block">
+                <button class="hint-btn" onclick="toggleHint(5)">💡 ヒントを表示</button>
+                <div class="hint-text" id="hint-5">カタカナ4文字の名前です。南米では他にも、アフリカ系と白人の混血（ムラート）や、先住民とアフリカ系の混血（サンボ）など、多様な人々が共に暮らしています。</div>
+            </div>
+            <ul class="options-list">
+                <li class="option-item"><button class="option-btn" id="btn-5-0" onclick="selectOption(5, 0)">A: ヒスパニック</button></li>
+                <li class="option-item"><button class="option-btn" id="btn-5-1" onclick="selectOption(5, 1)">B: メスチソ</button></li>
+                <li class="option-item"><button class="option-btn" id="btn-5-2" onclick="selectOption(5, 2)">C: マオリ</button></li>
+                <li class="option-item"><button class="option-btn" id="btn-5-3" onclick="selectOption(5, 3)">D: アボリジニ</button></li>
+            </ul>
+            <div class="result-box" id="result-5"></div>
+        </div>
+
+        <div class="ad-container">
+            <script src="https://adm.shinobi.jp/s/8883b8c96c219279b7215cf3521e8aed"></script>
+            </div>
+
+        <div class="quiz-card" id="card-6">
+            <span class="question-num">第 7 問</span>
+            <p class="question-text">世界的なコーヒー豆の生産国であるブラジルで、近年栽培が急速に拡大し、自動車の燃料（バイオエタノール）の原料としても大量に使われている植物は何でしょう？</p>
+            <div class="hint-block">
+                <button class="hint-btn" onclick="toggleHint(6)">💡 ヒントを表示</button>
+                <div class="hint-text" id="hint-6">砂糖の原料になる、背の高いイネ科の植物です。ブラジルでは、石油の代わりにこの植物から作ったアルコール燃料で走る車（フレックス燃料車）が広く普及しています。</div>
+            </div>
+            <ul class="options-list">
+                <li class="option-item"><button class="option-btn" id="btn-6-0" onclick="selectOption(6, 0)">A: とうもろこし</button></li>
+                <li class="option-item"><button class="option-btn" id="btn-6-1" onclick="selectOption(6, 1)">B: さとうきび</button></li>
+                <li class="option-item"><button class="option-btn" id="btn-6-2" onclick="selectOption(6, 2)">C: 油ヤシ</button></li>
+                <li class="option-item"><button class="option-btn" id="btn-6-3" onclick="selectOption(6, 3)">D: 天然ゴム</button></li>
+            </ul>
+            <div class="result-box" id="result-6"></div>
+        </div>
+
+        <div class="quiz-card" id="card-7">
+            <span class="question-num">第 8 問</span>
+            <p class="question-text">南アメリカ州の豊かな「鉱産資源」について、チリが世界第1位の生産・輸出量を誇り、電線や電子部品などに欠かせない金属資源は何でしょう？</p>
+            <div class="hint-block">
+                <button class="hint-btn" onclick="toggleHint(7)">💡 ヒントを表示</button>
+                <div class="hint-text" id="hint-7">漢字1文字の金属です。アンデス山脈の斜面にあるチュキカマタなどの大鉱山で、大規模な露天掘りが行われています。</div>
+            </div>
+            <ul class="options-list">
+                <li class="option-item"><button class="option-btn" id="btn-7-0" onclick="selectOption(7, 0)">A: 鉄（鉄鉱石）</button></li>
+                <li class="option-item"><button class="option-btn" id="btn-7-1" onclick="selectOption(7, 1)">B: 銅（銅鉱石）</button></li>
+                <li class="option-item"><button class="option-btn" id="btn-7-2" onclick="selectOption(7, 2)">C: 金</button></li>
+                <li class="option-item"><button class="option-btn" id="btn-7-3" onclick="selectOption(7, 3)">D: レアメタル</button></li>
+            </ul>
+            <div class="result-box" id="result-7"></div>
+        </div>
+
+        <div class="quiz-card" id="card-8">
+            <span class="question-num">第 9 問</span>
+            <p class="question-text">ブラジルのアマゾン川流域などで、国の経済を発展させるために現在進行形で進められているものの、地球温暖化を加速させるとして世界中から批判されている問題は何でしょう？</p>
+            <div class="hint-block">
+                <button class="hint-btn" onclick="toggleHint(8)">💡 ヒントを表示</button>
+                <div class="hint-text" id="hint-8">カラジャス鉄山などの資源開発や、道路（アマゾン横断道路）の建設、牛を飼うための牧場を作るために、あるものが大量に切り倒されています。</div>
+            </div>
+            <ul class="options-list">
+                <li class="option-item"><button class="option-btn" id="btn-8-0" onclick="selectOption(8, 0)">A: 熱帯雨林（森林）の破壊・減少</button></li>
+                <li class="option-item"><button class="option-btn" id="btn-8-1" onclick="selectOption(8, 1)">B: 大気汚染（酸性雨）</button></li>
+                <li class="option-item"><button class="option-btn" id="btn-8-2" onclick="selectOption(8, 2)">C: 砂漠化（さばくか）の進行</button></li>
+                <li class="option-item"><button class="option-btn" id="btn-8-3" onclick="selectOption(8, 3)">D: 外来種の大量発生</button></li>
+            </ul>
+            <div class="result-box" id="result-8"></div>
+        </div>
+
+        <div class="ad-container">
+            <script src="https://adm.shinobi.jp/s/8883b8c96c219279b7215cf3521e8aed"></script>
+            </div>
+
+        <div class="quiz-card" id="card-9">
+            <span class="question-num">第 10 問</span>
+            <p class="question-text">特定の農産物（コーヒーなど）や鉱産資源（原油・銅など）の輸出だけに国の経済を頼りきっている、南米の多くの国に見られる経済の仕組みを何といいますか？</p>
+            <div class="hint-block">
+                <button class="hint-btn" onclick="toggleHint(9)">💡 ヒントを表示</button>
+                <div class="hint-text" id="hint-9">「モノ（単一の）」という言葉に由来する経済用語です。世界的な景気や、その年の天候（豊作・不作）によって国の収入が激しく一喜一憂してしまう弱点があります。</div>
+            </div>
+            <ul class="options-list">
+                <li class="option-item"><button class="option-btn" id="btn-9-0" onclick="selectOption(9, 0)">A: 適地適作経済</button></li>
+                <li class="option-item"><button class="option-btn" id="btn-9-1" onclick="selectOption(9, 1)">B: モノカルチャー経済</button></li>
+                <li class="option-item"><button class="option-btn" id="btn-9-2" onclick="selectOption(9, 2)">C: 先進国型経済</button></li>
+                <li class="option-item"><button class="option-btn" id="btn-9-3" onclick="selectOption(9, 3)">D: 自由貿易経済</button></li>
+            </ul>
+            <div class="result-box" id="result-9"></div>
+        </div>
+    </div>
+
+    <button id="submit-btn" class="submit-all-btn" onclick="calculateScore()">採点する</button>
+
+    <div id="score-section" class="score-section">
+        <h2>結果発表</h2>
+        <p>あなたの正解数は...</p>
+        <div class="score-num" id="score-display">0 / 10</div>
+        <p id="score-comment"></p>
+        <button class="restart-btn" onclick="restartQuiz()">もう一度挑戦する</button>
+    </div>
+</div>
+
+<script>
+const quizMetaData = [
+    { correct: 2, rationale: "アンデス山脈が正解です。環太平洋造山帯に属する高くて険しい褶曲（しゅうきょく）山脈です。標高が高いため、低地が熱帯であっても山の上は涼しく（高地気候）、古くからジャガイモの原産地として独自の「アンデス文明（インカ帝国など）」が発達しました。" },
+    { correct: 1, rationale: "アマゾン川が正解です。流域には「セルバ」と呼ばれる世界最大の熱帯雨林が広がり、地球上の酸素の多くを作り出すことから「地球の肺」とも称されます。豊富な木材資源や広大な野生生物の宝庫です。" },
+    { correct: 0, rationale: "パンパが正解です。ラプラタ川の流域、主にアルゼンチンに広がる広大な平原（草原）です。年間降水量の多い東側（湿潤パンパ）では小麦や大豆の栽培と牛の放牧、乾燥する西側（乾燥パンパ）では羊などの飼育が行われています。" },
+    { correct: 2, rationale: "ポルトガル語が正解です。15世紀末の条約（トルデシリャス条約）などに基づき、現在の南米の東側（ブラジル）はポルトガル、西側の広大な地域はスペインの植民地となりました。この歴史的な境界線が、現在の南米の言語分布にそのまま残っています。" },
+    { correct: 1, rationale: "カトリックが正解です。ヨーロッパのスペインやポルトガルが植民地支配を進めると同時に、キリスト教のカトリックを現地に熱心に布教しました。そのため、現在でも南アメリカは世界で最もカトリック信者の割合が高い地域の一つとなっています。" },
+    { correct: 1, rationale: "メスチソが正解です。南米は「人種のるつぼ（モザイク）」と呼ばれるほど多様な人々が混ざり合って暮らしています。【先住民×白人＝メスチソ】のほか、【白人×アフリカ系＝ムラート】も非常によくテストに出題されます。" },
+    { correct: 1, rationale: "さとうきびが正解です。ブラジルは世界最大のサトウキビ生産国です。1970年代の石油危機をきっかけに、サトウキビから「バイオエタノール（植物由来の燃料）」を作る技術を開発し、環境に優しく石油に頼らない独自の自動車社会を築きました。" },
+    { correct: 1, rationale: "銅（銅鉱石）が正解です。チリは世界の銅生産の約3割近くを占める世界一の国です。なお、お隣の「ブラジル」では鉄鉱石（カラジャス鉄山など）の生産・日本への輸出が非常に盛んであり、チリ＝銅、ブラジル＝鉄鉱石という区別は超重要です。" },
+    { correct: 0, rationale: "熱帯雨林（森林）の破壊・減少が正解です。ブラジル政府は国内の経済発展や貧困対策のため、アマゾン横断道路の敷設、カラジャス鉄山などの鉱山開発、大規模な牛の牧場や大豆畑（農地）の開拓を進めました。しかし、これが二酸化炭素を吸収する熱帯雨林を激減させ、地球温暖化の原因として国際的な問題になっています。" },
+    { correct: 1, rationale: "モノカルチャー経済が正解です。限られた特定の一次産品（農産物や鉱産資源）の輸出だけに依存する経済構造のことです。チリの銅、ボリビアのスズ、ベネズエラの原油、コロンビアのコーヒーなどが代表例です。価格の変動に弱いため、近年は工業化を進めてこの仕組みから抜け出そうとしています。" }
+];
+
+let userAnswers = new Array(quizMetaData.length).fill(null);
+
+function selectOption(qIdx, oIdx) {
+    if (document.getElementById('score-section').style.display === 'block') return;
+
+    for (let i = 0; i < 4; i++) {
+        const btn = document.getElementById(`btn-${qIdx}-${i}`);
+        if (i === oIdx) {
+            btn.style.borderColor = 'var(--primary-color)';
+            btn.style.backgroundColor = '#fdf2e9';
+            btn.style.fontWeight = 'bold';
+        } else {
+            btn.style.borderColor = '#e9ecef';
+            btn.style.backgroundColor = '#f8f9fa';
+            btn.style.fontWeight = 'normal';
+        }
+    }
+    userAnswers[qIdx] = oIdx;
+}
+
+function toggleHint(qIdx) {
+    const hintDiv = document.getElementById(`hint-${qIdx}`);
+    hintDiv.style.display = hintDiv.style.display === 'block' ? 'none' : 'block';
+}
+
+function calculateScore() {
+    const unanswered = userAnswers.map((ans, idx) => ans === null ? idx + 1 : null).filter(v => v !== null);
+    if (unanswered.length > 0) {
+        alert(`未回答の問題があります。第 ${unanswered.join(', ')} 問に答えてください。`);
+        return;
+    }
+
+    let score = 0;
+
+    quizMetaData.forEach((q, qIdx) => {
+        const userAns = userAnswers[qIdx];
+        const resultBox = document.getElementById(`result-${qIdx}`);
+        
+        for (let i = 0; i < 4; i++) {
+            document.getElementById(`btn-${qIdx}-${i}`).disabled = true;
+        }
+
+        const selectedBtn = document.getElementById(`btn-${qIdx}-${userAns}`);
+        const correctBtn = document.getElementById(`btn-${qIdx}-${q.correct}`);
+
+        if (userAns === q.correct) {
+            score++;
+            selectedBtn.className = 'option-btn correct';
+            resultBox.className = 'result-box show correct-box';
+            resultBox.innerHTML = `<div class="result-title">🐆 正解！</div><div>${q.rationale}</div>`;
+        } else {
+            selectedBtn.className = 'option-btn incorrect';
+            correctBtn.className = 'option-btn correct';
+            resultBox.className = 'result-box show incorrect-box';
+            resultBox.innerHTML = `<div class="result-title">⚠️ 不正解...（正解は ${String.fromCharCode(65 + q.correct)}）</div><div>${q.rationale}</div>`;
+        }
+    });
+
+    document.getElementById('submit-btn').style.display = 'none';
+    const scoreSection = document.getElementById('score-section');
+    scoreSection.style.display = 'block';
+    document.getElementById('score-display').innerText = `${score} / ${quizMetaData.length}`;
+
+    let comment = '';
+    if (score === 10) comment = 'パーフェクト！南アメリカ州の地理は完全にマスターしましたね！アマゾンやアンデスの自然から、言語・宗教の植民地時代の歴史、バイオエタノールやモノカルチャー経済の課題まで完璧な理解度です！';
+    else if (score >= 7) comment = '素晴らしい高得点！テストによく出る「パンパ」「メスチソ」「モノカルチャー経済」といった重要キーワードがバッチリ頭に入っています。ブラジルのポルトガル語の引っ掛けも完璧ですね！';
+    else if (score >= 4) comment = '合格点です！南米を覚えるコツは、ブラジル（ポルトガル語・鉄鉱石・サトウキビ）とチリ（スペイン語・銅）のように、国ごとの特徴を対比させて整理することです。解説を読んで復習してみましょう。';
+    else comment = 'まずは南米の白地図を見ながら、アンデス山脈、アマゾン川、パンパの位置を確かめてみよう。そこから「ブラジル＝ポルトガル語」「その他の国＝スペイン語」という基本を覚えるだけで点数が一気に上がるよ！';
+    
+    document.getElementById('score-comment').innerText = comment;
+    scoreSection.scrollIntoView({ behavior: 'smooth' });
+}
+
+function restartQuiz() {
+    userAnswers = new Array(quizMetaData.length).fill(null);
+    document.getElementById('submit-btn').style.display = 'block';
+    document.getElementById('score-section').style.display = 'none';
+    
+    quizMetaData.forEach((q, qIdx) => {
+        const resultBox = document.getElementById(`result-${qIdx}`);
+        resultBox.className = 'result-box';
+        resultBox.innerHTML = '';
+        
+        for (let i = 0; i < 4; i++) {
+            const btn = document.getElementById(`btn-${qIdx}-${i}`);
+            btn.disabled = false;
+            btn.className = 'option-btn';
+            btn.style = '';
+        }
+        document.getElementById(`hint-${qIdx}`).style.display = 'none';
+    });
+
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+}
+</script>
+
+</body>
+</html>
