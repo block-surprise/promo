@@ -1,0 +1,554 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>中1地理：ヨーロッパ州 クイズ</title>
+    <style>
+        :root {
+            --primary-color: #16a085;
+            --accent-color: #1abc9c;
+            --success-color: #27ae60;
+            --error-color: #c0392b;
+            --bg-color: #e8f8f5;
+            --card-bg: #ffffff;
+            --text-color: #2c3e50;
+        }
+
+        body {
+            font-family: 'Helvetica Neue', Arial, 'Hiragino Kaku Gothic ProN', 'Hiragino Sans', Meiryo, sans-serif;
+            background-color: var(--bg-color);
+            color: var(--text-color);
+            margin: 0;
+            padding: 20px;
+            line-height: 1.6;
+        }
+
+        .container {
+            max-width: 800px;
+            margin: 0 auto;
+        }
+
+        header {
+            text-align: center;
+            margin-bottom: 30px;
+            padding: 20px;
+            background: linear-gradient(135deg, #16a085, #117a65);
+            color: white;
+            border-radius: 10px;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+        }
+
+        header h1 {
+            margin: 0 0 10px 0;
+            font-size: 24px;
+        }
+
+        header p {
+            margin: 0;
+            font-size: 14px;
+            opacity: 0.9;
+        }
+
+        .quiz-card {
+            background-color: var(--card-bg);
+            border-radius: 10px;
+            padding: 25px;
+            margin-bottom: 25px;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.05);
+        }
+
+        .question-num {
+            font-weight: bold;
+            color: var(--primary-color);
+            font-size: 14px;
+            text-transform: uppercase;
+            margin-bottom: 5px;
+            display: block;
+        }
+
+        .question-text {
+            font-size: 18px;
+            font-weight: bold;
+            margin-top: 0;
+            margin-bottom: 20px;
+        }
+
+        .options-list {
+            list-style: none;
+            padding: 0;
+            margin: 0 0 15px 0;
+        }
+
+        .option-item {
+            margin-bottom: 10px;
+        }
+
+        .option-btn {
+            width: 100%;
+            text-align: left;
+            padding: 12px 15px;
+            background-color: #f8f9fa;
+            border: 2px solid #e9ecef;
+            border-radius: 6px;
+            cursor: pointer;
+            font-size: 15px;
+            transition: all 0.2s ease;
+        }
+
+        .option-btn:hover:not(:disabled) {
+            background-color: #e9ecef;
+            border-color: #ced4da;
+        }
+
+        .option-btn:disabled {
+            cursor: not-allowed;
+            color: #6c757d;
+        }
+
+        .option-btn.correct {
+            background-color: #d4edda;
+            border-color: var(--success-color);
+            color: #155724;
+            font-weight: bold;
+        }
+
+        .option-btn.incorrect {
+            background-color: #f8d7da;
+            border-color: var(--error-color);
+            color: #721c24;
+        }
+
+        .hint-block {
+            margin-bottom: 15px;
+        }
+
+        .hint-btn {
+            background: none;
+            border: none;
+            color: #7f8c8d;
+            cursor: pointer;
+            font-size: 13px;
+            text-decoration: underline;
+            padding: 0;
+        }
+
+        .hint-text {
+            display: none;
+            background-color: #fff3cd;
+            color: #856404;
+            padding: 10px;
+            border-radius: 5px;
+            font-size: 13px;
+            margin-top: 5px;
+            border-left: 4px solid #ffc107;
+        }
+
+        .result-box {
+            display: none;
+            margin-top: 15px;
+            padding: 15px;
+            border-radius: 6px;
+            font-size: 14px;
+        }
+
+        .result-box.show {
+            display: block;
+        }
+
+        .result-box.correct-box {
+            background-color: #e2f0d9;
+            color: #2c5217;
+            border: 1px solid #c5e1b2;
+        }
+
+        .result-box.incorrect-box {
+            background-color: #fbe5e5;
+            color: #631c1c;
+            border: 1px solid #f3c2c2;
+        }
+
+        .result-title {
+            font-weight: bold;
+            margin-bottom: 5px;
+            font-size: 15px;
+        }
+
+        .score-section {
+            text-align: center;
+            background-color: var(--primary-color);
+            color: white;
+            padding: 30px;
+            border-radius: 10px;
+            margin-top: 30px;
+            display: none;
+        }
+
+        .score-num {
+            font-size: 48px;
+            font-weight: bold;
+            color: #f1c40f;
+            margin: 10px 0;
+        }
+
+        .restart-btn {
+            background-color: #2e4053;
+            color: white;
+            border: none;
+            padding: 12px 25px;
+            font-size: 16px;
+            border-radius: 5px;
+            cursor: pointer;
+            font-weight: bold;
+            margin-top: 15px;
+        }
+
+        .submit-all-btn {
+            display: block;
+            width: 100%;
+            background-color: var(--primary-color);
+            color: white;
+            border: none;
+            padding: 15px;
+            font-size: 18px;
+            font-weight: bold;
+            border-radius: 8px;
+            cursor: pointer;
+            margin-top: 20px;
+        }
+
+        .submit-all-btn:hover {
+            background-color: #117a65;
+        }
+
+        .ad-container {
+            text-align: center;
+            margin: 20px 0 35px 0;
+            min-height: 90px;
+        }
+    </style>
+</head>
+<body>
+
+<div class="container">
+    <header>
+        <h1>中1地理：ヨーロッパ州 クイズ</h1>
+        <p>ヨーロッパの自然環境、気候のヒミツ、特色ある農業、そしてEU（欧州連合）の歩みと課題をチェックしよう！</p>
+    </header>
+
+    <div id="quiz-container">
+        <!-- 第1問 -->
+        <div class="quiz-card" id="card-0">
+            <span class="question-num">第 1 問</span>
+            <p class="question-text">ヨーロッパの北部に位置するスカンディナビア半島などで見られる、かつて氷河によって削られてできた複雑に入り組んだ湾（入江）を何といいますか？</p>
+            <div class="hint-block">
+                <button class="hint-btn" onclick="toggleHint(0)">💡 ヒントを表示</button>
+                <div class="hint-text" id="hint-0">カタカナ4文字の言葉です。ノルウェーの沿岸部に多く、波が穏やかなため天然の良港や観光地として利用されています。</div>
+            </div>
+            <ul class="options-list">
+                <li class="option-item"><button class="option-btn" id="btn-0-0" onclick="selectOption(0, 0)">A: カルスト地形</button></li>
+                <li class="option-item"><button class="option-btn" id="btn-0-1" onclick="selectOption(0, 1)">B: フィヨルド</button></li>
+                <li class="option-item"><button class="option-btn" id="btn-0-2" onclick="selectOption(0, 2)">C: リアス海岸</button></li>
+                <li class="option-item"><button class="option-btn" id="btn-0-3" onclick="selectOption(0, 3)">D: デルタ（三角州）</button></li>
+            </ul>
+            <div class="result-box" id="result-0"></div>
+        </div>
+
+        <!-- 第2問 -->
+        <div class="quiz-card" id="card-1">
+            <span class="question-num">第 2 問</span>
+            <p class="question-text">ヨーロッパの西部（イギリスなど）は高緯度（日本より北）にあるにもかかわらず、冬でも比較的温暖です。その理由となる「暖流」と「西寄りの恒常風」の正しい組み合わせはどれでしょう？</p>
+            <div class="hint-block">
+                <button class="hint-btn" onclick="toggleHint(1)">💡 ヒントを表示</button>
+                <div class="hint-text" id="hint-1">暖流は「大西洋」を北上してくる流れです。風は一年中西から吹いて、海からの温かい空気を陸地に運びます。</div>
+            </div>
+            <ul class="options-list">
+                <li class="option-item"><button class="option-btn" id="btn-1-0" onclick="selectOption(1, 0)">A: 黒潮（日本海流） ＋ 季節風</button></li>
+                <li class="option-item"><button class="option-btn" id="btn-1-1" onclick="selectOption(1, 1)">B: メキシコ湾流 ＋ 貿易風</button></li>
+                <li class="option-item"><button class="option-btn" id="btn-1-2" onclick="selectOption(1, 2)">C: 北大西洋海流 ＋ 偏西風（へんせいふう）</button></li>
+                <li class="option-item"><button class="option-btn" id="btn-1-3" onclick="selectOption(1, 3)">D: カリフォルニア海流 ＋ 季節風</button></li>
+            </ul>
+            <div class="result-box" id="result-1"></div>
+        </div>
+
+        <!-- 第3問 -->
+        <div class="quiz-card" id="card-2">
+            <span class="question-num">第 3 問</span>
+            <p class="question-text">ヨーロッパの「農業の地域差」について、フランスやドイツなどの平野部で盛んな、主食用の小麦などの栽培と、家畜（豚や牛）の飼育を組み合わせた農業を何といいますか？</p>
+            <div class="hint-block">
+                <button class="hint-btn" onclick="toggleHint(2)">💡 ヒントを表示</button>
+                <div class="hint-text" id="hint-2">「栽培」と「飼育」を“混ぜて（混合して）”行うため、この名前がついています。</div>
+            </div>
+            <ul class="options-list">
+                <li class="option-item"><button class="option-btn" id="btn-2-0" onclick="selectOption(2, 0)">A: 酪農（らくのう）</button></li>
+                <li class="option-item"><button class="option-btn" id="btn-2-1" onclick="selectOption(2, 1)">B: 地中海式（ちちゅうかいしき）農業</button></li>
+                <li class="option-item"><button class="option-btn" id="btn-2-2" onclick="selectOption(2, 2)">C: 混合（こんごう）農業</button></li>
+                <li class="option-item"><button class="option-btn" id="btn-2-3" onclick="selectOption(2, 3)">D: プランテーション農業</button></li>
+            </ul>
+            <div class="result-box" id="result-2"></div>
+        </div>
+
+        <!-- 【指定位置①】第3問の後の広告 -->
+        <div class="ad-container">
+            <!-- admax -->
+            <script src="https://adm.shinobi.jp/s/8883b8c96c219279b7215cf3521e8aed"></script>
+            <!-- admax -->
+        </div>
+
+        <!-- 第4問 -->
+        <div class="quiz-card" id="card-3">
+            <span class="question-num">第 4 問</span>
+            <p class="question-text">イタリアやギリシャなどの地中海沿岸地方で盛んな、夏に乾燥する気候を利用してオリーブやぶどう、オレンジなどを栽培し、冬に小麦を栽培する農業を何といいますか？</p>
+            <div class="hint-block">
+                <button class="hint-btn" onclick="toggleHint(3)">💡 ヒントを表示</button>
+                <div class="hint-text" id="hint-3">地中海性気候（夏の乾燥、冬の雨）にぴったり合わせた農業スタイルです。名前にもその地域の名前が入ります。</div>
+            </div>
+            <ul class="options-list">
+                <li class="option-item"><button class="option-btn" id="btn-3-0" onclick="selectOption(3, 0)">A: 地中海式（ちちゅうかいしき）農業</button></li>
+                <li class="option-item"><button class="option-btn" id="btn-3-1" onclick="selectOption(3, 1)">B: 酪農（らくのう）</button></li>
+                <li class="option-item"><button class="option-btn" id="btn-3-2" onclick="selectOption(3, 2)">C: 混合農業</button></li>
+                <li class="option-item"><button class="option-btn" id="btn-3-3" onclick="selectOption(3, 3)">D: 園芸（えんげい）農業</button></li>
+            </ul>
+            <div class="result-box" id="result-3"></div>
+        </div>
+
+        <!-- 第5問 -->
+        <div class="quiz-card" id="card-4">
+            <span class="question-num">第 5 問</span>
+            <p class="question-text">オランダやデンマーク、アルプス山脈の周辺など、作物の栽培に適さない寒冷な地域や山地で盛んな、乳牛を飼育して牛乳やバター、チーズなどを生産する農業は何でしょう？</p>
+            <div class="hint-block">
+                <button class="hint-btn" onclick="toggleHint(4)">💡 ヒントを表示</button>
+                <div class="hint-text" id="hint-4">漢字2文字です。加工されたチーズやバターは、長期保存ができるためヨーロッパ全域に輸出されます。</div>
+            </div>
+            <ul class="options-list">
+                <li class="option-item"><button class="option-btn" id="btn-4-0" onclick="selectOption(4, 0)">A: 放牧（ほうぼく）</button></li>
+                <li class="option-item"><button class="option-btn" id="btn-4-1" onclick="selectOption(4, 1)">B: 酪農（らくのう）</button></li>
+                <li class="option-item"><button class="option-btn" id="btn-4-2" onclick="selectOption(4, 2)">C: 混合農業</button></li>
+                <li class="option-item"><button class="option-btn" id="btn-4-3" onclick="selectOption(4, 3)">D: 商業的穀物農業</button></li>
+            </ul>
+            <div class="result-box" id="result-4"></div>
+        </div>
+
+        <!-- 第6問 -->
+        <div class="quiz-card" id="card-5">
+            <span class="question-num">第 6 問</span>
+            <p class="question-text">1993年にマーストリヒト条約によって結成された、経済や政治の統合を目指すヨーロッパの組織（欧州連合）の略称はどれでしょう？</p>
+            <div class="hint-block">
+                <button class="hint-btn" onclick="toggleHint(5)">💡 ヒントを表示</button>
+                <div class="hint-text" id="hint-5">アルファベット2文字の組織です。本部はベルギーのブリュッセルにあります。</div>
+            </div>
+            <ul class="options-list">
+                <li class="option-item"><button class="option-btn" id="btn-5-0" onclick="selectOption(5, 0)">A: ASEAN</button></li>
+                <li class="option-item"><button class="option-btn" id="btn-5-1" onclick="selectOption(5, 1)">B: UN</button></li>
+                <li class="option-item"><button class="option-btn" id="btn-5-2" onclick="selectOption(5, 2)">C: EU（イーユー）</button></li>
+                <li class="option-item"><button class="option-btn" id="btn-5-3" onclick="selectOption(5, 3)">D: OPEC</button></li>
+            </ul>
+            <div class="result-box" id="result-5"></div>
+        </div>
+
+        <!-- 【指定位置②】第6問の後の広告 -->
+        <div class="ad-container">
+            <!-- admax -->
+            <script src="https://adm.shinobi.jp/s/8883b8c96c219279b7215cf3521e8aed"></script>
+            <!-- admax -->
+        </div>
+
+        <!-- 第7問 -->
+        <div class="quiz-card" id="card-6">
+            <span class="question-num">第 7 問</span>
+            <p class="question-text">EUの多くの加盟国で導入されている、共通の通貨の名前は何でしょう？</p>
+            <div class="hint-block">
+                <button class="hint-btn" onclick="toggleHint(6)">💡 ヒントを表示</button>
+                <div class="hint-text" id="hint-6">カタカナ3文字です。この通貨の導入により、国をまたぐ旅行や買い物の際の両替の手間がなくなりました。国によっては導入していない国（スウェーデンなど）もあります。</div>
+            </div>
+            <ul class="options-list">
+                <li class="option-item"><button class="option-btn" id="btn-6-0" onclick="selectOption(6, 0)">A: ドル</button></li>
+                <li class="option-item"><button class="option-btn" id="btn-6-1" onclick="selectOption(6, 1)">B: ポンド</button></li>
+                <li class="option-item"><button class="option-btn" id="btn-6-2" onclick="selectOption(6, 2)">C: ユーロ</button></li>
+                <li class="option-item"><button class="option-btn" id="btn-6-3" onclick="selectOption(6, 3)">D: フラン</button></li>
+            </ul>
+            <div class="result-box" id="result-6"></div>
+        </div>
+
+        <!-- 第8問 -->
+        <div class="quiz-card" id="card-7">
+            <span class="question-num">第 8 問</span>
+            <p class="question-text">ヨーロッパ諸国の中で、2020年にEUを完全に離脱（脱退）した、ロンドンを首都とする国はどこでしょう？</p>
+            <div class="hint-block">
+                <button class="hint-btn" onclick="toggleHint(7)">💡 ヒントを表示</button>
+                <div class="hint-text" id="hint-7">島国であり、独自の通貨「ポンド」を使い続けていた国です。離脱のニュースは世界中で大きな話題になりました。</div>
+            </div>
+            <ul class="options-list">
+                <li class="option-item"><button class="option-btn" id="btn-7-0" onclick="selectOption(7, 0)">A: フランス</button></li>
+                <li class="option-item"><button class="option-btn" id="btn-7-1" onclick="selectOption(7, 1)">B: イギリス</button></li>
+                <li class="option-item"><button class="option-btn" id="btn-7-2" onclick="selectOption(7, 2)">C: ドイツ</button></li>
+                <li class="option-item"><button class="option-btn" id="btn-7-3" onclick="selectOption(7, 3)">D: イタリア</button></li>
+            </ul>
+            <div class="result-box" id="result-7"></div>
+        </div>
+
+        <!-- 第9問 -->
+        <div class="quiz-card" id="card-8">
+            <span class="question-num">第 9 問</span>
+            <p class="question-text">ヨーロッパの「宗教の分布」について、イタリアやスペインなど「南ヨーロッパ」で特に信仰が厚い、キリスト教の宗派はどれでしょう？</p>
+            <div class="hint-block">
+                <button class="hint-btn" onclick="toggleHint(8)">💡 ヒントを表示</button>
+                <div class="hint-text" id="hint-8">バチカン市国のローマ教皇を中心とする伝統的な宗派です。ちなみに、北ヨーロッパは「プロテスタント」、東ヨーロッパは「正教（東方正教）」が盛んです。</div>
+            </div>
+            <ul class="options-list">
+                <li class="option-item"><button class="option-btn" id="btn-8-0" onclick="selectOption(8, 0)">A: カトリック</button></li>
+                <li class="option-item"><button class="option-btn" id="btn-8-1" onclick="selectOption(8, 1)">B: プロテスタント</button></li>
+                <li class="option-item"><button class="option-btn" id="btn-8-2" onclick="selectOption(8, 2)">C: イスラム教</button></li>
+                <li class="option-item"><button class="option-btn" id="btn-8-3" onclick="selectOption(8, 3)">D: 仏教</button></li>
+            </ul>
+            <div class="result-box" id="result-8"></div>
+        </div>
+
+        <!-- 【指定位置③】第9問の後の広告 -->
+        <div class="ad-container">
+            <!-- admax -->
+            <script src="https://adm.shinobi.jp/s/8883b8c96c219279b7215cf3521e8aed"></script>
+            <!-- admax -->
+        </div>
+
+        <!-- 第10問 -->
+        <div class="quiz-card" id="card-9">
+            <span class="question-num">第 10 問</span>
+            <p class="question-text">ヨーロッパ州で現在問題となっている、域内の「経済格差」について正しい説明をしているのはどれでしょう？</p>
+            <div class="hint-block">
+                <button class="hint-btn" onclick="toggleHint(9)">💡 ヒントを表示</button>
+                <div class="hint-text" id="hint-9">歴史的に早くから工業が発展した国々と、あとからEUに加盟した国々の位置関係を思い出してみましょう。</div>
+            </div>
+            <ul class="options-list">
+                <li class="option-item"><button class="option-btn" id="btn-9-0" onclick="selectOption(9, 0)">A: 北部・東部の国々の方が、西部・南部の国々よりも経済的に豊かである。</button></li>
+                <li class="option-item"><button class="option-btn" id="btn-9-1" onclick="selectOption(9, 1)">B: 西部・北部の国々の方が、東部の国々よりも経済的に豊かである。</button></li>
+                <li class="option-item"><button class="option-btn" id="btn-9-2" onclick="selectOption(9, 2)">C: ヨーロッパ州のすべての国は、経済水準が完全に均等である。</button></li>
+                <li class="option-item"><button class="option-btn" id="btn-9-3" onclick="selectOption(9, 3)">D: 南部の国々だけが圧倒的に豊かで、他の地域はすべて貧しい。</button></li>
+            </ul>
+            <div class="result-box" id="result-9"></div>
+        </div>
+    </div>
+
+    <button id="submit-btn" class="submit-all-btn" onclick="calculateScore()">採点する</button>
+
+    <div id="score-section" class="score-section">
+        <h2>結果発表</h2>
+        <p>あなたの正解数は...</p>
+        <div class="score-num" id="score-display">0 / 10</div>
+        <p id="score-comment"></p>
+        <button class="restart-btn" onclick="restartQuiz()">もう一度挑戦する</button>
+    </div>
+</div>
+
+<script>
+const quizMetaData = [
+    { correct: 1, rationale: "フィヨルドが正解です。氷河の侵食（削る働き）によってできたU字谷（Uじこく）に、海水が深く入り込んでできた複雑な湾です。非常に深く、かつ波が静かなため、船の通り道や天然の良港として活用されています。" },
+    { correct: 2, rationale: "北大西洋海流 ＋ 偏西風が正解です。温かい海水を運ぶ暖流（北大西洋海流）の上を通る温風を、一年中西から吹く「偏西風」がヨーロッパ大陸へと運びます。このため、ヨーロッパ西部は高緯度でも比較的温かい「西岸海洋性気候」になります。" },
+    { correct: 2, rationale: "混合（こんごう）農業が正解です。ヨーロッパの代表的な農業形態で、小麦やライ麦などの「穀物栽培」と、家畜のえさ（カブや牧草）の栽培、そして豚・牛などの「家畜の飼育」を効率よく組み合わせた仕組みです。" },
+    { correct: 0, rationale: "地中海式（ちちゅうかいしき）農業が正解です。地中海沿岸は「地中海性気候」に属し、夏に雨がほとんど降らず乾燥します。そのため、夏の乾燥に強いオリーブ、ぶどう（ワイン用）、コルクガシや、オレンジなどの柑橘類を栽培し、冬の雨を利用して主食の小麦を栽培します。" },
+    { correct: 1, rationale: "酪農（らくのう）が正解です。牧草地を広げて乳牛を飼育し、生乳だけでなく、チーズやバターなどの乳製品を加工・生産する農業です。オランダのポルダー（干拓地）や、寒冷で穀物栽培に向かない北海沿岸・山地などで盛んです。" },
+    { correct: 2, rationale: "EU（欧州連合）が正解です。1993年に、前身のEC（欧州共同体）から発展する形で発足しました。加盟国間での「人・もの・お金・サービス」の移動の自由を掲げ、国境の検査なしで行き来できる仕組み（シェンゲン協定）などが特徴です。" },
+    { correct: 2, rationale: "ユーロが正解です。EUの共通通貨であり、これにより加盟国間での貿易や観光が非常にスムーズになりました。ただし、EU加盟国すべてが導入しているわけではなく、イギリス（離脱前）やスウェーデン、デンマークなどは独自の通貨を使用しています。" },
+    { correct: 1, rationale: "イギリスが正解です。イギリスは2016年の国民投票による決定を経て、2020年1月31日にEUを正式に離脱しました。これにより、関税や移民の受け入れ制限など、新たな国境の壁が復活することになりました。" },
+    { correct: 0, rationale: "カトリックが正解です。ヨーロッパの文化はキリスト教と深く結びついており、地域（民族）ごとに宗派が分かれています。【ラテン民族の多い南部＝カトリック】【ゲルマン民族の多い北部＝プロテスタント】【スラブ民族の多い東部＝正教】という分布は、テストの超頻出ポイントです。" },
+    { correct: 1, rationale: "B が正解です。早くから産業革命を起こし、EUを引っ張ってきたドイツやフランスなどの「西部・北部」に比べ、2000年代以降に新しく加盟した東ヨーロッパ（旧社会主義国など）の「東部」は経済水準が低く、西側への出稼ぎによる人口流出や、域内の経済格差がEUの大きな課題となっています。" }
+];
+
+let userAnswers = new Array(quizMetaData.length).fill(null);
+
+function selectOption(qIdx, oIdx) {
+    if (document.getElementById('score-section').style.display === 'block') return;
+
+    for (let i = 0; i < 4; i++) {
+        const btn = document.getElementById(`btn-${qIdx}-${i}`);
+        if (i === oIdx) {
+            btn.style.borderColor = 'var(--primary-color)';
+            btn.style.backgroundColor = '#e8f8f5';
+            btn.style.fontWeight = 'bold';
+        } else {
+            btn.style.borderColor = '#e9ecef';
+            btn.style.backgroundColor = '#f8f9fa';
+            btn.style.fontWeight = 'normal';
+        }
+    }
+    userAnswers[qIdx] = oIdx;
+}
+
+function toggleHint(qIdx) {
+    const hintDiv = document.getElementById(`hint-${qIdx}`);
+    hintDiv.style.display = hintDiv.style.display === 'block' ? 'none' : 'block';
+}
+
+function calculateScore() {
+    const unanswered = userAnswers.map((ans, idx) => ans === null ? idx + 1 : null).filter(v => v !== null);
+    if (unanswered.length > 0) {
+        alert(`未回答の問題があります。第 ${unanswered.join(', ')} 問に答えてください。`);
+        return;
+    }
+
+    let score = 0;
+
+    quizMetaData.forEach((q, qIdx) => {
+        const userAns = userAnswers[qIdx];
+        const resultBox = document.getElementById(`result-${qIdx}`);
+        
+        for (let i = 0; i < 4; i++) {
+            document.getElementById(`btn-${qIdx}-${i}`).disabled = true;
+        }
+
+        const selectedBtn = document.getElementById(`btn-${qIdx}-${userAns}`);
+        const correctBtn = document.getElementById(`btn-${qIdx}-${q.correct}`);
+
+        if (userAns === q.correct) {
+            score++;
+            selectedBtn.className = 'option-btn correct';
+            resultBox.className = 'result-box show correct-box';
+            resultBox.innerHTML = `<div class="result-title">🏰 正解！</div><div>${q.rationale}</div>`;
+        } else {
+            selectedBtn.className = 'option-btn incorrect';
+            correctBtn.className = 'option-btn correct';
+            resultBox.className = 'result-box show incorrect-box';
+            resultBox.innerHTML = `<div class="result-title">⚠️ 不正解...（正解は ${String.fromCharCode(65 + q.correct)}）</div><div>${q.rationale}</div>`;
+        }
+    });
+
+    document.getElementById('submit-btn').style.display = 'none';
+    const scoreSection = document.getElementById('score-section');
+    scoreSection.style.display = 'block';
+    document.getElementById('score-display').innerText = `${score} / ${quizMetaData.length}`;
+
+    let comment = '';
+    if (score === 10) comment = '完璧です！ヨーロッパ州の地理はマスターしましたね！気候のヒミツから3大農業の地域差、EUの特徴と課題、言語・宗教の分布までパーフェクトな理解度です！';
+    else if (score >= 7) comment = '高得点です！混合農業・地中海式農業・酪農の違いや、北大西洋海流と偏西風の関係など、記述問題でも狙われやすい重要キーワードがバッチリ頭に入っています！';
+    else if (score >= 4) comment = '合格点です！ヨーロッパは「北・西・南・東」の地域ごとに【気候・農業・宗教・言語】がすべてセットで結びついています。解説を読んで、タテのつながりを意識して復習してみましょう。';
+    else comment = 'まずはヨーロッパの白地図を用意して、アルプス山脈、ライン川、国際河川、そして「混合農業・地中海式農業・酪農」のエリアを色分けして整理してみるのがおすすめ。基礎を固めてリトライだ！';
+    
+    document.getElementById('score-comment').innerText = comment;
+    scoreSection.scrollIntoView({ behavior: 'smooth' });
+}
+
+function restartQuiz() {
+    userAnswers = new Array(quizMetaData.length).fill(null);
+    document.getElementById('submit-btn').style.display = 'block';
+    document.getElementById('score-section').style.display = 'none';
+    
+    quizMetaData.forEach((q, qIdx) => {
+        const resultBox = document.getElementById(`result-${qIdx}`);
+        resultBox.className = 'result-box';
+        resultBox.innerHTML = '';
+        
+        for (let i = 0; i < 4; i++) {
+            const btn = document.getElementById(`btn-${qIdx}-${i}`);
+            btn.disabled = false;
+            btn.className = 'option-btn';
+            btn.style = '';
+        }
+        document.getElementById(`hint-${qIdx}`).style.display = 'none';
+    });
+
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+}
+</script>
+
+</body>
+</html>
