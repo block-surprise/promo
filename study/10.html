@@ -1,0 +1,535 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>中1地理：アジア州 クイズ</title>
+    <style>
+        :root {
+            --primary-color: #2980b9;
+            --accent-color: #3498db;
+            --success-color: #27ae60;
+            --error-color: #c0392b;
+            --bg-color: #ebf5fb;
+            --card-bg: #ffffff;
+            --text-color: #2c3e50;
+        }
+
+        body {
+            font-family: 'Helvetica Neue', Arial, 'Hiragino Kaku Gothic ProN', 'Hiragino Sans', Meiryo, sans-serif;
+            background-color: var(--bg-color);
+            color: var(--text-color);
+            margin: 0;
+            padding: 20px;
+            line-height: 1.6;
+        }
+
+        .container {
+            max-width: 800px;
+            margin: 0 auto;
+        }
+
+        header {
+            text-align: center;
+            margin-bottom: 30px;
+            padding: 20px;
+            background: linear-gradient(135deg, #3498db, #1f618d);
+            color: white;
+            border-radius: 10px;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+        }
+
+        header h1 {
+            margin: 0 0 10px 0;
+            font-size: 24px;
+        }
+
+        header p {
+            margin: 0;
+            font-size: 14px;
+            opacity: 0.9;
+        }
+
+        .quiz-card {
+            background-color: var(--card-bg);
+            border-radius: 10px;
+            padding: 25px;
+            margin-bottom: 25px;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.05);
+        }
+
+        .question-num {
+            font-weight: bold;
+            color: var(--primary-color);
+            font-size: 14px;
+            text-transform: uppercase;
+            margin-bottom: 5px;
+            display: block;
+        }
+
+        .question-text {
+            font-size: 18px;
+            font-weight: bold;
+            margin-top: 0;
+            margin-bottom: 20px;
+        }
+
+        .options-list {
+            list-style: none;
+            padding: 0;
+            margin: 0 0 15px 0;
+        }
+
+        .option-item {
+            margin-bottom: 10px;
+        }
+
+        .option-btn {
+            width: 100%;
+            text-align: left;
+            padding: 12px 15px;
+            background-color: #f8f9fa;
+            border: 2px solid #e9ecef;
+            border-radius: 6px;
+            cursor: pointer;
+            font-size: 15px;
+            transition: all 0.2s ease;
+        }
+
+        .option-btn:hover:not(:disabled) {
+            background-color: #e9ecef;
+            border-color: #ced4da;
+        }
+
+        .option-btn:disabled {
+            cursor: not-allowed;
+            color: #6c757d;
+        }
+
+        .option-btn.correct {
+            background-color: #d4edda;
+            border-color: var(--success-color);
+            color: #155724;
+            font-weight: bold;
+        }
+
+        .option-btn.incorrect {
+            background-color: #f8d7da;
+            border-color: var(--error-color);
+            color: #721c24;
+        }
+
+        .hint-block {
+            margin-bottom: 15px;
+        }
+
+        .hint-btn {
+            background: none;
+            border: none;
+            color: #7f8c8d;
+            cursor: pointer;
+            font-size: 13px;
+            text-decoration: underline;
+            padding: 0;
+        }
+
+        .hint-text {
+            display: none;
+            background-color: #fff3cd;
+            color: #856404;
+            padding: 10px;
+            border-radius: 5px;
+            font-size: 13px;
+            margin-top: 5px;
+            border-left: 4px solid #ffc107;
+        }
+
+        .result-box {
+            display: none;
+            margin-top: 15px;
+            padding: 15px;
+            border-radius: 6px;
+            font-size: 14px;
+        }
+
+        .result-box.show {
+            display: block;
+        }
+
+        .result-box.correct-box {
+            background-color: #e2f0d9;
+            color: #2c5217;
+            border: 1px solid #c5e1b2;
+        }
+
+        .result-box.incorrect-box {
+            background-color: #fbe5e5;
+            color: #631c1c;
+            border: 1px solid #f3c2c2;
+        }
+
+        .result-title {
+            font-weight: bold;
+            margin-bottom: 5px;
+            font-size: 15px;
+        }
+
+        .score-section {
+            text-align: center;
+            background-color: var(--primary-color);
+            color: white;
+            padding: 30px;
+            border-radius: 10px;
+            margin-top: 30px;
+            display: none;
+        }
+
+        .score-num {
+            font-size: 48px;
+            font-weight: bold;
+            color: #f1c40f;
+            margin: 10px 0;
+        }
+
+        .restart-btn {
+            background-color: #27ae60;
+            color: white;
+            border: none;
+            padding: 12px 25px;
+            font-size: 16px;
+            border-radius: 5px;
+            cursor: pointer;
+            font-weight: bold;
+            margin-top: 15px;
+        }
+
+        .submit-all-btn {
+            display: block;
+            width: 100%;
+            background-color: var(--primary-color);
+            color: white;
+            border: none;
+            padding: 15px;
+            font-size: 18px;
+            font-weight: bold;
+            border-radius: 8px;
+            cursor: pointer;
+            margin-top: 20px;
+        }
+
+        .submit-all-btn:hover {
+            background-color: #1f618d;
+        }
+
+        .ad-container {
+            text-align: center;
+            margin: 20px 0 35px 0;
+            min-height: 90px;
+        }
+    </style>
+</head>
+<body>
+
+<div class="container">
+    <header>
+        <h1>中1地理：アジア州 クイズ</h1>
+        <p>アジア州の自然環境、農業、工業の特徴から西アジアの文化まで、テストによく出る重要ポイントを確認しよう！</p>
+    </header>
+
+    <div id="quiz-container">
+        <div class="quiz-card" id="card-0">
+            <span class="question-num">第 1 問</span>
+            <p class="question-text">アジアの気候に大きな影響を与える、夏と冬で風向きが逆になる風を何といいますか？</p>
+            <div class="hint-block">
+                <button class="hint-btn" onclick="toggleHint(0)">💡 ヒントを表示</button>
+                <div class="hint-text" id="hint-0">カタカナで「モンスーン」とも呼ばれます。東アジアや南アジアに夏に大量の雨をもたらし、稲作を盛んにする原因となっています。</div>
+            </div>
+            <ul class="options-list">
+                <li class="option-item"><button class="option-btn" id="btn-0-0" onclick="selectOption(0, 0)">A: 偏西風（へんせいふう）</button></li>
+                <li class="option-item"><button class="option-btn" id="btn-0-1" onclick="selectOption(0, 1)">B: 季節風（きせつふう）</button></li>
+                <li class="option-item"><button class="option-btn" id="btn-0-2" onclick="selectOption(0, 2)">C: 貿易風（ぼうえきふう）</button></li>
+                <li class="option-item"><button class="option-btn" id="btn-0-3" onclick="selectOption(0, 3)">D: 熱帯低気圧</button></li>
+            </ul>
+            <div class="result-box" id="result-0"></div>
+        </div>
+
+        <div class="quiz-card" id="card-1">
+            <span class="question-num">第 2 問</span>
+            <p class="question-text">東南アジアや南アジア（インドなど）の年間降水量の多い地域（平野や沿岸部）で、古くから盛んに行われてきた独自の農業はどれでしょう？</p>
+            <div class="hint-block">
+                <button class="hint-btn" onclick="toggleHint(1)">💡 ヒントを表示</button>
+                <div class="hint-text" id="hint-1">アジアは世界の約9割を生産している一大産地です。夏の季節風による大量の水と、温かい気候が必要な主食作物です。</div>
+            </div>
+            <ul class="options-list">
+                <li class="option-item"><button class="option-btn" id="btn-1-0" onclick="selectOption(1, 0)">A: 大型機械を使った小麦栽培</button></li>
+                <li class="option-item"><button class="option-btn" id="btn-1-1" onclick="selectOption(1, 1)">B: 稲作（いなさく）</button></li>
+                <li class="option-item"><button class="option-btn" id="btn-1-2" onclick="selectOption(1, 2)">C: 企業的な放牧（地中海式農業）</button></li>
+                <li class="option-item"><button class="option-btn" id="btn-1-3" onclick="selectOption(1, 3)">D: オリーブの栽培</button></li>
+            </ul>
+            <div class="result-box" id="result-1"></div>
+        </div>
+
+        <div class="quiz-card" id="card-2">
+            <span class="question-num">第 3 問</span>
+            <p class="question-text">東南アジアなどでかつて欧米の植民地時代に開かれ、天然ゴムや油ヤシ（パーム油）、茶などの商品作物を大規模に栽培する農園を何といいますか？</p>
+            <div class="hint-block">
+                <button class="hint-btn" onclick="toggleHint(2)">💡 ヒントを表示</button>
+                <div class="hint-text" id="hint-2">カタカナで「プ」から始まる言葉です。現在でも東南アジア各国の重要な輸出産業の基盤となっています。</div>
+            </div>
+            <ul class="options-list">
+                <li class="option-item"><button class="option-btn" id="btn-2-0" onclick="selectOption(2, 0)">A: 経済特区（けいざいとっく）</button></li>
+                <li class="option-item"><button class="option-btn" id="btn-2-1" onclick="selectOption(2, 1)">B: タウンシップ</button></li>
+                <li class="option-item"><button class="option-btn" id="btn-2-2" onclick="selectOption(2, 2)">C: プランテーション</button></li>
+                <li class="option-item"><button class="option-btn" id="btn-2-3" onclick="selectOption(2, 3)">D: スラム</button></li>
+            </ul>
+            <div class="result-box" id="result-2"></div>
+        </div>
+
+        <div class="ad-container">
+            <script src="https://adm.shinobi.jp/s/8883b8c96c219279b7215cf3521e8aed"></script>
+            </div>
+
+        <div class="quiz-card" id="card-3">
+            <span class="question-num">第 4 問</span>
+            <p class="question-text">中国が1970年代末からの「改革・開放」政策の一環として、外国の資本や進んだ技術を導入するために沿岸部に設けた地域を何といいますか？</p>
+            <div class="hint-block">
+                <button class="hint-btn" onclick="toggleHint(3)">💡 ヒントを表示</button>
+                <div class="hint-text" id="hint-3">シェンチェン（深圳）やアモイ（厦門）などが代表例です。漢字4文字の言葉です。</div>
+            </div>
+            <ul class="options-list">
+                <li class="option-item"><button class="option-btn" id="btn-3-0" onclick="selectOption(3, 0)">A: 租界（そかい）</button></li>
+                <li class="option-item"><button class="option-btn" id="btn-3-1" onclick="selectOption(3, 1)">B: 経済特区（けいざいとっく）</button></li>
+                <li class="option-item"><button class="option-btn" id="btn-3-2" onclick="selectOption(3, 2)">C: アジアNIEs</button></li>
+                <li class="option-item"><button class="option-btn" id="btn-3-3" onclick="selectOption(3, 3)">D: 特別行政区</button></li>
+            </ul>
+            <div class="result-box" id="result-3"></div>
+        </div>
+
+        <div class="quiz-card" id="card-4">
+            <span class="question-num">第 5 問</span>
+            <p class="question-text">中国の人口の約9割を占める、固有の言語や文化を持つ民族を何といいますか？</p>
+            <div class="hint-block">
+                <button class="hint-btn" onclick="toggleHint(4)">💡 ヒントを表示</button>
+                <div class="hint-text" id="hint-4">中国（中華人民共和国）は55の少数民族と、この「大多数を占める民族」からなる多民族国家です。漢字2文字で表されます。</div>
+            </div>
+            <ul class="options-list">
+                <li class="option-item"><button class="option-btn" id="btn-4-0" onclick="selectOption(4, 0)">A: 漢族（かんぞく）</button></li>
+                <li class="option-item"><button class="option-btn" id="btn-4-1" onclick="selectOption(4, 1)">B: チベット族</button></li>
+                <li class="option-item"><button class="option-btn" id="btn-4-2" onclick="selectOption(4, 2)">C: ウイグル族</button></li>
+                <li class="option-item"><button class="option-btn" id="btn-4-3" onclick="selectOption(4, 3)">D: 朝鮮族</button></li>
+            </ul>
+            <div class="result-box" id="result-4"></div>
+        </div>
+
+        <div class="quiz-card" id="card-5">
+            <span class="question-num">第 6 問</span>
+            <p class="question-text">インドで近年、英語が堪能な優秀な人材や、アメリカとの時差を利用して急速に発展している産業分野は何でしょう？</p>
+            <div class="hint-block">
+                <button class="hint-btn" onclick="toggleHint(5)">💡 ヒントを表示</button>
+                <div class="hint-text" id="hint-5">バンガロールという都市がこの産業の中心地（アジアのシリコンバレー）として有名です。ソフトウェア開発などがこれに含まれます。</div>
+            </div>
+            <ul class="options-list">
+                <li class="option-item"><button class="option-btn" id="btn-5-0" onclick="selectOption(5, 0)">A: 自動車工業</button></li>
+                <li class="option-item"><button class="option-btn" id="btn-5-1" onclick="selectOption(5, 1)">B: 繊維（せんい）工業</button></li>
+                <li class="option-item"><button class="option-btn" id="btn-5-2" onclick="selectOption(5, 2)">C: ICT（情報通信技術）産業</button></li>
+                <li class="option-item"><button class="option-btn" id="btn-5-3" onclick="selectOption(5, 3)">D: 石油化学工業</button></li>
+            </ul>
+            <div class="result-box" id="result-5"></div>
+        </div>
+
+        <div class="ad-container">
+            <script src="https://adm.shinobi.jp/s/8883b8c96c219279b7215cf3521e8aed"></script>
+            </div>
+
+        <div class="quiz-card" id="card-6">
+            <span class="question-num">第 7 問</span>
+            <p class="question-text">東南アジア諸国連合の略称で、域内の経済協力や平和を目的として、現在10カ国が加盟している組織はどれでしょう？</p>
+            <div class="hint-block">
+                <button class="hint-btn" onclick="toggleHint(6)">💡 ヒントを表示</button>
+                <div class="hint-text" id="hint-6">アルファベット5文字の略称です。近年は「世界の成長センター」として経済的な結びつきを強めています。</div>
+            </div>
+            <ul class="options-list">
+                <li class="option-item"><button class="option-btn" id="btn-6-0" onclick="selectOption(6, 0)">A: APEC</button></li>
+                <li class="option-item"><button class="option-btn" id="btn-6-1" onclick="selectOption(6, 1)">B: EU</button></li>
+                <li class="option-item"><button class="option-btn" id="btn-6-2" onclick="selectOption(6, 2)">C: OPEC</button></li>
+                <li class="option-item"><button class="option-btn" id="btn-6-3" onclick="selectOption(6, 3)">D: ASEAN（アセアン）</button></li>
+            </ul>
+            <div class="result-box" id="result-6"></div>
+        </div>
+
+        <div class="quiz-card" id="card-7">
+            <span class="question-num">第 8 問</span>
+            <p class="question-text">西アジア（アラビア半島など）の国々に多くみられる、1日5回の礼拝や、豚肉を食べない、酒を飲まないといった戒律がある宗教は何でしょう？</p>
+            <div class="hint-block">
+                <button class="hint-btn" onclick="toggleHint(7)">💡 ヒントを表示</button>
+                <div class="hint-text" id="hint-7">聖地はメッカ。信者のことを「ムスリム」と呼び、アジア州だけでなく北アフリカやインドネシアなどにも多くの信者がいます。</div>
+            </div>
+            <ul class="options-list">
+                <li class="option-item"><button class="option-btn" id="btn-7-0" onclick="selectOption(7, 0)">A: 仏教（ぶっきょう）</button></li>
+                <li class="option-item"><button class="option-btn" id="btn-7-1" onclick="selectOption(7, 1)">B: キリスト教</button></li>
+                <li class="option-item"><button class="option-btn" id="btn-7-2" onclick="selectOption(7, 2)">C: イスラム教</button></li>
+                <li class="option-item"><button class="option-btn" id="btn-7-3" onclick="selectOption(7, 3)">D: ヒンドゥー教</button></li>
+            </ul>
+            <div class="result-box" id="result-7"></div>
+        </div>
+
+        <div class="quiz-card" id="card-8">
+            <span class="question-num">第 9 問</span>
+            <p class="question-text">ペルシャ湾沿岸の国々などが加盟する、石油（原油）の輸出量や価格を調整するために結成された「石油輸出国機構」の略称はどれでしょう？</p>
+            <div class="hint-block">
+                <button class="hint-btn" onclick="toggleHint(8)">💡 ヒントを表示</button>
+                <div class="hint-text" id="hint-8">アルファベット4文字の組織です。西アジアの国々はこの資源の利益によって、急速に近代的な都市開発（ドバイなど）を進めました。</div>
+            </div>
+            <ul class="options-list">
+                <li class="option-item"><button class="option-btn" id="btn-8-0" onclick="selectOption(8, 0)">A: OPEC（オペック）</button></li>
+                <li class="option-item"><button class="option-btn" id="btn-8-1" onclick="selectOption(8, 1)">B: OECD</button></li>
+                <li class="option-item"><button class="option-btn" id="btn-8-2" onclick="selectOption(8, 2)">C: APEC</button></li>
+                <li class="option-item"><button class="option-btn" id="btn-8-3" onclick="selectOption(8, 3)">D: WTO</button></li>
+            </ul>
+            <div class="result-box" id="result-8"></div>
+        </div>
+
+        <div class="ad-container">
+            <script src="https://adm.shinobi.jp/s/8883b8c96c219279b7215cf3521e8aed"></script>
+            </div>
+
+        <div class="quiz-card" id="card-9">
+            <span class="question-num">第 10 問</span>
+            <p class="question-text">アジアにおいて、1970年代以降に急速な経済成長を遂げた「韓国・台湾・香港・シンガポール」の4つの国・地域をまとめて何と呼びますか？</p>
+            <div class="hint-block">
+                <button class="hint-btn" onclick="toggleHint(9)">💡 ヒントを表示</button>
+                <div class="hint-text" id="hint-9">「新興工業経済地域」をアルファベットで表した言葉です。アジアの「新興工業国（地域）」の先駆けとなりました。</div>
+            </div>
+            <ul class="options-list">
+                <li class="option-item"><button class="option-btn" id="btn-9-0" onclick="selectOption(9, 0)">A: BRICS（ブリックス）</button></li>
+                <li class="option-item"><button class="option-btn" id="btn-9-1" onclick="selectOption(9, 1)">B: アジアNIEs（ニーズ）</button></li>
+                <li class="option-item"><button class="option-btn" id="btn-9-2" onclick="selectOption(9, 2)">C: 経済特区</button></li>
+                <li class="option-item"><button class="option-btn" id="btn-9-3" onclick="selectOption(9, 3)">D: ASEAN</button></li>
+            </ul>
+            <div class="result-box" id="result-9"></div>
+        </div>
+    </div>
+
+    <button id="submit-btn" class="submit-all-btn" onclick="calculateScore()">採点する</button>
+
+    <div id="score-section" class="score-section">
+        <h2>結果発表</h2>
+        <p>あなたの正解数は...</p>
+        <div class="score-num" id="score-display">0 / 10</div>
+        <p id="score-comment"></p>
+        <button class="restart-btn" onclick="restartQuiz()">もう一度挑戦する</button>
+    </div>
+</div>
+
+<script>
+const quizMetaData = [
+    { correct: 1, rationale: "季節風（きせつふう）が正解です。夏は海から陸へ、冬は陸から海へ向かって吹きます。東アジアや南アジアでは、夏の季節風がもたらす豊富な雨を利用して、古くから稲作（米作り）が発展してきました。" },
+    { correct: 1, rationale: "稲作（いなさく）が正解です。夏のモンスーン（季節風）による高温多湿な気候を利用し、平野部や河川の流域、棚田などで盛んに行われています。なお、やや降水量の少ない内陸部や北側（中国の華北、インドのデカン高原など）では小麦などの「畑作」が行われます。" },
+    { correct: 2, rationale: "プランテーションが正解です。欧米の植民地支配下において、輸出用の特定の作物（天然ゴム、茶、カカオ、油ヤシなど）を安価な労働力を使って単一栽培（モノカルチャー）した大規模農園のことです。" },
+    { correct: 1, rationale: "経済特区（けいざいとっく）が正解です。1970年代末からの「改革・開放」政策により、シェンチェン（深圳）、アモイ（厦門）、スワトウ（汕頭）、チューハイ（珠海）、ハイナン（海南）の沿岸5箇所に設けられ、外国企業の進出を促して「世界の工場」と呼ばれる発展の足がかりとなりました。" },
+    { correct: 0, rationale: "漢族（かんぞく）が正解です。中国の人口の大部分を占めており、私たちが使う「漢字」の由来にもなっています。中国政府はこれに加えて55の少数民族を認めており、チベット自治区や新疆ウイグル自治区などを設置しています。" },
+    { correct: 2, rationale: "ICT（情報通信技術）産業が正解です。インドでは、過去にイギリスの植民地であったことから英語を話せる優秀な人材が多く、さらにアメリカ（シリコンバレー）と12時間の時差があるため、アメリカの夜間にインドでシステム開発を引き継ぐといった形（アウトソーシング）で、情報技術産業が急成長しました。" },
+    { correct: 3, rationale: "ASEAN（アセアン）が正解です。1967年に結成され、現在はタイ、インドネシア、シンガポール、フィリピン、マレーシア、ベトナムなど東南アジアの10カ国が加盟しています（東ティモールは加盟申請中）。経済的な統合や協力を進めています。" },
+    { correct: 2, rationale: "イスラム教が正解です。西アジアや北アフリカを中心に広く信仰されており、コーラン（聖典）に基づいた厳格な生活習慣（1日5回の礼拝、ラマダンの断食、豚肉・飲酒の禁止など）があります。ちなみにインドネシアは世界最大のイスラム教徒人口を持つ国です。" },
+    { correct: 0, rationale: "OPEC（オペック）が正解です。1960年に結成された石油輸出国機構のことで、産油国（主に西アジアなど）の利益を守るために原油の生産量や価格に大きな影響力を持ちます。これに対し、アラブ諸国のみでつくる組織はOAPEC（アラブ石油輸出国機構）といいます。" },
+    { correct: 1, rationale: "アジアNIEs（ニーズ）が正解です。1970年代以降、輸出指向型の工業化で急速な経済成長を遂げた新興工業経済地域（Newly Industrializing Economies）のことで、アジアでは韓国・台湾・香港・シンガポールの4つが「アジアの四小龍」などと呼ばれました。" }
+];
+
+let userAnswers = new Array(quizMetaData.length).fill(null);
+
+function selectOption(qIdx, oIdx) {
+    if (document.getElementById('score-section').style.display === 'block') return;
+
+    for (let i = 0; i < 4; i++) {
+        const btn = document.getElementById(`btn-${qIdx}-${i}`);
+        if (i === oIdx) {
+            btn.style.borderColor = 'var(--primary-color)';
+            btn.style.backgroundColor = '#e8f4f8';
+            btn.style.fontWeight = 'bold';
+        } else {
+            btn.style.borderColor = '#e9ecef';
+            btn.style.backgroundColor = '#f8f9fa';
+            btn.style.fontWeight = 'normal';
+        }
+    }
+    userAnswers[qIdx] = oIdx;
+}
+
+function toggleHint(qIdx) {
+    const hintDiv = document.getElementById(`hint-${qIdx}`);
+    hintDiv.style.display = hintDiv.style.display === 'block' ? 'none' : 'block';
+}
+
+function calculateScore() {
+    const unanswered = userAnswers.map((ans, idx) => ans === null ? idx + 1 : null).filter(v => v !== null);
+    if (unanswered.length > 0) {
+        alert(`未回答の問題があります。第 ${unanswered.join(', ')} 問に答えてください。`);
+        return;
+    }
+
+    let score = 0;
+
+    quizMetaData.forEach((q, qIdx) => {
+        const userAns = userAnswers[qIdx];
+        const resultBox = document.getElementById(`result-${qIdx}`);
+        
+        for (let i = 0; i < 4; i++) {
+            document.getElementById(`btn-${qIdx}-${i}`).disabled = true;
+        }
+
+        const selectedBtn = document.getElementById(`btn-${qIdx}-${userAns}`);
+        const correctBtn = document.getElementById(`btn-${qIdx}-${q.correct}`);
+
+        if (userAns === q.correct) {
+            score++;
+            selectedBtn.className = 'option-btn correct';
+            resultBox.className = 'result-box show correct-box';
+            resultBox.innerHTML = `<div class="result-title">🌏 正解！</div><div>${q.rationale}</div>`;
+        } else {
+            selectedBtn.className = 'option-btn incorrect';
+            correctBtn.className = 'option-btn correct';
+            resultBox.className = 'result-box show incorrect-box';
+            resultBox.innerHTML = `<div class="result-title">⚠️ 不正解...（正解は ${String.fromCharCode(65 + q.correct)}）</div><div>${q.rationale}</div>`;
+        }
+    });
+
+    document.getElementById('submit-btn').style.display = 'none';
+    const scoreSection = document.getElementById('score-section');
+    scoreSection.style.display = 'block';
+    document.getElementById('score-display').innerText = `${score} / ${quizMetaData.length}`;
+
+    let comment = '';
+    if (score === 10) comment = '素晴らしい！アジア州マスターです！気候風土に応じた農業（稲作・プランテーション）から、中国の経済特区、インドのICT、西アジアの資源・宗教まで完璧な理解です！';
+    else if (score >= 7) comment = '高得点です！ASEANやOPECの略称、NIEsや経済特区といった重要な用語がしっかりと定着しています。間違えた問題の解説を読んでおけば定期テスト対策は完璧です！';
+    else if (score >= 4) comment = '合格点です！「雨が多い地域＝稲作」「雨が少ない内陸＝畑作・牧畜」といった、自然環境と人間のくらし（産業）を結びつけて覚えるとさらに点数が伸びますよ。';
+    else comment = 'まずはアジアをいくつかの地域（東アジア、東南アジア、南アジア、西アジア）に分けて、それぞれの国名や気候、主な宗教を地図帳で整理し直してみよう。もう一度復習して再挑戦だ！';
+    
+    document.getElementById('score-comment').innerText = comment;
+    scoreSection.scrollIntoView({ behavior: 'smooth' });
+}
+
+function restartQuiz() {
+    userAnswers = new Array(quizMetaData.length).fill(null);
+    document.getElementById('submit-btn').style.display = 'block';
+    document.getElementById('score-section').style.display = 'none';
+    
+    quizMetaData.forEach((q, qIdx) => {
+        const resultBox = document.getElementById(`result-${qIdx}`);
+        resultBox.className = 'result-box';
+        resultBox.innerHTML = '';
+        
+        for (let i = 0; i < 4; i++) {
+            const btn = document.getElementById(`btn-${qIdx}-${i}`);
+            btn.disabled = false;
+            btn.className = 'option-btn';
+            btn.style = '';
+        }
+        document.getElementById(`hint-${qIdx}`).style.display = 'none';
+    });
+
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+}
+</script>
+
+</body>
+</html>
