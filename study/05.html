@@ -1,0 +1,531 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>第二次世界大戦クイズ</title>
+    <style>
+        :root {
+            --primary-color: #2c3e50;
+            --accent-color: #c0392b;
+            --success-color: #27ae60;
+            --error-color: #962d22;
+            --bg-color: #f8f9fa;
+            --card-bg: #ffffff;
+            --text-color: #2c3e50;
+        }
+
+        body {
+            font-family: 'Helvetica Neue', Arial, 'Hiragino Kaku Gothic ProN', 'Hiragino Sans', Meiryo, sans-serif;
+            background-color: var(--bg-color);
+            color: var(--text-color);
+            margin: 0;
+            padding: 20px;
+            line-height: 1.6;
+        }
+
+        .container {
+            max-width: 800px;
+            margin: 0 auto;
+        }
+
+        header {
+            text-align: center;
+            margin-bottom: 30px;
+            padding: 20px;
+            background: linear-gradient(135deg, #34495e, #95a5a6);
+            color: white;
+            border-radius: 10px;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+        }
+
+        header h1 {
+            margin: 0 0 10px 0;
+            font-size: 24px;
+        }
+
+        header p {
+            margin: 0;
+            font-size: 14px;
+            opacity: 0.9;
+        }
+
+        .quiz-card {
+            background-color: var(--card-bg);
+            border-radius: 10px;
+            padding: 25px;
+            margin-bottom: 25px;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.05);
+        }
+
+        .question-num {
+            font-weight: bold;
+            color: var(--accent-color);
+            font-size: 14px;
+            text-transform: uppercase;
+            margin-bottom: 5px;
+            display: block;
+        }
+
+        .question-text {
+            font-size: 18px;
+            font-weight: bold;
+            margin-top: 0;
+            margin-bottom: 20px;
+        }
+
+        .options-list {
+            list-style: none;
+            padding: 0;
+            margin: 0 0 15px 0;
+        }
+
+        .option-item {
+            margin-bottom: 10px;
+        }
+
+        .option-btn {
+            width: 100%;
+            text-align: left;
+            padding: 12px 15px;
+            background-color: #f8f9fa;
+            border: 2px solid #e9ecef;
+            border-radius: 6px;
+            cursor: pointer;
+            font-size: 15px;
+            transition: all 0.2s ease;
+        }
+
+        .option-btn:hover:not(:disabled) {
+            background-color: #e9ecef;
+            border-color: #ced4da;
+        }
+
+        .option-btn:disabled {
+            cursor: not-allowed;
+            color: #6c757d;
+        }
+
+        .option-btn.correct {
+            background-color: #d4edda;
+            border-color: var(--success-color);
+            color: #155724;
+            font-weight: bold;
+        }
+
+        .option-btn.incorrect {
+            background-color: #f8d7da;
+            border-color: var(--error-color);
+            color: #721c24;
+        }
+
+        .hint-block {
+            margin-bottom: 15px;
+        }
+
+        .hint-btn {
+            background: none;
+            border: none;
+            color: #7f8c8d;
+            cursor: pointer;
+            font-size: 13px;
+            text-decoration: underline;
+            padding: 0;
+        }
+
+        .hint-text {
+            display: none;
+            background-color: #fff3cd;
+            color: #856404;
+            padding: 10px;
+            border-radius: 5px;
+            font-size: 13px;
+            margin-top: 5px;
+            border-left: 4px solid #ffc107;
+        }
+
+        .result-box {
+            display: none;
+            margin-top: 15px;
+            padding: 15px;
+            border-radius: 6px;
+            font-size: 14px;
+        }
+
+        .result-box.show {
+            display: block;
+        }
+
+        .result-box.correct-box {
+            background-color: #e2f0d9;
+            color: #2c5217;
+            border: 1px solid #c5e1b2;
+        }
+
+        .result-box.incorrect-box {
+            background-color: #fbe5e5;
+            color: #631c1c;
+            border: 1px solid #f3c2c2;
+        }
+
+        .result-title {
+            font-weight: bold;
+            margin-bottom: 5px;
+            font-size: 15px;
+        }
+
+        .score-section {
+            text-align: center;
+            background-color: var(--primary-color);
+            color: white;
+            padding: 30px;
+            border-radius: 10px;
+            margin-top: 30px;
+            display: none;
+        }
+
+        .score-num {
+            font-size: 48px;
+            font-weight: bold;
+            color: #f1c40f;
+            margin: 10px 0;
+        }
+
+        .restart-btn {
+            background-color: #27ae60;
+            color: white;
+            border: none;
+            padding: 12px 25px;
+            font-size: 16px;
+            border-radius: 5px;
+            cursor: pointer;
+            font-weight: bold;
+            margin-top: 15px;
+        }
+
+        .submit-all-btn {
+            display: block;
+            width: 100%;
+            background-color: var(--primary-color);
+            color: white;
+            border: none;
+            padding: 15px;
+            font-size: 18px;
+            font-weight: bold;
+            border-radius: 8px;
+            cursor: pointer;
+            margin-top: 20px;
+        }
+
+        .submit-all-btn:hover {
+            background-color: #34495e;
+        }
+
+        .ad-container {
+            text-align: center;
+            margin: 20px 0 35px 0;
+            min-height: 90px;
+        }
+    </style>
+</head>
+<body>
+
+<div class="container">
+    <header>
+        <h1>第二次世界大戦クイズ</h1>
+        <p>1939年の勃発から、独ソ戦、太平洋戦争、そしてファシズム陣営の崩壊と終戦までの流れを復習する10問です。</p>
+    </header>
+
+    <div id="quiz-container">
+        <div class="quiz-card" id="card-0">
+            <span class="question-num">第 1 問</span>
+            <p class="question-text">1939年9月、ドイツがどこの国に侵攻したことが引き金となって、第二次世界大戦が始まったでしょう？</p>
+            <div class="hint-block">
+                <button class="hint-btn" onclick="toggleHint(0)">💡 ヒントを表示</button>
+                <div class="hint-text" id="hint-0">ドイツの東隣にある国です。ドイツは直前にソ連と「独ソ不可侵条約」を結び、この国を東西から挟み撃ちにして分割占領しました。</div>
+            </div>
+            <ul class="options-list">
+                <li class="option-item"><button class="option-btn" id="btn-0-0" onclick="selectOption(0, 0)">A: フランス</button></li>
+                <li class="option-item"><button class="option-btn" id="btn-0-1" onclick="selectOption(0, 1)">B: ポーランド</button></li>
+                <li class="option-item"><button class="option-btn" id="btn-0-2" onclick="selectOption(0, 2)">C: チェコスロバキア</button></li>
+                <li class="option-item"><button class="option-btn" id="btn-0-3" onclick="selectOption(0, 3)">D: オーストリア</button></li>
+            </ul>
+            <div class="result-box" id="result-0"></div>
+        </div>
+
+        <div class="quiz-card" id="card-1">
+            <span class="question-num">第 2 問</span>
+            <p class="question-text">1940年、軍事力を強化する日本が、ヨーロッパで快進撃を続けるドイツ、および地中海進出を狙うイタリアと結んだ軍事同盟を何というでしょう？</p>
+            <div class="hint-block">
+                <button class="hint-btn" onclick="toggleHint(1)">💡 ヒントを表示</button>
+                <div class="hint-text" id="hint-1">これにより「枢軸国（すうじくこく）」側の中心的な陣営が完成し、アメリカやイギリスなどの連合国側との対立が決定づけられました。</div>
+            </div>
+            <ul class="options-list">
+                <li class="option-item"><button class="option-btn" id="btn-1-0" onclick="selectOption(1, 0)">A: 日英同盟（にちえいどうめい）</button></li>
+                <li class="option-item"><button class="option-btn" id="btn-1-1" onclick="selectOption(1, 1)">B: 日独伊三国同盟（にちどくいさんこくどうめい）</button></li>
+                <li class="option-item"><button class="option-btn" id="btn-1-2" onclick="selectOption(1, 2)">C: 日ソ中立条約（にっそちゅうりつじょうやく）</button></li>
+                <li class="option-item"><button class="option-btn" id="btn-1-3" onclick="selectOption(1, 3)">D: 独ソ不可侵条約</button></li>
+            </ul>
+            <div class="result-box" id="result-1"></div>
+        </div>
+
+        <div class="quiz-card" id="card-2">
+            <span class="question-num">第 3 問</span>
+            <p class="question-text">1941年12月、日本軍がアメリカのハワイにある海軍基地を奇襲攻撃したことで、太平洋戦争（第二次世界大戦のアジア太平洋戦線）が勃発しました。この基地を何というでしょう？</p>
+            <div class="hint-block">
+                <button class="hint-btn" onclick="toggleHint(2)">💡 ヒントを表示</button>
+                <div class="hint-text" id="hint-2">漢字では「真珠湾（しんじゅわん）」と書きます。カタカナ表記での名前を選んでください。</div>
+            </div>
+            <ul class="options-list">
+                <li class="option-item"><button class="option-btn" id="btn-2-0" onclick="selectOption(2, 0)">A: ミッドウェータワー</button></li>
+                <li class="option-item"><button class="option-btn" id="btn-2-1" onclick="selectOption(2, 1)">B: パールハーバー</button></li>
+                <li class="option-item"><button class="option-btn" id="btn-2-2" onclick="selectOption(2, 2)">C: グアムベース</button></li>
+                <li class="option-item"><button class="option-btn" id="btn-2-3" onclick="selectOption(2, 3)">D: サンディエゴ港</button></li>
+            </ul>
+            <div class="result-box" id="result-2"></div>
+        </div>
+
+        <div class="ad-container">
+            <script src="https://adm.shinobi.jp/s/8883b8c96c219279b7215cf3521e8aed"></script>
+            </div>
+
+        <div class="quiz-card" id="card-3">
+            <span class="question-num">第 4 問</span>
+            <p class="question-text">1942年6月、日本海軍が主力空母4隻を失い、太平洋戦争における「攻守の転換点（日本優位からアメリカ優位へ）」となった激しい海戦は何でしょう？</p>
+            <div class="hint-block">
+                <button class="hint-btn" onclick="toggleHint(3)">💡 ヒントを表示</button>
+                <div class="hint-text" id="hint-3">ハワイの北西に位置する環礁（かんしょう）の近くで行われた海戦です。日本軍の情報がアメリカ側に暗号解読されていたことも敗因となりました。</div>
+            </div>
+            <ul class="options-list">
+                <li class="option-item"><button class="option-btn" id="btn-3-0" onclick="selectOption(3, 0)">A: マリアナ海戦</button></li>
+                <li class="option-item"><button class="option-btn" id="btn-3-1" onclick="selectOption(3, 1)">B: ミッドウェー海戦</button></li>
+                <li class="option-item"><button class="option-btn" id="btn-3-2" onclick="selectOption(3, 2)">C: 日本海海戦</button></li>
+                <li class="option-item"><button class="option-btn" id="btn-3-3" onclick="selectOption(3, 3)">D: レイテ沖海戦</button></li>
+            </ul>
+            <div class="result-box" id="result-3"></div>
+        </div>
+
+        <div class="quiz-card" id="card-4">
+            <span class="question-num">第 5 問</span>
+            <p class="question-text">ヨーロッパ戦線において、破竹の勢いだったドイツ軍がソ連軍に包囲されて大敗し、独ソ戦およびヨーロッパ戦線全体の最大の転換点となった都市の戦いは何でしょう？</p>
+            <div class="hint-block">
+                <button class="hint-btn" onclick="toggleHint(4)">💡 ヒントを表示</button>
+                <div class="hint-text" id="hint-4">当時のソ連の指導者の名前がつけられた、ヴォルガ川沿いの都市です（現在はヴォルゴグラードに改名）。激しい市街戦と冬の寒さでドイツ軍が壊滅しました。</div>
+            </div>
+            <ul class="options-list">
+                <li class="option-item"><button class="option-btn" id="btn-4-0" onclick="selectOption(4, 0)">A: ベルリンの戦い</button></li>
+                <li class="option-item"><button class="option-btn" id="btn-4-1" onclick="selectOption(4, 1)">B: スターリングラードの戦い</button></li>
+                <li class="option-item"><button class="option-btn" id="btn-4-2" onclick="selectOption(4, 2)">C: モスクワ攻防戦</button></li>
+                <li class="option-item"><button class="option-btn" id="btn-4-3" onclick="selectOption(4, 3)">D: ノルマンディー上陸作戦</button></li>
+            </ul>
+            <div class="result-box" id="result-4"></div>
+        </div>
+
+        <div class="quiz-card" id="card-5">
+            <span class="question-num">第 6 問</span>
+            <p class="question-text">日独伊三国同盟を結んでいた3カ国のうち、最も早く1943年9月に連合国側へ無条件降伏した国はどこでしょう？</p>
+            <div class="hint-block">
+                <button class="hint-btn" onclick="toggleHint(5)">💡 ヒントを表示</button>
+                <div class="hint-text" id="hint-5">ムッソリーニ率いるファシスト党の政権が崩壊し、国王によってムッソリーニが解任されたことで降伏へ向かいました。</div>
+            </div>
+            <ul class="options-list">
+                <li class="option-item"><button class="option-btn" id="btn-5-0" onclick="selectOption(5, 0)">A: ドイツ</button></li>
+                <li class="option-item"><button class="option-btn" id="btn-5-1" onclick="selectOption(5, 1)">B: イタリア</button></li>
+                <li class="option-item"><button class="option-btn" id="btn-5-2" onclick="selectOption(5, 2)">C: 日本</button></li>
+                <li class="option-item"><button class="option-btn" id="btn-5-3" onclick="selectOption(5, 3)">D: フィンランド</button></li>
+            </ul>
+            <div class="result-box" id="result-5"></div>
+        </div>
+
+        <div class="ad-container">
+            <script src="https://adm.shinobi.jp/s/8883b8c96c219279b7215cf3521e8aed"></script>
+            </div>
+
+        <div class="quiz-card" id="card-6">
+            <span class="question-num">第 7 問</span>
+            <p class="question-text">1945年2月、アメリカ（ルーズベルト）、イギリス（チャーチル）、ソ連（スターリン）の3首脳が集まり、戦後の処理方針やソ連の対日参戦などを秘密裏に決めた会談を何というでしょう？</p>
+            <div class="hint-block">
+                <button class="hint-btn" onclick="toggleHint(6)">💡 ヒントを表示</button>
+                <div class="hint-text" id="hint-6">クリミア半島にある保養地で行われた会談です。ここでの決定に基づき、ソ連は終戦直前に日ソ中立条約を破って日本に攻め込みました。</div>
+            </div>
+            <ul class="options-list">
+                <li class="option-item"><button class="option-btn" id="btn-6-0" onclick="selectOption(6, 0)">A: カイロ会談</button></li>
+                <li class="option-item"><button class="option-btn" id="btn-6-1" onclick="selectOption(6, 1)">B: テヘラン会談</button></li>
+                <li class="option-item"><button class="option-btn" id="btn-6-2" onclick="selectOption(6, 2)">C: ヤルタ会談</button></li>
+                <li class="option-item"><button class="option-btn" id="btn-6-3" onclick="selectOption(6, 3)">D: ポツダム会談</button></li>
+            </ul>
+            <div class="result-box" id="result-6"></div>
+        </div>
+
+        <div class="quiz-card" id="card-7">
+            <span class="question-num">第 8 問</span>
+            <p class="question-text">日本国内での地上戦のうち、1945年3月末から始まり、多くの民間人を巻き込んだ激しい戦闘が繰り広げられた都道府県はどこでしょう？</p>
+            <div class="hint-block">
+                <button class="hint-btn" onclick="toggleHint(7)">💡 ヒントを表示</button>
+                <div class="hint-text" id="hint-7">米軍が日本本土上陸の拠点とするために押し寄せた、日本最南端の県です。一般市民が鉄血勤皇隊やひめゆり学徒隊などとして動員されました。</div>
+            </div>
+            <ul class="options-list">
+                <li class="option-item"><button class="option-btn" id="btn-7-0" onclick="selectOption(7, 0)">A: 鹿児島県（知覧）</button></li>
+                <li class="option-item"><button class="option-btn" id="btn-7-1" onclick="selectOption(7, 1)">B: 東京都（小笠原・硫黄島）</button></li>
+                <li class="option-item"><button class="option-btn" id="btn-7-2" onclick="selectOption(7, 2)">C: 長崎県</button></li>
+                <li class="option-item"><button class="option-btn" id="btn-7-3" onclick="selectOption(7, 3)">D: 沖縄県</button></li>
+            </ul>
+            <div class="result-box" id="result-7"></div>
+        </div>
+
+        <div class="quiz-card" id="card-8">
+            <span class="question-num">第 9 問</span>
+            <p class="question-text">1945年8月6日に広島、8月9日に長崎に人類史上初めて投下され、甚大な被害をもたらした大量破壊兵器は何でしょう？</p>
+            <div class="hint-block">
+                <button class="hint-btn" onclick="toggleHint(8)">💡 ヒントを表示</button>
+                <div class="hint-text" id="hint-8">核分裂のエネルギーを利用した爆弾で、「原爆（げんばく）」とも略されます。</div>
+            </div>
+            <ul class="options-list">
+                <li class="option-item"><button class="option-btn" id="btn-8-0" onclick="selectOption(8, 0)">A: 水素爆弾（水爆）</button></li>
+                <li class="option-item"><button class="option-btn" id="btn-8-1" onclick="selectOption(8, 1)">B: 原子爆弾（原爆）</button></li>
+                <li class="option-item"><button class="option-btn" id="btn-8-2" onclick="selectOption(8, 2)">C: 焼夷弾（しょういだん）</button></li>
+                <li class="option-item"><button class="option-btn" id="btn-8-3" onclick="selectOption(8, 3)">D: 毒ガス弾</button></li>
+            </ul>
+            <div class="result-box" id="result-8"></div>
+        </div>
+
+        <div class="quiz-card" id="card-9">
+            <span class="question-num">第 10 問</span>
+            <p class="question-text">1945年7月、米・英・中の名で日本に無条件降伏を求めた宣言で、日本が最終的にこれを受諾（受け入れ）して終戦を迎えることになったものは何でしょう？</p>
+            <div class="hint-block">
+                <button class="hint-btn" onclick="toggleHint(9)">💡 ヒントを表示</button>
+                <div class="hint-text" id="hint-9">ドイツのベルリン郊外にある都市の名前がついた宣言です。日本政府は当初これを黙殺（無視）しましたが、原爆投下やソ連参戦を受けて受諾を決定、8月15日に国民に発表されました。</div>
+            </div>
+            <ul class="options-list">
+                <li class="option-item"><button class="option-btn" id="btn-9-0" onclick="selectOption(9, 0)">A: カイロ宣言</button></li>
+                <li class="option-item"><button class="option-btn" id="btn-9-1" onclick="selectOption(9, 1)">B: 大西洋憲章</button></li>
+                <li class="option-item"><button class="option-btn" id="btn-9-2" onclick="selectOption(9, 2)">C: ポツダム宣言</button></li>
+                <li class="option-item"><button class="option-btn" id="btn-9-3" onclick="selectOption(9, 3)">D: サンフランシスコ平和宣言</button></li>
+            </ul>
+            <div class="result-box" id="result-9"></div>
+        </div>
+    </div>
+
+    <button id="submit-btn" class="submit-all-btn" onclick="calculateScore()">採点する</button>
+
+    <div id="score-section" class="score-section">
+        <h2>結果発表</h2>
+        <p>あなたの正解数は...</p>
+        <div class="score-num" id="score-display">0 / 10</div>
+        <p id="score-comment"></p>
+        <button class="restart-btn" onclick="restartQuiz()">もう一度挑戦する</button>
+    </div>
+</div>
+
+<script>
+const quizMetaData = [
+    { correct: 1, rationale: "ポーランドです。ドイツによるポーランド侵攻に対し、同盟を結んでいたイギリスとフランスがドイツに宣戦布告したことで、第二次世界大戦が幕を開けました。" },
+    { correct: 1, rationale: "日独伊三国同盟です。軍部主導でファシズム国家との結びつきを強め、アメリカを強く牽制（けんせい）する狙いがありましたが、かえって対立を決定的なものにしました。" },
+    { correct: 1, rationale: "パールハーバー（真珠湾）です。日本軍によるこの奇襲攻撃により、それまで参戦をためらっていたアメリカが一気に「リメンバー・パールハーバー」を合言葉に団結し、本格参戦しました。" },
+    { correct: 1, rationale: "ミッドウェー海戦です。破竹の勢いだった日本海軍が、暗号を解読していた米軍の待ち伏せに遭い、主力空母4隻とその熟練パイロットを多数失って大敗。これ以降、連合国側の反撃が本格化します。" },
+    { correct: 1, rationale: "スターリングラードの戦いです。歴史上最も過酷な消耗戦の一つであり、ドイツ軍の東部戦線における前進が完全にストップし、これ以降ソ連軍による猛烈な押し返しが始まりました。" },
+    { correct: 1, rationale: "イタリアです。バドリオ政権によって1943年9月に降伏しました。その後、1945年5月にドイツが、同年8月に日本が降伏しています。" },
+    { correct: 2, rationale: "ヤルタ会談です。米・英・ソの首脳が集まり、ドイツの戦後分割統治や、ソ連が「ドイツ降伏の3ヶ月後に対日参戦する」という秘密協定が結ばれました。" },
+    { correct: 3, rationale: "沖縄県です。1945年3月末から凄惨な地上戦（沖縄戦）が行われ、一般住民を含む20万人以上が犠牲となりました。" },
+    { correct: 1, rationale: "原子爆弾です。8月6日に広島に「リトルボーイ」、8月9日に長崎に「ファットマン」と呼ばれる原子爆弾が投下され、一瞬にして数十万人の命が奪われました。" },
+    { correct: 2, rationale: "ポツダム宣言です。日本側に全般的な降伏と軍国主義の排除を求めたもので、日本は8月14日にこの受諾を決定し、翌15日に昭和天皇による玉音放送（ぎょくおんほうそう）で国民に伝えられました。" }
+];
+
+let userAnswers = new Array(quizMetaData.length).fill(null);
+
+function selectOption(qIdx, oIdx) {
+    if (document.getElementById('score-section').style.display === 'block') return;
+
+    for (let i = 0; i < 4; i++) {
+        const btn = document.getElementById(`btn-${qIdx}-${i}`);
+        if (i === oIdx) {
+            btn.style.borderColor = 'var(--primary-color)';
+            btn.style.backgroundColor = '#e9ecef';
+            btn.style.fontWeight = 'bold';
+        } else {
+            btn.style.borderColor = '#e9ecef';
+            btn.style.backgroundColor = '#f8f9fa';
+            btn.style.fontWeight = 'normal';
+        }
+    }
+    userAnswers[qIdx] = oIdx;
+}
+
+function toggleHint(qIdx) {
+    const hintDiv = document.getElementById(`hint-${qIdx}`);
+    hintDiv.style.display = hintDiv.style.display === 'block' ? 'none' : 'block';
+}
+
+function calculateScore() {
+    const unanswered = userAnswers.map((ans, idx) => ans === null ? idx + 1 : null).filter(v => v !== null);
+    if (unanswered.length > 0) {
+        alert(`未回答の問題があります。第 ${unanswered.join(', ')} 問に答えてください。`);
+        return;
+    }
+
+    let score = 0;
+
+    quizMetaData.forEach((q, qIdx) => {
+        const userAns = userAnswers[qIdx];
+        const resultBox = document.getElementById(`result-${qIdx}`);
+        
+        for (let i = 0; i < 4; i++) {
+            document.getElementById(`btn-${qIdx}-${i}`).disabled = true;
+        }
+
+        const selectedBtn = document.getElementById(`btn-${qIdx}-${userAns}`);
+        const correctBtn = document.getElementById(`btn-${qIdx}-${q.correct}`);
+
+        if (userAns === q.correct) {
+            score++;
+            selectedBtn.className = 'option-btn correct';
+            resultBox.className = 'result-box show correct-box';
+            resultBox.innerHTML = `<div class="result-title">⭕ 正解！</div><div>${q.rationale}</div>`;
+        } else {
+            selectedBtn.className = 'option-btn incorrect';
+            correctBtn.className = 'option-btn correct';
+            resultBox.className = 'result-box show incorrect-box';
+            resultBox.innerHTML = `<div class="result-title">❌ 不正解...（正解は ${String.fromCharCode(65 + q.correct)}）</div><div>${q.rationale}</div>`;
+        }
+    });
+
+    document.getElementById('submit-btn').style.display = 'none';
+    const scoreSection = document.getElementById('score-section');
+    scoreSection.style.display = 'block';
+    document.getElementById('score-display').innerText = `${score} / ${quizMetaData.length}`;
+
+    let comment = '';
+    if (score === 10) comment = '完璧！第二次世界大戦の開戦から日独伊の降伏、終戦の歴史的流れをパーフェクトに把握しています！';
+    else if (score >= 7) comment = '素晴らしい！ミッドウェー海戦、ヤルタ会談、ポツダム宣言など、合否を分ける重要事項がしっかり整理されています。';
+    else if (score >= 4) comment = '合格点です！枢軸国が「イタリア→ドイツ→日本」の順に降伏したことや、それぞれの転換点となった戦いをもう一度見直しておきましょう。';
+    else comment = '大戦の歴史は複雑ですが、「どの国がどの順で動き、どう結末を迎えたか」を意識して解説を読み、もう一度挑戦してみましょう！';
+    
+    document.getElementById('score-comment').innerText = comment;
+    scoreSection.scrollIntoView({ behavior: 'smooth' });
+}
+
+function restartQuiz() {
+    userAnswers = new Array(quizMetaData.length).fill(null);
+    document.getElementById('submit-btn').style.display = 'block';
+    document.getElementById('score-section').style.display = 'none';
+    
+    quizMetaData.forEach((q, qIdx) => {
+        const resultBox = document.getElementById(`result-${qIdx}`);
+        resultBox.className = 'result-box';
+        resultBox.innerHTML = '';
+        
+        for (let i = 0; i < 4; i++) {
+            const btn = document.getElementById(`btn-${qIdx}-${i}`);
+            btn.disabled = false;
+            btn.className = 'option-btn';
+            btn.style = '';
+        }
+        document.getElementById(`hint-${qIdx}`).style.display = 'none';
+    });
+
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+}
+</script>
+
+</body>
+</html>
