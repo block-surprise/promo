@@ -1,0 +1,554 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>中1理科：生物1章 クイズ</title>
+    <style>
+        :root {
+            --primary-color: #2e7d32;
+            --accent-color: #4caf50;
+            --success-color: #27ae60;
+            --error-color: #c0392b;
+            --bg-color: #f1f8e9;
+            --card-bg: #ffffff;
+            --text-color: #263238;
+        }
+
+        body {
+            font-family: 'Helvetica Neue', Arial, 'Hiragino Kaku Gothic ProN', 'Hiragino Sans', Meiryo, sans-serif;
+            background-color: var(--bg-color);
+            color: var(--text-color);
+            margin: 0;
+            padding: 20px;
+            line-height: 1.6;
+        }
+
+        .container {
+            max-width: 800px;
+            margin: 0 auto;
+        }
+
+        header {
+            text-align: center;
+            margin-bottom: 30px;
+            padding: 20px;
+            background: linear-gradient(135deg, #4caf50, #1b5e20);
+            color: white;
+            border-radius: 10px;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+        }
+
+        header h1 {
+            margin: 0 0 10px 0;
+            font-size: 24px;
+        }
+
+        header p {
+            margin: 0;
+            font-size: 14px;
+            opacity: 0.9;
+        }
+
+        .quiz-card {
+            background-color: var(--card-bg);
+            border-radius: 10px;
+            padding: 25px;
+            margin-bottom: 25px;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.05);
+        }
+
+        .question-num {
+            font-weight: bold;
+            color: var(--primary-color);
+            font-size: 14px;
+            text-transform: uppercase;
+            margin-bottom: 5px;
+            display: block;
+        }
+
+        .question-text {
+            font-size: 18px;
+            font-weight: bold;
+            margin-top: 0;
+            margin-bottom: 20px;
+        }
+
+        .options-list {
+            list-style: none;
+            padding: 0;
+            margin: 0 0 15px 0;
+        }
+
+        .option-item {
+            margin-bottom: 10px;
+        }
+
+        .option-btn {
+            width: 100%;
+            text-align: left;
+            padding: 12px 15px;
+            background-color: #f8f9fa;
+            border: 2px solid #e9ecef;
+            border-radius: 6px;
+            cursor: pointer;
+            font-size: 15px;
+            transition: all 0.2s ease;
+        }
+
+        .option-btn:hover:not(:disabled) {
+            background-color: #e9ecef;
+            border-color: #ced4da;
+        }
+
+        .option-btn:disabled {
+            cursor: not-allowed;
+            color: #6c757d;
+        }
+
+        .option-btn.correct {
+            background-color: #d4edda;
+            border-color: var(--success-color);
+            color: #155724;
+            font-weight: bold;
+        }
+
+        .option-btn.incorrect {
+            background-color: #f8d7da;
+            border-color: var(--error-color);
+            color: #721c24;
+        }
+
+        .hint-block {
+            margin-bottom: 15px;
+        }
+
+        .hint-btn {
+            background: none;
+            border: none;
+            color: #7f8c8d;
+            cursor: pointer;
+            font-size: 13px;
+            text-decoration: underline;
+            padding: 0;
+        }
+
+        .hint-text {
+            display: none;
+            background-color: #fff3cd;
+            color: #856404;
+            padding: 10px;
+            border-radius: 5px;
+            font-size: 13px;
+            margin-top: 5px;
+            border-left: 4px solid #ffc107;
+        }
+
+        .result-box {
+            display: none;
+            margin-top: 15px;
+            padding: 15px;
+            border-radius: 6px;
+            font-size: 14px;
+        }
+
+        .result-box.show {
+            display: block;
+        }
+
+        .result-box.correct-box {
+            background-color: #e2f0d9;
+            color: #2c5217;
+            border: 1px solid #c5e1b2;
+        }
+
+        .result-box.incorrect-box {
+            background-color: #fbe5e5;
+            color: #631c1c;
+            border: 1px solid #f3c2c2;
+        }
+
+        .result-title {
+            font-weight: bold;
+            margin-bottom: 5px;
+            font-size: 15px;
+        }
+
+        .score-section {
+            text-align: center;
+            background-color: var(--primary-color);
+            color: white;
+            padding: 30px;
+            border-radius: 10px;
+            margin-top: 30px;
+            display: none;
+        }
+
+        .score-num {
+            font-size: 48px;
+            font-weight: bold;
+            color: #f1c40f;
+            margin: 10px 0;
+        }
+
+        .restart-btn {
+            background-color: #f1c40f;
+            color: #1b5e20;
+            border: none;
+            padding: 12px 25px;
+            font-size: 16px;
+            border-radius: 5px;
+            cursor: pointer;
+            font-weight: bold;
+            margin-top: 15px;
+        }
+
+        .submit-all-btn {
+            display: block;
+            width: 100%;
+            background-color: var(--primary-color);
+            color: white;
+            border: none;
+            padding: 15px;
+            font-size: 18px;
+            font-weight: bold;
+            border-radius: 8px;
+            cursor: pointer;
+            margin-top: 20px;
+        }
+
+        .submit-all-btn:hover {
+            background-color: #1b5e20;
+        }
+
+        .ad-container {
+            text-align: center;
+            margin: 20px 0 35px 0;
+            min-height: 90px;
+        }
+    </style>
+</head>
+<body>
+
+<div class="container">
+    <header>
+        <h1>中1理科：生物1章 クイズ</h1>
+        <p>植物の生活と種類について、顕微鏡の使い方から花のつくり、光合成の仕組みまでテストの頻出問題を解いてみよう！</p>
+    </header>
+
+    <div id="quiz-container">
+        <!-- 第1問 -->
+        <div class="quiz-card" id="card-0">
+            <span class="question-num">第 1 問</span>
+            <p class="question-text">野外でルーペ（拡大鏡）を使って植物を観察するときの正しい操作方法はどれでしょう？</p>
+            <div class="hint-block">
+                <button class="hint-btn" onclick="toggleHint(0)">💡 ヒントを表示</button>
+                <div class="hint-text" id="hint-0">ルーペは目に近づけて固定するのが基本です。では、見たいものが「動かせる植物（ちぎった葉など）」のときと、「動かせない植物（地面に咲く花など）」のときで、それぞれ何を動かすでしょうか？</div>
+            </div>
+            <ul class="options-list">
+                <li class="option-item"><button class="option-btn" id="btn-0-0" onclick="selectOption(0, 0)">A: ルーペを目から離し、見たいものと目の真ん中あたりに固定して観察する。</button></li>
+                <li class="option-item"><button class="option-btn" id="btn-0-1" onclick="selectOption(0, 1)">B: ルーペを目に近づけて固定し、動かせるものはそれを前後に動かしてピントを合わせる。</button></li>
+                <li class="option-item"><button class="option-btn" id="btn-0-2" onclick="selectOption(0, 2)">C: ルーペを目に近づけて固定し、動かせないものを観察するときはルーペだけを前後に動かす。</button></li>
+                <li class="option-item"><button class="option-btn" id="btn-0-3" onclick="selectOption(0, 3)">D: 太陽の光をよく当てるため、ルーペを通して太陽を直接見ながらピントを合わせる。</button></li>
+            </ul>
+            <div class="result-box" id="result-0"></div>
+        </div>
+
+        <!-- 第2問 -->
+        <div class="quiz-card" id="card-1">
+            <span class="question-num">第 2 問</span>
+            <p class="question-text">顕微鏡の倍率を「低倍率」から「高倍率」に変えたとき、視野の様子（広さと明るさ）はどう変化しますか？</p>
+            <div class="hint-block">
+                <button class="hint-btn" onclick="toggleHint(1)">💡 ヒントを表示</button>
+                <div class="hint-text" id="hint-1">高倍率にすると、狭い範囲をぐっと拡大することになります。拡大された分、光の量や見える範囲はどうなるかを想像してみましょう。</div>
+            </div>
+            <ul class="options-list">
+                <li class="option-item"><button class="option-btn" id="btn-1-0" onclick="selectOption(1, 0)">A: 視野は広くなり、明るくなる。</button></li>
+                <li class="option-item"><button class="option-btn" id="btn-1-1" onclick="selectOption(1, 1)">B: 視野は広くなり、暗くなる。</button></li>
+                <li class="option-item"><button class="option-btn" id="btn-1-2" onclick="selectOption(1, 2)">C: 視野は狭くなり、明るくなる。</button></li>
+                <li class="option-item"><button class="option-btn" id="btn-1-3" onclick="selectOption(1, 3)">D: 視野は狭くなり、暗くなる。</button></li>
+            </ul>
+            <div class="result-box" id="result-1"></div>
+        </div>
+
+        <!-- 第3問 -->
+        <div class="quiz-card" id="card-2">
+            <span class="question-num">第 3 問</span>
+            <p class="question-text">アブラナやツツジなどの「被子植物」の花のつくりについて、中心から外側に向かって並んでいる正しい順番はどれでしょう？</p>
+            <div class="hint-block">
+                <button class="hint-btn" onclick="toggleHint(2)">💡 ヒントを表示</button>
+                <div class="hint-text" id="hint-2">一番中心にあって将来種子や果実になる重要なパーツから順番に、外側に向かって守るような構造になっています。</div>
+            </div>
+            <ul class="options-list">
+                <li class="option-item"><button class="option-btn" id="btn-2-0" onclick="selectOption(2, 0)">A: めしべ &rarr; おしべ &rarr; 花弁（花びら） &rarr; がく</button></li>
+                <li class="option-item"><button class="option-btn" id="btn-2-1" onclick="selectOption(2, 1)">B: おしべ &rarr; めしべ &rarr; 花弁（花びら） &rarr; がく</button></li>
+                <li class="option-item"><button class="option-btn" id="btn-2-2" onclick="selectOption(2, 2)">C: がく &rarr; 花弁（花びら） &rarr; おしべ &rarr; めしべ</button></li>
+                <li class="option-item"><button class="option-btn" id="btn-2-3" onclick="selectOption(2, 3)">D: めしべ &rarr; 花弁（花びら） &rarr; おしべ &rarr; がく</button></li>
+            </ul>
+            <div class="result-box" id="result-2"></div>
+        </div>
+
+        <!-- 【指定位置①】第3問の後の広告 -->
+        <div class="ad-container">
+            <!-- admax -->
+            <script src="https://adm.shinobi.jp/s/8883b8c96c219279b7215cf3521e8aed"></script>
+            <!-- admax -->
+        </div>
+
+        <!-- 第4問 -->
+        <div class="quiz-card" id="card-3">
+            <span class="question-num">第 4 問</span>
+            <p class="question-text">めしべの根元のふくらんだ部分を（ X ）、その中にある将来種子になる小さな粒を（ Y ）といいます。正しい組み合わせを選んでください。</p>
+            <div class="hint-block">
+                <button class="hint-btn" onclick="toggleHint(3)">💡 ヒントを表示</button>
+                <div class="hint-text" id="hint-3">Xは将来「果実」になるところ、Yは将来「種子」になるところです。漢字の組み合わせをしっかり思い出しましょう。</div>
+            </div>
+            <ul class="options-list">
+                <li class="option-item"><button class="option-btn" id="btn-3-0" onclick="selectOption(3, 0)">A: X: 胚珠（はいしゅ） / Y: 子房（しぼう）</button></li>
+                <li class="option-item"><button class="option-btn" id="btn-3-1" onclick="selectOption(3, 1)">B: X: 子房（しぼう） / Y: 胚珠（はいしゅ）</button></li>
+                <li class="option-item"><button class="option-btn" id="btn-3-2" onclick="selectOption(3, 2)">C: X: やく / Y: 胞子（ほうし）</button></li>
+                <li class="option-item"><button class="option-btn" id="btn-3-3" onclick="selectOption(3, 3)">D: X: 子房（しぼう） / Y: 花粉（かふん）</button></li>
+            </ul>
+            <div class="result-box" id="result-3"></div>
+        </div>
+
+        <!-- 第5問 -->
+        <div class="quiz-card" id="card-4">
+            <span class="question-num">第 5 問</span>
+            <p class="question-text">マツやイチョウのように、子房がなく胚珠がむき出しになっている植物の仲間を何といいますか？</p>
+            <div class="hint-block">
+                <button class="hint-btn" onclick="toggleHint(4)">💡 ヒントを表示</button>
+                <div class="hint-text" id="hint-4">「衣服を着ていない（むき出し）」という意味を表す漢字が使われている植物の分類名です。</div>
+            </div>
+            <ul class="options-list">
+                <li class="option-item"><button class="option-btn" id="btn-4-0" onclick="selectOption(4, 0)">A: 被子植物（ひししょくぶつ）</button></li>
+                <li class="option-item"><button class="option-btn" id="btn-4-1" onclick="selectOption(4, 1)">B: 裸子植物（らししょくぶつ）</button></li>
+                <li class="option-item"><button class="option-btn" id="btn-4-2" onclick="selectOption(4, 2)">C: シダ植物</button></li>
+                <li class="option-item"><button class="option-btn" id="btn-4-3" onclick="selectOption(4, 3)">D: コケ植物</button></li>
+            </ul>
+            <div class="result-box" id="result-4"></div>
+        </div>
+
+        <!-- 第6問 -->
+        <div class="quiz-card" id="card-5">
+            <span class="question-num">第 6 問</span>
+            <p class="question-text">植物の葉の表皮にある、2つの「孔辺細胞（こうへんさいぼう）」に囲まれた隙間のことを何といいますか？</p>
+            <div class="hint-block">
+                <button class="hint-btn" onclick="toggleHint(5)">💡 ヒントを表示</button>
+                <div class="hint-text" id="hint-5">主に葉の「裏側」に多く存在し、水蒸気の出口（蒸散）や、気体の出入り口になっています。「空気の穴」という意味の漢字2文字です。</div>
+            </div>
+            <ul class="options-list">
+                <li class="option-item"><button class="option-btn" id="btn-5-0" onclick="selectOption(5, 0)">A: 葉緑体（ようりょくたい）</button></li>
+                <li class="option-item"><button class="option-btn" id="btn-5-1" onclick="selectOption(5, 1)">B: 気孔（きこう）</button></li>
+                <li class="option-item"><button class="option-btn" id="btn-5-2" onclick="selectOption(5, 2)">C: 道管（どうかん）</button></li>
+                <li class="option-item"><button class="option-btn" id="btn-5-3" onclick="selectOption(5, 3)">D: 師管（しかん）</button></li>
+            </ul>
+            <div class="result-box" id="result-5"></div>
+        </div>
+
+        <!-- 【指定位置②】第6問の後の広告 -->
+        <div class="ad-container">
+            <!-- admax -->
+            <script src="https://adm.shinobi.jp/s/8883b8c96c219279b7215cf3521e8aed"></script>
+            <!-- admax -->
+        </div>
+
+        <!-- 第7問 -->
+        <div class="quiz-card" id="card-6">
+            <span class="question-num">第 7 問</span>
+            <p class="question-text">植物の茎にある維管束（いかんそく）のうち、「水や根から吸収した肥料分」が通る管（ X ）と、「葉で作られた栄養分（デンプンが変化したもの）」が通る管（ Y ）の正しい組み合わせはどれでしょう？</p>
+            <div class="hint-block">
+                <button class="hint-btn" onclick="toggleHint(6)">💡 ヒントを表示</button>
+                <div class="hint-text" id="hint-6">覚え方のコツ：「水（水道）が通るのが道管」「栄養（お師匠さんの美味しいご飯）が通るのが師管」とリンクさせると忘れません。</div>
+            </div>
+            <ul class="options-list">
+                <li class="option-item"><button class="option-btn" id="btn-6-0" onclick="selectOption(6, 0)">A: X: 師管（しかん） / Y: 道管（どうかん）</button></li>
+                <li class="option-item"><button class="option-btn" id="btn-6-1" onclick="selectOption(6, 1)">B: X: 道管（どうかん） / Y: 師管（しかん）</button></li>
+                <li class="option-item"><button class="option-btn" id="btn-6-2" onclick="selectOption(6, 2)">C: X: 気孔（きこう） / Y: 道管（どうかん）</button></li>
+                <li class="option-item"><button class="option-btn" id="btn-6-3" onclick="selectOption(6, 3)">D: X: 根毛（こんもう） / Y: 師管（しかん）</button></li>
+            </ul>
+            <div class="result-box" id="result-6"></div>
+        </div>
+
+        <!-- 第8問 -->
+        <div class="quiz-card" id="card-7">
+            <span class="question-num">第 8 問</span>
+            <p class="question-text">植物が光を受けて「二酸化炭素」と「水」から「デンプン（栄養分）」と「酸素」を作り出す働きを何といいますか？</p>
+            <div class="hint-block">
+                <button class="hint-btn" onclick="toggleHint(7)">💡 ヒントを表示</button>
+                <div class="hint-text" id="hint-7">この働きは、葉の細胞の中にある緑色の粒（葉緑体）で行われます。植物特有の、光のエネルギーを使った合成反応です。</div>
+            </div>
+            <ul class="options-list">
+                <li class="option-item"><button class="option-btn" id="btn-7-0" onclick="selectOption(7, 0)">A: 呼吸（こきゅう）</button></li>
+                <li class="option-item"><button class="option-btn" id="btn-7-1" onclick="selectOption(7, 1)">B: 蒸散（じょうさん）</button></li>
+                <li class="option-item"><button class="option-btn" id="btn-7-2" onclick="selectOption(7, 2)">C: 光合成（こうごうせい）</button></li>
+                <li class="option-item"><button class="option-btn" id="btn-7-3" onclick="selectOption(7, 3)">D: 受粉（じゅふん）</button></li>
+            </ul>
+            <div class="result-box" id="result-7"></div>
+        </div>
+
+        <!-- 第9問 -->
+        <div class="quiz-card" id="card-8">
+            <span class="question-num">第 9 問</span>
+            <p class="question-text">植物の「呼吸」について、正しい説明をしているものはどれでしょう？</p>
+            <div class="hint-block">
+                <button class="hint-btn" onclick="toggleHint(8)">💡 ヒントを表示</button>
+                <div class="hint-text" id="hint-8">植物も私たち人間と同じ「生き物」です。生きるためのエネルギーを得るために、いつ、何の気体を吸って、何の気体を出しているでしょうか？光合成とごっちゃにならないように！</div>
+            </div>
+            <ul class="options-list">
+                <li class="option-item"><button class="option-btn" id="btn-8-0" onclick="selectOption(8, 0)">A: 植物は光が当たらない夜だけ呼吸を行っている。</button></li>
+                <li class="option-item"><button class="option-btn" id="btn-8-1" onclick="selectOption(8, 1)">B: 植物の呼吸では、二酸化炭素を吸って酸素を出している。</button></li>
+                <li class="option-item"><button class="option-btn" id="btn-8-2" onclick="selectOption(8, 2)">C: 植物は昼も夜も一日中、酸素を吸って二酸化炭素を出す呼吸を行っている。</button></li>
+                <li class="option-item"><button class="option-btn" id="btn-8-3" onclick="selectOption(8, 3)">D: 植物は光合成をするので、呼吸は一切行っていない。</button></li>
+            </ul>
+            <div class="result-box" id="result-8"></div>
+        </div>
+
+        <!-- 【指定位置③】第9問の後の広告 -->
+        <div class="ad-container">
+            <!-- admax -->
+            <script src="https://adm.shinobi.jp/s/8883b8c96c219279b7215cf3521e8aed"></script>
+            <!-- admax -->
+        </div>
+
+        <!-- 第10問 -->
+        <div class="quiz-card" id="card-9">
+            <span class="question-num">第 10 問</span>
+            <p class="question-text">ゼニゴケやスギゴケなどの「コケ植物」の特徴として、正しいものはどれでしょう？</p>
+            <div class="hint-block">
+                <button class="hint-btn" onclick="toggleHint(9)">💡 ヒントを表示</button>
+                <div class="hint-text" id="hint-9">コケ植物は、シダ植物と同様に「胞子」で増えますが、体に「維管束（道管・師管）」や明確な「根・茎・葉」の区別があるかどうかが大きな違いです。</div>
+            </div>
+            <ul class="options-list">
+                <li class="option-item"><button class="option-btn" id="btn-9-0" onclick="selectOption(9, 0)">A: 種子で仲間を増やし、日当たりの良い乾燥した場所に育つ。</button></li>
+                <li class="option-item"><button class="option-btn" id="btn-9-1" onclick="selectOption(9, 1)">B: 体に維管束があり、根から水を大量に吸収する。</button></li>
+                <li class="option-item"><button class="option-btn" id="btn-9-2" onclick="selectOption(9, 2)">C: 根・茎・葉の区別や維管束がなく、体全体の表面から水を吸収する。</button></li>
+                <li class="option-item"><button class="option-btn" id="btn-9-3" onclick="selectOption(9, 3)">D: 花を咲かせ、果実の中にたくさんの胞子を作る。</button></li>
+            </ul>
+            <div class="result-box" id="result-9"></div>
+        </div>
+    </div>
+
+    <button id="submit-btn" class="submit-all-btn" onclick="calculateScore()">採点する</button>
+
+    <div id="score-section" class="score-section">
+        <h2>結果発表</h2>
+        <p>あなたの正解数は...</p>
+        <div class="score-num" id="score-display">0 / 10</div>
+        <p id="score-comment"></p>
+        <button class="restart-btn" onclick="restartQuiz()">もう一度挑戦する</button>
+    </div>
+</div>
+
+<script>
+const quizMetaData = [
+    { correct: 1, rationale: "B が正解です。ルーペを使うときは「目に近づけて固定する」のが大原則。対象物が動かせる場合は対象物を前後に動かし、動かせない場合は自分の頭（顔）を前後に動かしてピントを合わせます。太陽を直接見るのは絶対にNGです。" },
+    { correct: 3, rationale: "D が正解です。倍率を高くすると、より狭い範囲を拡大して見ることになるため「視野は狭く」なります。また、入ってくる光の量が減るため「視野は暗く」なります。実験での調節方法（しぼりや反射鏡の調整）も一緒に狙われます。" },
+    { correct: 0, rationale: "A が正解です。被子植物の花は、中心から順に「めしべ &rarr; おしべ &rarr; 花弁 &rarr; がく」の順に並んでいます。それぞれの本数や、花弁がくっついているか（合弁花）離れているか（離弁花）もテスト頻出です。" },
+    { correct: 1, rationale: "B が正解です。めしべの根元の膨らんだ部分は「子房（しぼう）」、その中にある小さな粒は「胚珠（はいしゅ）」です。受粉すると、子房は将来「果実」に、胚珠は「種子」へと成長します。この変化は超重要です！" },
+    { correct: 1, rationale: "B が正解です。子房がなく、胚珠がむき出しになっている植物を「裸子植物」といいます。マツ、イチョウ、ソテツ、スギなどが代表例です。花弁（花びら）やがくが無いことも特徴です。" },
+    { correct: 1, rationale: "B が正解です。2つの孔辺細胞に囲まれた隙間を「気孔（きこう）」といいます。ここから水蒸気が外に出ていく現象を「蒸散（じょうさん）」といい、根からの水の吸い上げを促す重要な役割を持っています。" },
+    { correct: 1, rationale: "B が正解です。根から吸い上げた水や栄養分が通るのが「道管」、葉で作られた有機養分が通るのが「師管」です。茎の断面では、道管が内側（中心寄り）、師管が外側に並んで維管束を作っています。" },
+    { correct: 2, rationale: "C が正解です。植物が光エネルギーを利用して、二酸化炭素と水からデンプンなどの養分と酸素を作る働きを「光合成」といいます。細胞内の「葉緑体」で行われる、植物ならではの重要な活動です。" },
+    { correct: 2, rationale: "C が正解です。植物の呼吸は、人間と同じように「一日中（昼も夜も）」行われており、「酸素を吸って二酸化炭素を出す」活動です。昼間は光合成の勢いが強いため二酸化炭素を吸っているように見えますが、呼吸も同時に行っています。" },
+    { correct: 2, rationale: "C が正解です。コケ植物（ゼニゴケ、スギゴケなど）は、シダ植物と同じく胞子で増えますが、体に「根・茎・葉の区別」や「維管束」がありません。根のように見えるものは「仮根（かこん）」と呼ばれ、体を地面に固定するだけの役割です。水は体表全体から吸収します。" }
+];
+
+let userAnswers = new Array(quizMetaData.length).fill(null);
+
+function selectOption(qIdx, oIdx) {
+    if (document.getElementById('score-section').style.display === 'block') return;
+
+    for (let i = 0; i < 4; i++) {
+        const btn = document.getElementById(`btn-${qIdx}-${i}`);
+        if (i === oIdx) {
+            btn.style.borderColor = 'var(--primary-color)';
+            btn.style.backgroundColor = '#e8f5e9';
+            btn.style.fontWeight = 'bold';
+        } else {
+            btn.style.borderColor = '#e9ecef';
+            btn.style.backgroundColor = '#f8f9fa';
+            btn.style.fontWeight = 'normal';
+        }
+    }
+    userAnswers[qIdx] = oIdx;
+}
+
+function toggleHint(qIdx) {
+    const hintDiv = document.getElementById(`hint-${qIdx}`);
+    hintDiv.style.display = hintDiv.style.display === 'block' ? 'none' : 'block';
+}
+
+function calculateScore() {
+    const unanswered = userAnswers.map((ans, idx) => ans === null ? idx + 1 : null).filter(v => v !== null);
+    if (unanswered.length > 0) {
+        alert(`未回答の問題があります。第 ${unanswered.join(', ')} 問に答えてください。`);
+        return;
+    }
+
+    let score = 0;
+
+    quizMetaData.forEach((q, qIdx) => {
+        const userAns = userAnswers[qIdx];
+        const resultBox = document.getElementById(`result-${qIdx}`);
+        
+        for (let i = 0; i < 4; i++) {
+            document.getElementById(`btn-${qIdx}-${i}`).disabled = true;
+        }
+
+        const selectedBtn = document.getElementById(`btn-${qIdx}-${userAns}`);
+        const correctBtn = document.getElementById(`btn-${qIdx}-${q.correct}`);
+
+        if (userAns === q.correct) {
+            score++;
+            selectedBtn.className = 'option-btn correct';
+            resultBox.className = 'result-box show correct-box';
+            resultBox.innerHTML = `<div class="result-title">🌱 正解！</div><div>${q.rationale}</div>`;
+        } else {
+            selectedBtn.className = 'option-btn incorrect';
+            correctBtn.className = 'option-btn correct';
+            resultBox.className = 'result-box show incorrect-box';
+            resultBox.innerHTML = `<div class="result-title">🍂 不正解...（正解は ${String.fromCharCode(65 + q.correct)}）</div><div>${q.rationale}</div>`;
+        }
+    });
+
+    document.getElementById('submit-btn').style.display = 'none';
+    const scoreSection = document.getElementById('score-section');
+    scoreSection.style.display = 'block';
+    document.getElementById('score-display').innerText = `${score} / ${quizMetaData.length}`;
+
+    let comment = '';
+    if (score === 10) comment = '素晴らしい！満点です！植物のつくりや顕微鏡の操作、光合成・呼吸の区別まで完璧に理解できています。定期テストもバッチリですね！';
+    else if (score >= 7) comment = '高得点です！裸子植物・被子植物の違いや、道管・師管の役割など、重要語句がしっかり頭に入っています。間違えた問題の解説だけ見直しておきましょう。';
+    else if (score >= 4) comment = 'あと一歩！「子房と胚珠」「昼の光合成と呼吸の関係」など、ひっかけやすいポイントで迷ってしまったかもしれません。解説を読んで復習してみましょう。';
+    else comment = 'まずは教科書やノートの基本用語をチェック！顕微鏡の使い方や、植物が「胞子」で増えるか「種子」で増えるかなど、大きな分類から整理し直して再挑戦だ！';
+    
+    document.getElementById('score-comment').innerText = comment;
+    scoreSection.scrollIntoView({ behavior: 'smooth' });
+}
+
+function restartQuiz() {
+    userAnswers = new Array(quizMetaData.length).fill(null);
+    document.getElementById('submit-btn').style.display = 'block';
+    document.getElementById('score-section').style.display = 'none';
+    
+    quizMetaData.forEach((q, qIdx) => {
+        const resultBox = document.getElementById(`result-${qIdx}`);
+        resultBox.className = 'result-box';
+        resultBox.innerHTML = '';
+        
+        for (let i = 0; i < 4; i++) {
+            const btn = document.getElementById(`btn-${qIdx}-${i}`);
+            btn.disabled = false;
+            btn.className = 'option-btn';
+            btn.style = '';
+        }
+        document.getElementById(`hint-${qIdx}`).style.display = 'none';
+    });
+
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+}
+</script>
+
+</body>
+</html>
