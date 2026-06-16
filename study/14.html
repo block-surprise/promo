@@ -1,0 +1,555 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>中1地理：アフリカ州 クイズ</title>
+    <style>
+        :root {
+            --primary-color: #2c3e50;
+            --accent-color: #e67e22;
+            --success-color: #2ecc71;
+            --error-color: #e74c3c;
+            --bg-color: #f4f6f7;
+            --card-bg: #ffffff;
+            --text-color: #2c3e50;
+        }
+
+        body {
+            font-family: 'Helvetica Neue', Arial, 'Hiragino Kaku Gothic ProN', 'Hiragino Sans', Meiryo, sans-serif;
+            background-color: var(--bg-color);
+            color: var(--text-color);
+            margin: 0;
+            padding: 20px;
+            line-height: 1.6;
+        }
+
+        .container {
+            max-width: 800px;
+            margin: 0 auto;
+        }
+
+        header {
+            text-align: center;
+            margin-bottom: 30px;
+            padding: 20px;
+            background: linear-gradient(135deg, #34495e, #2c3e50);
+            color: white;
+            border-radius: 10px;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+            border-bottom: 5px solid var(--accent-color);
+        }
+
+        header h1 {
+            margin: 0 0 10px 0;
+            font-size: 24px;
+        }
+
+        header p {
+            margin: 0;
+            font-size: 14px;
+            opacity: 0.9;
+        }
+
+        .quiz-card {
+            background-color: var(--card-bg);
+            border-radius: 10px;
+            padding: 25px;
+            margin-bottom: 25px;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.05);
+        }
+
+        .question-num {
+            font-weight: bold;
+            color: var(--accent-color);
+            font-size: 14px;
+            text-transform: uppercase;
+            margin-bottom: 5px;
+            display: block;
+        }
+
+        .question-text {
+            font-size: 18px;
+            font-weight: bold;
+            margin-top: 0;
+            margin-bottom: 20px;
+        }
+
+        .options-list {
+            list-style: none;
+            padding: 0;
+            margin: 0 0 15px 0;
+        }
+
+        .option-item {
+            margin-bottom: 10px;
+        }
+
+        .option-btn {
+            width: 100%;
+            text-align: left;
+            padding: 12px 15px;
+            background-color: #f8f9fa;
+            border: 2px solid #e9ecef;
+            border-radius: 6px;
+            cursor: pointer;
+            font-size: 15px;
+            transition: all 0.2s ease;
+        }
+
+        .option-btn:hover:not(:disabled) {
+            background-color: #e9ecef;
+            border-color: #ced4da;
+        }
+
+        .option-btn:disabled {
+            cursor: not-allowed;
+            color: #6c757d;
+        }
+
+        .option-btn.correct {
+            background-color: #d4edda;
+            border-color: var(--success-color);
+            color: #155724;
+            font-weight: bold;
+        }
+
+        .option-btn.incorrect {
+            background-color: #f8d7da;
+            border-color: var(--error-color);
+            color: #721c24;
+        }
+
+        .hint-block {
+            margin-bottom: 15px;
+        }
+
+        .hint-btn {
+            background: none;
+            border: none;
+            color: #7f8c8d;
+            cursor: pointer;
+            font-size: 13px;
+            text-decoration: underline;
+            padding: 0;
+        }
+
+        .hint-text {
+            display: none;
+            background-color: #fff3cd;
+            color: #856404;
+            padding: 10px;
+            border-radius: 5px;
+            font-size: 13px;
+            margin-top: 5px;
+            border-left: 4px solid #ffc107;
+        }
+
+        .result-box {
+            display: none;
+            margin-top: 15px;
+            padding: 15px;
+            border-radius: 6px;
+            font-size: 14px;
+        }
+
+        .result-box.show {
+            display: block;
+        }
+
+        .result-box.correct-box {
+            background-color: #e2f0d9;
+            color: #2c5217;
+            border: 1px solid #c5e1b2;
+        }
+
+        .result-box.incorrect-box {
+            background-color: #fbe5e5;
+            color: #631c1c;
+            border: 1px solid #f3c2c2;
+        }
+
+        .result-title {
+            font-weight: bold;
+            margin-bottom: 5px;
+            font-size: 15px;
+        }
+
+        .score-section {
+            text-align: center;
+            background-color: var(--primary-color);
+            color: white;
+            padding: 30px;
+            border-radius: 10px;
+            margin-top: 30px;
+            display: none;
+        }
+
+        .score-num {
+            font-size: 48px;
+            font-weight: bold;
+            color: #f1c40f;
+            margin: 10px 0;
+        }
+
+        .restart-btn {
+            background-color: var(--accent-color);
+            color: white;
+            border: none;
+            padding: 12px 25px;
+            font-size: 16px;
+            border-radius: 5px;
+            cursor: pointer;
+            font-weight: bold;
+            margin-top: 15px;
+        }
+
+        .submit-all-btn {
+            display: block;
+            width: 100%;
+            background-color: var(--accent-color);
+            color: white;
+            border: none;
+            padding: 15px;
+            font-size: 18px;
+            font-weight: bold;
+            border-radius: 8px;
+            cursor: pointer;
+            margin-top: 20px;
+        }
+
+        .submit-all-btn:hover {
+            background-color: #d35400;
+        }
+
+        .ad-container {
+            text-align: center;
+            margin: 20px 0 35px 0;
+            min-height: 90px;
+        }
+    </style>
+</head>
+<body>
+
+<div class="container">
+    <header>
+        <h1>中1地理：アフリカ州 クイズ</h1>
+        <p>世界最大の砂漠や大河、植民地時代の歴史が残した国境線、豊富な鉱産資源とこれからのモノカルチャー経済からの脱却を学ぼう！</p>
+    </header>
+
+    <div id="quiz-container">
+        <!-- 第1問 -->
+        <div class="quiz-card" id="card-0">
+            <span class="question-num">第 1 問</span>
+            <p class="question-text">アフリカ大陸の北部に広がる、世界最大の面積を持つ広大な乾燥した砂漠を何といいますか？</p>
+            <div class="hint-block">
+                <button class="hint-btn" onclick="toggleHint(0)">💡 ヒントを表示</button>
+                <div class="hint-text" id="hint-0">カタカナ3文字の砂漠です。アフリカ大陸の約3分の1を占める非常に大きな砂漠で、この砂漠の南の縁（へり）に沿って広がる半乾燥の草原地帯は「サヘル」と呼ばれています。</div>
+            </div>
+            <ul class="options-list">
+                <li class="option-item"><button class="option-btn" id="btn-0-0" onclick="selectOption(0, 0)">A: ゴビ砂漠</button></li>
+                <li class="option-item"><button class="option-btn" id="btn-0-1" onclick="selectOption(0, 1)">B: サハラ砂漠</button></li>
+                <li class="option-item"><button class="option-btn" id="btn-0-2" onclick="selectOption(0, 2)">C: カラハリ砂漠</button></li>
+                <li class="option-item"><button class="option-btn" id="btn-0-3" onclick="selectOption(0, 3)">D: タクラマカン砂漠</button></li>
+            </ul>
+            <div class="result-box" id="result-0"></div>
+        </div>
+
+        <!-- 第2問 -->
+        <div class="quiz-card" id="card-1">
+            <span class="question-num">第 2 問</span>
+            <p class="question-text">アフリカ大陸を南から北へと貫いて地中海に注ぐ、世界でもっとも長い大河の名前は何でしょう？</p>
+            <div class="hint-block">
+                <button class="hint-btn" onclick="toggleHint(1)">💡 ヒントを表示</button>
+                <div class="hint-text" id="hint-1">カタカナ3文字の川です。古代エジプト文明を育んだ川としても有名で、「エジプトはこの川の賜物（たまもの）」という歴史的な言葉が残されています。</div>
+            </div>
+            <ul class="options-list">
+                <li class="option-item"><button class="option-btn" id="btn-1-0" onclick="selectOption(1, 0)">A: ナイル川</button></li>
+                <li class="option-item"><button class="option-btn" id="btn-1-1" onclick="selectOption(1, 1)">B: コンゴ川</button></li>
+                <li class="option-item"><button class="option-btn" id="btn-1-2" onclick="selectOption(1, 2)">C: ニジェール川</button></li>
+                <li class="option-item"><button class="option-btn" id="btn-1-3" onclick="selectOption(1, 3)">D: ザンベジ川</button></li>
+            </ul>
+            <div class="result-box" id="result-1"></div>
+        </div>
+
+        <!-- 第3問 -->
+        <div class="quiz-card" id="card-2">
+            <span class="question-num">第 3 問</span>
+            <p class="question-text">アフリカの多くの国々の「国境線」は、緯線（いせん）や経線（けいせん）に沿って「直線的」になっている場所が多く見られます。これはなぜでしょう？</p>
+            <div class="hint-block">
+                <button class="hint-btn" onclick="toggleHint(2)">💡 ヒントを表示</button>
+                <div class="hint-text" id="hint-2">かつてアフリカを支配していたヨーロッパの国々が、現地の民族や地形（川や山脈）を無視して、地図の上に勝手に線を引いて分割した歴史が背景にあります。</div>
+            </div>
+            <ul class="options-list">
+                <li class="option-item"><button class="option-btn" id="btn-2-0" onclick="selectOption(2, 0)">A: 地震が多くて地形が変わりやすかったから</button></li>
+                <li class="option-item"><button class="option-btn" id="btn-2-1" onclick="selectOption(2, 1)">B: 民族ごとに話し合って綺麗に分けたから</button></li>
+                <li class="option-item"><button class="option-btn" id="btn-2-2" onclick="selectOption(2, 2)">C: かつて植民地支配していたヨーロッパ諸国が、都合よく区切ったから</button></li>
+                <li class="option-item"><button class="option-btn" id="btn-2-3" onclick="selectOption(2, 3)">D: 砂漠が多くて目印になるものが何もなかったから</button></li>
+            </ul>
+            <div class="result-box" id="result-2"></div>
+        </div>
+
+        <!-- 【指定位置①】第3問の後の広告 -->
+        <div class="ad-container">
+            <!-- admax -->
+            <script src="https://adm.shinobi.jp/s/8883b8c96c219279b7215cf3521e8aed"></script>
+            <!-- admax -->
+        </div>
+
+        <!-- 第4問 -->
+        <div class="quiz-card" id="card-3">
+            <span class="question-num">第 4 問</span>
+            <p class="question-text">アフリカ州の宗教の分布について、アラビア半島に近い「北部（サハラ砂漠より北）」の国々で古くから広く信仰されている宗教はどれでしょう？</p>
+            <div class="hint-block">
+                <button class="hint-btn" onclick="toggleHint(3)">💡 ヒントを表示</button>
+                <div class="hint-text" id="hint-3">エジプトやアルジェリアなど、北アフリカの国々ではアラビア語が広く使われており、文化的には中東（西アジア）と非常に近いです。</div>
+            </div>
+            <ul class="options-list">
+                <li class="option-item"><button class="option-btn" id="btn-3-0" onclick="selectOption(3, 0)">A: キリスト教</button></li>
+                <li class="option-item"><button class="option-btn" id="btn-3-1" onclick="selectOption(3, 1)">B: 仏教</button></li>
+                <li class="option-item"><button class="option-btn" id="btn-3-2" onclick="selectOption(3, 2)">C: イスラム教</button></li>
+                <li class="option-item"><button class="option-btn" id="btn-3-3" onclick="selectOption(3, 3)">D: ヒンドゥー教</button></li>
+            </ul>
+            <div class="result-box" id="result-3"></div>
+        </div>
+
+        <!-- 第5問 -->
+        <div class="quiz-card" id="card-4">
+            <span class="question-num">第 5 問</span>
+            <p class="question-text">かつて植民地時代にヨーロッパの人々によって作られた、特定の農産物を輸出用に大量栽培する「大規模な農園（農業の仕組み）」を何といいますか？</p>
+            <div class="hint-block">
+                <button class="hint-btn" onclick="toggleHint(4)">💡 ヒントを表示</button>
+                <div class="hint-text" id="hint-4">カタカナ7文字の言葉です。コートジボワールやガーナのカカオ、ケニアの茶（紅茶）などが、この農園によって今でも盛んに生産されています。</div>
+            </div>
+            <ul class="options-list">
+                <li class="option-item"><button class="option-btn" id="btn-4-0" onclick="selectOption(4, 0)">A: プランテーション</button></li>
+                <li class="option-item"><button class="option-btn" id="btn-4-1" onclick="selectOption(4, 1)">B: ファゼンダ</button></li>
+                <li class="option-item"><button class="option-btn" id="btn-4-2" onclick="selectOption(4, 2)">C: コルホーズ</button></li>
+                <li class="option-item"><button class="option-btn" id="btn-4-3" onclick="selectOption(4, 3)">D: 適地適作（てきちてきさく）</button></li>
+            </ul>
+            <div class="result-box" id="result-4"></div>
+        </div>
+
+        <!-- 第6問 -->
+        <div class="quiz-card" id="card-5">
+            <span class="question-num">第 6 問</span>
+            <p class="question-text">アフリカ西海岸の「コートジボワール」や「ガーナ」が世界的な生産量を誇り、チョコレートの原料として日本も多くを輸入している農産物は何でしょう？</p>
+            <div class="hint-block">
+                <button class="hint-btn" onclick="toggleHint(5)">💡 ヒントを表示</button>
+                <div class="hint-text" id="hint-5">カタカナ3文字の農産物です。ギニア湾の沿岸に位置するこれらの国では、赤道に近い熱帯の気候を利用してこの作物の栽培が盛んに行われています。</div>
+            </div>
+            <ul class="options-list">
+                <li class="option-item"><button class="option-btn" id="btn-5-0" onclick="selectOption(5, 0)">A: コーヒー</button></li>
+                <li class="option-item"><button class="option-btn" id="btn-5-1" onclick="selectOption(5, 1)">B: カカオ</button></li>
+                <li class="option-item"><button class="option-btn" id="btn-5-2" onclick="selectOption(5, 2)">C: さとうきび</button></li>
+                <li class="option-item"><button class="option-btn" id="btn-5-3" onclick="selectOption(5, 3)">D: バナナ</button></li>
+            </ul>
+            <div class="result-box" id="result-5"></div>
+        </div>
+
+        <!-- 【指定位置②】第6問の後の広告 -->
+        <div class="ad-container">
+            <!-- admax -->
+            <script src="https://adm.shinobi.jp/s/8883b8c96c219279b7215cf3521e8aed"></script>
+            <!-- admax -->
+        </div>
+
+        <!-- 第7問 -->
+        <div class="quiz-card" id="card-6">
+            <span class="question-num">第 7 問</span>
+            <p class="question-text">アフリカ州の豊かな「鉱産資源」について、南アフリカ共和国などで多く産出され、スマートフォンなどのハイテク製品に欠かせない、地球上の存在量が非常に少ない金属を何といいますか？</p>
+            <div class="hint-block">
+                <button class="hint-btn" onclick="toggleHint(6)">💡 ヒントを表示</button>
+                <div class="hint-text" id="hint-6">英語で「珍しい・希少な金属」という意味の言葉です。クロム、マンガン、コバルト、プラチナ（白金）などがこれに該当します。</div>
+            </div>
+            <ul class="options-list">
+                <li class="option-item"><button class="option-btn" id="btn-6-0" onclick="selectOption(6, 0)">A: レアメタル（希少金属）</button></li>
+                <li class="option-item"><button class="option-btn" id="btn-6-1" onclick="selectOption(6, 1)">B: 鉄鉱石</button></li>
+                <li class="option-item"><button class="option-btn" id="btn-6-2" onclick="selectOption(6, 2)">C: ボーキサイト</button></li>
+                <li class="option-item"><button class="option-btn" id="btn-6-3" onclick="selectOption(6, 3)">D: 銅鉱石</button></li>
+            </ul>
+            <div class="result-box" id="result-6"></div>
+        </div>
+
+        <!-- 第8問 -->
+        <div class="quiz-card" id="card-7">
+            <span class="question-num">第 8 問</span>
+            <p class="question-text">ギニア湾に面した「ナイジェリア」や、北部のアルジェリアなどで多く産出され、国の大きな輸出品目（国の収入源）となっているエネルギー資源は何でしょう？</p>
+            <div class="hint-block">
+                <button class="hint-btn" onclick="toggleHint(7)">💡 ヒントを表示</button>
+                <div class="hint-text" id="hint-7">漢字2文字の資源です。ナイジェリアはアフリカ最大の人口を持つ国であると同時に、この資源の輸出によって石油輸出国機構（OPEC）にも加盟しています。</div>
+            </div>
+            <ul class="options-list">
+                <li class="option-item"><button class="option-btn" id="btn-7-0" onclick="selectOption(7, 0)">A: 石炭</button></li>
+                <li class="option-item"><button class="option-btn" id="btn-7-1" onclick="selectOption(7, 1)">B: 原油（石油）</button></li>
+                <li class="option-item"><button class="option-btn" id="btn-7-2" onclick="selectOption(7, 2)">C: ウラン</button></li>
+                <li class="option-item"><button class="option-btn" id="btn-7-3" onclick="selectOption(7, 3)">D: 天然ガス</button></li>
+            </ul>
+            <div class="result-box" id="result-7"></div>
+        </div>
+
+        <!-- 第9問 -->
+        <div class="quiz-card" id="card-8">
+            <span class="question-num">第 9 問</span>
+            <p class="question-text">限られた特定の農産物や鉱産資源の輸出だけに、国の経済の大部分を頼りきっているアフリカの多くの国に見られる経済の仕組みを何といいますか？</p>
+            <div class="hint-block">
+                <button class="hint-btn" onclick="toggleHint(8)">💡 ヒントを表示</button>
+                <div class="hint-text" id="hint-8">カタカナ11文字の経済用語です。世界的な景気の変化や天候によって、国の収入が激しく変動してしまうという大きな弱点を持っています。</div>
+            </div>
+            <ul class="options-list">
+                <li class="option-item"><button class="option-btn" id="btn-8-0" onclick="selectOption(8, 0)">A: プランテーション経済</button></li>
+                <li class="option-item"><button class="option-btn" id="btn-8-1" onclick="selectOption(8, 1)">B: モノカルチャー経済</button></li>
+                <li class="option-item"><button class="option-btn" id="btn-8-2" onclick="selectOption(8, 2)">C: 資本主義経済</button></li>
+                <li class="option-item"><button class="option-btn" id="btn-8-3" onclick="selectOption(8, 3)">D: アジア通貨経済</button></li>
+            </ul>
+            <div class="result-box" id="result-8"></div>
+        </div>
+
+        <!-- 【指定位置③】第9問の後の広告 -->
+        <div class="ad-container">
+            <!-- admax -->
+            <script src="https://adm.shinobi.jp/s/8883b8c96c219279b7215cf3521e8aed"></script>
+            <!-- admax -->
+        </div>
+
+        <!-- 第10問 -->
+        <div class="quiz-card" id="card-9">
+            <span class="question-num">第 10 問</span>
+            <p class="question-text">アフリカ州では近年、経済の弱点を克服するために、どのような取り組み（産業の工夫）を始めていますか？一番適切なものを選びましょう。</p>
+            <div class="hint-block">
+                <button class="hint-btn" onclick="toggleHint(9)">💡 ヒントを表示</button>
+                <div class="hint-text" id="hint-9">1つの作物や資源だけに頼るのをやめて、国内で自動車などの「工業」を発展させたり、別の新しい産業を育てたりする工夫（産業の多角化）が進められています。</div>
+            </div>
+            <ul class="options-list">
+                <li class="option-item"><button class="option-btn" id="btn-9-0" onclick="selectOption(9, 0)">A: 他の国からの輸入を完全に禁止して、自給自足の生活に戻る</button></li>
+                <li class="option-item"><button class="option-btn" id="btn-9-1" onclick="selectOption(9, 1)">B: 農業をすべてやめて、全員でレアメタルの採掘だけに集中する</button></li>
+                <li class="option-item"><button class="option-btn" id="btn-9-2" onclick="selectOption(9, 2)">C: 資源の加工や工業化を進め、多くの種類の産業を育てる（多角化）</button></li>
+                <li class="option-item"><button class="option-btn" id="btn-9-3" onclick="selectOption(9, 3)">D: ヨーロッパの国々に再び植民地になってもらうようにお願いする</button></li>
+            </ul>
+            <div class="result-box" id="result-9"></div>
+        </div>
+    </div>
+
+    <button id="submit-btn" class="submit-all-btn" onclick="calculateScore()">採点する</button>
+
+    <div id="score-section" class="score-section">
+        <h2>結果発表</h2>
+        <p>あなたの正解数は...</p>
+        <div class="score-num" id="score-display">0 / 10</div>
+        <p id="score-comment"></p>
+        <button class="restart-btn" onclick="restartQuiz()">もう一度挑戦する</button>
+    </div>
+</div>
+
+<script>
+const quizMetaData = [
+    { correct: 1, rationale: "サハラ砂漠が正解です。アフリカ北部に広がる世界最大の砂漠です。サハラ砂漠のすぐ南側には、気候の変化や過放牧・過耕作などによって急速に砂漠化が進んでいる、植生がわずかな半乾燥の草原地帯「サヘル」があり、こちらも非常によくテストに出題されます。" },
+    { correct: 0, rationale: "ナイル川が正解です。全長約6650kmに及ぶ世界最長の大河です。なお、アフリカ大陸の中央（赤道付近）を流れる「コンゴ川」は、熱帯雨林を流れるため水の量（流量）がアフリカ最大であり、ナイル川（最長）とコンゴ川（最多流量）の区別は重要です。" },
+    { correct: 2, rationale: "「かつて植民地支配していたヨーロッパ諸国が、都合よく区切ったから」が正解です。19世紀後半、ヨーロッパ諸国はアフリカに住む多くの民族の境界や、山脈・河川といった地形を完全に無視し、地図上で緯線・経線などを基準に機械的に境界線を引きました。これが独立後の現在でも、国内の民族対立や国境紛争の一因となっています。" },
+    { correct: 2, rationale: "イスラム教が正解です。7世紀以降、北アフリカはアラブ（イスラム）世界の強い影響を受け、言語はアラビア語、宗教はイスラム教が広く定着しました。一方、サハラ砂漠より南側（キリスト教の布教やヨーロッパの植民地支配の影響を強く受けた地域）では、キリスト教や現地の伝統的な宗教が多く信仰されています。" },
+    { correct: 0, rationale: "プランテーションが正解です。かつてヨーロッパの宗主国が、自国に持ち帰るため、あるいは世界に輸出して利益を出すために開いた大規模な農園です。現地の人々を安い賃金で働かせ、コーヒー、カカオ、茶、天然ゴムなどを単一栽培（モノカルチャー）させました。" },
+    { correct: 1, rationale: "カカオが正解です。コートジボワールは世界第1位、ガーナは世界第2位クラスのシェアを誇るカカオ豆の巨大生産国です。日本が輸入するカカオ豆の約7〜8割はガーナ産であり、私たちの食べるチョコレートに深く結びついています。" },
+    { correct: 0, rationale: "レアメタル（希少金属）が正解です。南アフリカ共和国はクロムやプラチナ、マンガン、コバルトなどのレアメタルの世界的産地です。また、南アフリカ共和国やボツワナは「ダイヤモンド」や「金」の産地としても有名です。" },
+    { correct: 1, rationale: "原油（石油）が正解です。ナイジェリアはアフリカ最大の原油の生産・輸出国であり、国家の収入のほとんどを原油に依存しています。近年は経済発展が著しく、南アフリカ共和国などと並んでアフリカ経済を引っ張る大国となっています。" },
+    { correct: 1, rationale: "モノカルチャー経済が正解です。特定のわずかな種類の農産物や鉱産資源（一次産品）の輸出だけに国全体の経済が依存している構造です。天候不良で大凶作になったり、世界市場での資源価格が暴落したりすると、国全体の財政がたちまち大打撃を受けてしまうという大きな弱点があります。" },
+    { correct: 2, rationale: "「資源の加工や工業化を進め、多くの種類の産業を育てる（多角化）」が正解です。モノカルチャー経済の弱点を克服するため、近年は採掘した資源をそのまま輸出するのではなく、国内で加工して製品にする工業化を進めたり、観光業やIT産業など、新しい産業を育てて経済を安定させる「多角化」への取り組みが活発になっています。" }
+];
+
+let userAnswers = new Array(quizMetaData.length).fill(null);
+
+function selectOption(qIdx, oIdx) {
+    if (document.getElementById('score-section').style.display === 'block') return;
+
+    for (let i = 0; i < 4; i++) {
+        const btn = document.getElementById(`btn-${qIdx}-${i}`);
+        if (i === oIdx) {
+            btn.style.borderColor = 'var(--accent-color)';
+            btn.style.backgroundColor = '#fdf2e9';
+            btn.style.fontWeight = 'bold';
+        } else {
+            btn.style.borderColor = '#e9ecef';
+            btn.style.backgroundColor = '#f8f9fa';
+            btn.style.fontWeight = 'normal';
+        }
+    }
+    userAnswers[qIdx] = oIdx;
+}
+
+function toggleHint(qIdx) {
+    const hintDiv = document.getElementById(`hint-${qIdx}`);
+    hintDiv.style.display = hintDiv.style.display === 'block' ? 'none' : 'block';
+}
+
+function calculateScore() {
+    const unanswered = userAnswers.map((ans, idx) => ans === null ? idx + 1 : null).filter(v => v !== null);
+    if (unanswered.length > 0) {
+        alert(`未回答の問題があります。第 ${unanswered.join(', ')} 問に答えてください。`);
+        return;
+    }
+
+    let score = 0;
+
+    quizMetaData.forEach((q, qIdx) => {
+        const userAns = userAnswers[qIdx];
+        const resultBox = document.getElementById(`result-${qIdx}`);
+        
+        for (let i = 0; i < 4; i++) {
+            document.getElementById(`btn-${qIdx}-${i}`).disabled = true;
+        }
+
+        const selectedBtn = document.getElementById(`btn-${qIdx}-${userAns}`);
+        const correctBtn = document.getElementById(`btn-${qIdx}-${q.correct}`);
+
+        if (userAns === q.correct) {
+            score++;
+            selectedBtn.className = 'option-btn correct';
+            resultBox.className = 'result-box show correct-box';
+            resultBox.innerHTML = `<div class="result-title">🦁 正解！</div><div>${q.rationale}</div>`;
+        } else {
+            selectedBtn.className = 'option-btn incorrect';
+            correctBtn.className = 'option-btn correct';
+            resultBox.className = 'result-box show incorrect-box';
+            resultBox.innerHTML = `<div class="result-title">⚠️ 不正解...（正解は ${String.fromCharCode(65 + q.correct)}）</div><div>${q.rationale}</div>`;
+        }
+    });
+
+    document.getElementById('submit-btn').style.display = 'none';
+    const scoreSection = document.getElementById('score-section');
+    scoreSection.style.display = 'block';
+    document.getElementById('score-display').innerText = `${score} / ${quizMetaData.length}`;
+
+    let comment = '';
+    if (score === 10) comment = '満点パーフェクト！アフリカ州の地理は完全にマスターしていますね！サハラ砂漠とサヘルの違い、直線的な国境線の背景、カカオやレアメタルなどの産業、そしてモノカルチャー経済からの脱却まで、完璧な理解度です！';
+    else if (score >= 7) comment = '素晴らしい高得点！テスト最頻出の「直線的な国境」「プランテーション」「モノカルチャー経済」といった最重要ワードがバッチリ定着しています。この調子なら定期テストや模試も安心です！';
+    else if (score >= 4) comment = '合格点クリアです！アフリカを覚えるポイントは、サハラ砂漠の北側（イスラム・アラビア語）と南側（キリスト教・英語やフランス語）の文化の違い、そして国ごとの輸出品（ナイジェリア＝原油、南アフリカ＝レアメタル）を整理することです。解説を読んで復習してみましょう。';
+    else comment = 'まずはアフリカの白地図で「サハラ砂漠」「ナイル川」の位置を確認することから始めてみよう！そして、「ヨーロッパの支配によって国境が直線になった」「特定の資源に頼るモノカルチャー経済」という2大超重要ストーリーを頭に入れると、点数が一気に伸びるよ！';
+    
+    document.getElementById('score-comment').innerText = comment;
+    scoreSection.scrollIntoView({ behavior: 'smooth' });
+}
+
+function restartQuiz() {
+    userAnswers = new Array(quizMetaData.length).fill(null);
+    document.getElementById('submit-btn').style.display = 'block';
+    document.getElementById('score-section').style.display = 'none';
+    
+    quizMetaData.forEach((q, qIdx) => {
+        const resultBox = document.getElementById(`result-${qIdx}`);
+        resultBox.className = 'result-box';
+        resultBox.innerHTML = '';
+        
+        for (let i = 0; i < 4; i++) {
+            const btn = document.getElementById(`btn-${qIdx}-${i}`);
+            btn.disabled = false;
+            btn.className = 'option-btn';
+            btn.style = '';
+        }
+        document.getElementById(`hint-${qIdx}`).style.display = 'none';
+    });
+
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+}
+</script>
+
+</body>
+</html>
