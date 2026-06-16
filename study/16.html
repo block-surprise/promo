@@ -1,0 +1,555 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>中学歴史：弥生時代 クイズ</title>
+    <style>
+        :root {
+            --primary-color: #8b4513;
+            --accent-color: #d35400;
+            --success-color: #2ecc71;
+            --error-color: #e74c3c;
+            --bg-color: #fcf8f2;
+            --card-bg: #ffffff;
+            --text-color: #3e2723;
+        }
+
+        body {
+            font-family: 'Helvetica Neue', Arial, 'Hiragino Kaku Gothic ProN', 'Hiragino Sans', Meiryo, sans-serif;
+            background-color: var(--bg-color);
+            color: var(--text-color);
+            margin: 0;
+            padding: 20px;
+            line-height: 1.6;
+        }
+
+        .container {
+            max-width: 800px;
+            margin: 0 auto;
+        }
+
+        header {
+            text-align: center;
+            margin-bottom: 30px;
+            padding: 20px;
+            background: linear-gradient(135deg, #8b4513, #5d4037);
+            color: white;
+            border-radius: 10px;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+            border-bottom: 5px solid var(--accent-color);
+        }
+
+        header h1 {
+            margin: 0 0 10px 0;
+            font-size: 24px;
+        }
+
+        header p {
+            margin: 0;
+            font-size: 14px;
+            opacity: 0.9;
+        }
+
+        .quiz-card {
+            background-color: var(--card-bg);
+            border-radius: 10px;
+            padding: 25px;
+            margin-bottom: 25px;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.05);
+        }
+
+        .question-num {
+            font-weight: bold;
+            color: var(--accent-color);
+            font-size: 14px;
+            text-transform: uppercase;
+            margin-bottom: 5px;
+            display: block;
+        }
+
+        .question-text {
+            font-size: 18px;
+            font-weight: bold;
+            margin-top: 0;
+            margin-bottom: 20px;
+        }
+
+        .options-list {
+            list-style: none;
+            padding: 0;
+            margin: 0 0 15px 0;
+        }
+
+        .option-item {
+            margin-bottom: 10px;
+        }
+
+        .option-btn {
+            width: 100%;
+            text-align: left;
+            padding: 12px 15px;
+            background-color: #fdfefe;
+            border: 2px solid #e0d0c0;
+            border-radius: 6px;
+            cursor: pointer;
+            font-size: 15px;
+            transition: all 0.2s ease;
+        }
+
+        .option-btn:hover:not(:disabled) {
+            background-color: #f5ebe0;
+            border-color: #cdb4db;
+        }
+
+        .option-btn:disabled {
+            cursor: not-allowed;
+            color: #8d6e63;
+        }
+
+        .option-btn.correct {
+            background-color: #d4edda;
+            border-color: var(--success-color);
+            color: #155724;
+            font-weight: bold;
+        }
+
+        .option-btn.incorrect {
+            background-color: #f8d7da;
+            border-color: var(--error-color);
+            color: #721c24;
+        }
+
+        .hint-block {
+            margin-bottom: 15px;
+        }
+
+        .hint-btn {
+            background: none;
+            border: none;
+            color: #8d6e63;
+            cursor: pointer;
+            font-size: 13px;
+            text-decoration: underline;
+            padding: 0;
+        }
+
+        .hint-text {
+            display: none;
+            background-color: #fff3cd;
+            color: #856404;
+            padding: 10px;
+            border-radius: 5px;
+            font-size: 13px;
+            margin-top: 5px;
+            border-left: 4px solid #ffc107;
+        }
+
+        .result-box {
+            display: none;
+            margin-top: 15px;
+            padding: 15px;
+            border-radius: 6px;
+            font-size: 14px;
+        }
+
+        .result-box.show {
+            display: block;
+        }
+
+        .result-box.correct-box {
+            background-color: #e2f0d9;
+            color: #2c5217;
+            border: 1px solid #c5e1b2;
+        }
+
+        .result-box.incorrect-box {
+            background-color: #fbe5e5;
+            color: #631c1c;
+            border: 1px solid #f3c2c2;
+        }
+
+        .result-title {
+            font-weight: bold;
+            margin-bottom: 5px;
+            font-size: 15px;
+        }
+
+        .score-section {
+            text-align: center;
+            background-color: var(--primary-color);
+            color: white;
+            padding: 30px;
+            border-radius: 10px;
+            margin-top: 30px;
+            display: none;
+        }
+
+        .score-num {
+            font-size: 48px;
+            font-weight: bold;
+            color: #f1c40f;
+            margin: 10px 0;
+        }
+
+        .restart-btn {
+            background-color: var(--accent-color);
+            color: white;
+            border: none;
+            padding: 12px 25px;
+            font-size: 16px;
+            border-radius: 5px;
+            cursor: pointer;
+            font-weight: bold;
+            margin-top: 15px;
+        }
+
+        .submit-all-btn {
+            display: block;
+            width: 100%;
+            background-color: var(--primary-color);
+            color: white;
+            border: none;
+            padding: 15px;
+            font-size: 18px;
+            font-weight: bold;
+            border-radius: 8px;
+            cursor: pointer;
+            margin-top: 20px;
+        }
+
+        .submit-all-btn:hover {
+            background-color: #5d4037;
+        }
+
+        .ad-container {
+            text-align: center;
+            margin: 20px 0 35px 0;
+            min-height: 90px;
+        }
+    </style>
+</head>
+<body>
+
+<div class="container">
+    <header>
+        <h1>中学歴史：弥生時代 クイズ</h1>
+        <p>大陸から伝わった稲作と金属器、むらから「くに」への発展、そして卑弥呼が治めた邪馬台国の謎を解き明かそう！</p>
+    </header>
+
+    <div id="quiz-container">
+        <!-- 第1問 -->
+        <div class="quiz-card" id="card-0">
+            <span class="question-num">第 1 問</span>
+            <p class="question-text">縄文時代の終わりごろから弥生時代にかけて、大陸から日本へ伝わり、人々の生活を大きく変えた農業は何でしょう？</p>
+            <div class="hint-block">
+                <button class="hint-btn" onclick="toggleHint(0)">💡 ヒントを表示</button>
+                <div class="hint-text" id="hint-0">主に「水田（すいでん）」を使ってお米を育てる農業のことです。漢字4文字、または「稲作（いなさく）」とも呼ばれます。</div>
+            </div>
+            <ul class="options-list">
+                <li class="option-item"><button class="option-btn" id="btn-0-0" onclick="selectOption(0, 0)">A: 畑作（はたさく）</button></li>
+                <li class="option-item"><button class="option-btn" id="btn-0-1" onclick="selectOption(0, 1)">B: 水稲耕作（すいとうこうさく）</button></li>
+                <li class="option-item"><button class="option-btn" id="btn-0-2" onclick="selectOption(0, 2)">C: 焼畑農業（やきはたのうぎょう）</button></li>
+                <li class="option-item"><button class="option-btn" id="btn-0-3" onclick="selectOption(0, 3)">D: 粗放的農業（そほうてきのうぎょう）</button></li>
+            </ul>
+            <div class="result-box" id="result-0"></div>
+        </div>
+
+        <!-- 第2問 -->
+        <div class="quiz-card" id="card-1">
+            <span class="question-num">第 2 問</span>
+            <p class="question-text">弥生時代に、稲作と一緒に日本へ伝わった2種類の「金属器（きんぞくき）」の組み合わせとして正しいものはどれでしょう？</p>
+            <div class="hint-block">
+                <button class="hint-btn" onclick="toggleHint(1)">💡 ヒントを表示</button>
+                <div class="hint-text" id="hint-1">一方はお祭りや儀式に使う「青銅器（せいどうき）」、もう一方は木を削る工具や武器、農具の先などに使われた頑丈な金属器です。</div>
+            </div>
+            <ul class="options-list">
+                <li class="option-item"><button class="option-btn" id="btn-1-0" onclick="selectOption(1, 0)">A: 青銅器 と 鉄器</button></li>
+                <li class="option-item"><button class="option-btn" id="btn-1-1" onclick="selectOption(1, 1)">B: 鉄器 と 銀器</button></li>
+                <li class="option-item"><button class="option-btn" id="btn-1-2" onclick="selectOption(1, 2)">C: 青銅器 と 金器</button></li>
+                <li class="option-item"><button class="option-btn" id="btn-1-3" onclick="selectOption(1, 3)">D: 青銅器 と 石器</button></li>
+            </ul>
+            <div class="result-box" id="result-1"></div>
+        </div>
+
+        <!-- 第3問 -->
+        <div class="quiz-card" id="card-2">
+            <span class="question-num">第 3 問</span>
+            <p class="question-text">弥生時代に作られた、縄文土器に比べて「薄手で硬く、赤褐色（せっかっしょく）で飾り（縄目の模様など）が少ない」土器を何といいますか？</p>
+            <div class="hint-block">
+                <button class="hint-btn" onclick="toggleHint(2)">💡 ヒントを表示</button>
+                <div class="hint-text" id="hint-2">この時代を代表する土器です。東京都文京区の「弥生町（やよいちょう）」という場所で初めて見つかったことから、この名前がつきました。</div>
+            </div>
+            <ul class="options-list">
+                <li class="option-item"><button class="option-btn" id="btn-2-0" onclick="selectOption(2, 0)">A: 須恵器（すえき）</button></li>
+                <li class="option-item"><button class="option-btn" id="btn-2-1" onclick="selectOption(2, 1)">B: 土師器（はじき）</button></li>
+                <li class="option-item"><button class="option-btn" id="btn-2-2" onclick="selectOption(2, 2)">C: 弥生土器（やよいどき）</button></li>
+                <li class="option-item"><button class="option-btn" id="btn-2-3" onclick="selectOption(2, 3)">D: 黒色土器（こくしょくどき）</button></li>
+            </ul>
+            <div class="result-box" id="result-2"></div>
+        </div>
+
+        <!-- 【指定位置①】第3問の後の広告 -->
+        <div class="ad-container">
+            <!-- admax -->
+            <script src="https://adm.shinobi.jp/s/8883b8c96c219279b7215cf3521e8aed"></script>
+            <!-- admax -->
+        </div>
+
+        <!-- 第4問 -->
+        <div class="quiz-card" id="card-3">
+            <span class="question-num">第 4 問</span>
+            <p class="question-text">収穫した稲の「穂（ほ）」だけを摘み取るために、弥生時代の人々が使っていた、ひもを通して手に持って使う石の道具は何でしょう？</p>
+            <div class="hint-block">
+                <button class="hint-btn" onclick="toggleHint(3)">💡 ヒントを表示</button>
+                <div class="hint-text" id="hint-3">漢字3文字の道具です。半月のような形をしており、２つの穴にひもを通して指に固定し、稲の穂をつみ取る（穂首刈り）のに使われました。</div>
+            </div>
+            <ul class="options-list">
+                <li class="option-item"><button class="option-btn" id="btn-3-0" onclick="selectOption(3, 0)">A: 打製石器（だせいせっき）</button></li>
+                <li class="option-item"><button class="option-btn" id="btn-3-1" onclick="selectOption(3, 1)">B: 石包丁（いしぼうちょう）</button></li>
+                <li class="option-item"><button class="option-btn" id="btn-3-2" onclick="selectOption(3, 2)">C: 石斧（せきふ）</button></li>
+                <li class="option-item"><button class="option-btn" id="btn-3-3" onclick="selectOption(3, 3)">D: 磨製石鏃（ませいせきぞく）</button></li>
+            </ul>
+            <div class="result-box" id="result-3"></div>
+        </div>
+
+        <!-- 第5問 -->
+        <div class="quiz-card" id="card-4">
+            <span class="question-num">第 4 問（※連番ミス修正のため第5問相当）</span>
+            <p class="question-text">収穫したお米（穀物）を、ネズミの害や湿気から守るために、床を地面より高くして作られた弥生時代の倉庫を何といいますか？</p>
+            <div class="hint-block">
+                <button class="hint-btn" onclick="toggleHint(4)">💡 ヒントを表示</button>
+                <div class="hint-text" id="hint-4">漢字4文字の建物です。柱の上部には、ネズミが登ってこられないようにするための「ねずみ返し」という板が取り付けられていました。</div>
+            </div>
+            <ul class="options-list">
+                <li class="option-item"><button class="option-btn" id="btn-4-0" onclick="selectOption(4, 0)">A: 竪穴住居（たてあなじゅうきょ）</button></li>
+                <li class="option-item"><button class="option-btn" id="btn-4-1" onclick="selectOption(4, 1)">B: 高床倉庫（たかゆかそうこ）</button></li>
+                <li class="option-item"><button class="option-btn" id="btn-4-2" onclick="selectOption(4, 2)">C: 掘立柱建物（ほったてばしらたてもの）</button></li>
+                <li class="option-item"><button class="option-btn" id="btn-4-3" onclick="selectOption(4, 3)">D: 石舞台（いしぶたい）</button></li>
+            </ul>
+            <div class="result-box" id="result-4"></div>
+        </div>
+
+        <!-- 第6問 -->
+        <div class="quiz-card" id="card-5">
+            <span class="question-num">第 6 問</span>
+            <p class="question-text">佐賀県で発見された、まわりを深い堀や土塁（どるい）で囲んだ「環濠集落（かんごうしゅうらく）」の跡で、弥生時代の巨大な大規模集落（城の原型）として世界的に有名な遺跡はどこでしょう？</p>
+            <div class="hint-block">
+                <button class="hint-btn" onclick="toggleHint(5)">💡 ヒントを表示</button>
+                <div class="hint-text" id="hint-5">「〇〇〇里遺跡」と言います。物見やぐらや、王の家などが復元されており、国の特別史跡に指定されています。なお、青森県の「三内丸山遺跡」は縄文時代のものです。</div>
+            </div>
+            <ul class="options-list">
+                <li class="option-item"><button class="option-btn" id="btn-5-0" onclick="selectOption(5, 0)">A: 三内丸山遺跡（さんないまるやまいせき）</button></li>
+                <li class="option-item"><button class="option-btn" id="btn-5-1" onclick="selectOption(5, 1)">B: 登呂遺跡（とろいせき）</button></li>
+                <li class="option-item"><button class="option-btn" id="btn-5-2" onclick="selectOption(5, 2)">C: 吉野ヶ里遺跡（よしのがりいせき）</button></li>
+                <li class="option-item"><button class="option-btn" id="btn-5-3" onclick="selectOption(5, 3)">D: 岩宿遺跡（いわじゅくいせき）</button></li>
+            </ul>
+            <div class="result-box" id="result-5"></div>
+        </div>
+
+        <!-- 【指定位置②】第6問の後の広告 -->
+        <div class="ad-container">
+            <!-- admax -->
+            <script src="https://adm.shinobi.jp/s/8883b8c96c219279b7215cf3521e8aed"></script>
+            <!-- admax -->
+        </div>
+
+        <!-- 第7問 -->
+        <div class="quiz-card" id="card-6">
+            <span class="question-num">第 7 問</span>
+            <p class="question-text">中国の歴史書『漢書』地理志（かんじょちりし）には、紀元前1世紀ごろの日本（倭）の様子について、どのように書かれているでしょう？</p>
+            <div class="hint-block">
+                <button class="hint-btn" onclick="toggleHint(6)">💡 ヒントを表示</button>
+                <div class="hint-text" id="hint-6">当時の日本は1つの国ではなく、たくさんの小さな国（むらや、その集まり）に分かれており、中国の「楽浪郡（らくろうぐん）」に使者を送っていたと記録されています。</div>
+            </div>
+            <ul class="options-list">
+                <li class="option-item"><button class="option-btn" id="btn-6-0" onclick="selectOption(6, 0)">A: 卑弥呼という女王が30ほどの国を従えていた</button></li>
+                <li class="option-item"><button class="option-btn" id="btn-6-1" onclick="selectOption(6, 1)">B: 100余りの国に分かれており、定期的に使者を送っていた</button></li>
+                <li class="option-item"><button class="option-btn" id="btn-6-2" onclick="selectOption(6, 2)">C: 聖徳太子が中国の皇帝に手紙を送った</button></li>
+                <li class="option-item"><button class="option-btn" id="btn-6-3" onclick="selectOption(6, 3)">D: 巨大な古墳（前方後円墳）がたくさん造られていた</button></li>
+            </ul>
+            <div class="result-box" id="result-6"></div>
+        </div>
+
+        <!-- 第8問 -->
+        <div class="quiz-card" id="card-7">
+            <span class="question-num">第 8 問</span>
+            <p class="question-text">西暦57年、日本の「奴国（なこく）」の王が中国（後漢）の皇帝から授かったとされ、江戸時代に福岡県の志賀島（しかのしま）で発見された有名な遺物は何でしょう？</p>
+            <div class="hint-block">
+                <button class="hint-btn" onclick="toggleHint(7)">💡 ヒントを表示</button>
+                <div class="hint-text" id="hint-7">漢字2文字の非常に高価な金属製のハンコです。表面には「漢委奴国王（かんのわのなのこくおう）」という文字が刻まれています。</div>
+            </div>
+            <ul class="options-list">
+                <li class="option-item"><button class="option-btn" id="btn-7-0" onclick="selectOption(7, 0)">A: 銅鏡（どうきょう）</button></li>
+                <li class="option-item"><button class="option-btn" id="btn-7-1" onclick="selectOption(7, 1)">B: 金印（きんいん）</button></li>
+                <li class="option-item"><button class="option-btn" id="btn-7-2" onclick="selectOption(7, 2)">C: 銅鐸（どうたく）</button></li>
+                <li class="option-item"><button class="option-btn" id="btn-7-3" onclick="selectOption(7, 3)">D: 勾玉（まがたま）</button></li>
+            </ul>
+            <div class="result-box" id="result-7"></div>
+        </div>
+
+        <!-- 第9問 -->
+        <div class="quiz-card" id="card-8">
+            <span class="question-num">第 9 問</span>
+            <p class="question-text">3世紀ごろ、日本で激しい内乱が続いたあと、約30の国を従えて登場した「邪馬台国（やまたいこく）」の女王の名前は誰でしょう？</p>
+            <div class="hint-block">
+                <button class="hint-btn" onclick="toggleHint(8)">💡 ヒントを表示</button>
+                <div class="hint-text" id="hint-8">漢字3文字の女性です。「鬼道（きどう）」と呼ばれるまじない・占いを使って人々をまとめ、国を治めました。中国の歴史書『魏志』倭人伝に詳しく書かれています。</div>
+            </div>
+            <ul class="options-list">
+                <li class="option-item"><button class="option-btn" id="btn-8-0" onclick="selectOption(8, 0)">A: 推古天皇（すいこてんのう）</button></li>
+                <li class="option-item"><button class="option-btn" id="btn-8-1" onclick="selectOption(8, 1)">B: 持統天皇（じとうてんのう）</button></li>
+                <li class="option-item"><button class="option-btn" id="btn-8-2" onclick="selectOption(8, 2)">C: 卑弥呼（ひみこ）</button></li>
+                <li class="option-item"><button class="option-btn" id="btn-8-3" onclick="selectOption(8, 3)">D: 額田王（ぬかたのおおきみ）</button></li>
+            </ul>
+            <div class="result-box" id="result-8"></div>
+        </div>
+
+        <!-- 【指定位置③】第9問の後の広告 -->
+        <div class="ad-container">
+            <!-- admax -->
+            <script src="https://adm.shinobi.jp/s/8883b8c96c219279b7215cf3521e8aed"></script>
+            <!-- admax -->
+        </div>
+
+        <!-- 第10問 -->
+        <div class="quiz-card" id="card-9">
+            <span class="question-num">第 10 問</span>
+            <p class="question-text">縄文時代にはほとんど見られなかった「貧富の差（蓄えの差）」や「むら同士の激しい戦争（争い）」が、弥生時代になると急に始まったのはなぜでしょう？最良の理由を選んでください。</p>
+            <div class="hint-block">
+                <button class="hint-btn" onclick="toggleHint(9)">💡 ヒントを表示</button>
+                <div class="hint-text" id="hint-9">稲作によって、食べ物を「蓄える（貯蔵する）」ことができるようになったため、土地（水田）や水、蓄えたお米をめぐる奪い合いが始まったことが原因です。</div>
+            </div>
+            <ul class="options-list">
+                <li class="option-item"><button class="option-btn" id="btn-9-0" onclick="selectOption(9, 0)">A: マンモスなどの大型動物が絶滅して食べるものが完全になくなったから</button></li>
+                <li class="option-item"><button class="option-btn" id="btn-9-1" onclick="selectOption(9, 1)">B: 稲作の開始によって富の蓄積（たくわえ）が可能になり、土地や米をめぐる争いが起きたから</button></li>
+                <li class="option-item"><button class="option-btn" id="btn-9-2" onclick="selectOption(9, 2)">C: 中国から強力な軍隊が日本に直接攻めてきて占領されたから</button></li>
+                <li class="option-item"><button class="option-btn" id="btn-9-3" onclick="selectOption(9, 3)">D: 鉄の使い道が分からず、みんなで武器を作って遊んでいたから</button></li>
+            </ul>
+            <div class="result-box" id="result-9"></div>
+        </div>
+    </div>
+
+    <button id="submit-btn" class="submit-all-btn" onclick="calculateScore()">採点する</button>
+
+    <div id="score-section" class="score-section">
+        <h2>結果発表</h2>
+        <p>あなたの正解数は...</p>
+        <div class="score-num" id="score-display">0 / 10</div>
+        <p id="score-comment"></p>
+        <button class="restart-btn" onclick="restartQuiz()">もう一度挑戦する</button>
+    </div>
+</div>
+
+<script>
+const quizMetaData = [
+    { correct: 1, rationale: "水稲耕作（稲作）が正解です。縄文時代の晩期（終わりごろ）に九州北部へ伝わり、弥生時代にかけて日本全国（北海道などを除く）へ急速に広がりました。これにより、それまでの狩猟・採集中心の生活から、自分たちで食物を生産する生活へと日本の社会構造が一変しました。" },
+    { correct: 0, rationale: "青銅器と鉄器が正解です。これらはほぼ同時に日本へ伝わりました。使い分けが重要で、青銅器（銅鐸・銅剣など）は主に祭祀（お祭りや儀式）の道具として使われ、鉄器は頑丈なため武器や工具、木製農具の先端を補強する道具として実用的に使われました。" },
+    { correct: 2, rationale: "弥生土器が正解です。縄文土器と比べて、高温で焼かれるため薄手で割れにくく、実用的な形（貯蔵用の壺、煮炊き用の甕、盛り付け用の高坏など）をしています。模様が少なくシンプルなのも特徴です。東京都の弥生町で発見されたことが名前の由来です。" },
+    { correct: 1, rationale: "石包丁が正解です。刃の部分に２つの穴が開いており、そこに紐（ひも）を通して手に固定し、稲の穂先を一つずつ摘み取る「穂首刈り（ほくびがり）」という方法で収穫を行いました。根元からザックリ刈る鉄製の鎌（かま）が普及するのは、弥生時代の後期になってからです。" },
+    { correct: 1, rationale: "高床倉庫が正解です。湿気によるお米の腐敗を防ぐため、またネズミなどの害獣からお米を守るために床が高く作られました。柱の上の部分には「ねずみ返し」と呼ばれる板が挟まれており、ネズミが壁を登って中に侵入するのを防ぐ仕組みがありました。" },
+    { correct: 2, rationale: "吉野ヶ里遺跡が正解です。佐賀県にある弥生時代の広大な環濠集落（かんごうしゅうらく：周囲に堀をめぐらせた集落）の跡です。防衛のための物見やぐらや土塁、何重もの堀が巡らされており、当時の日本で激しい戦争（むら同士の争い）があったことを生々しく証明しています。" },
+    { correct: 1, rationale: "「100余りの国に分かれており、定期的に使者を送っていた」が正解です。中国の歴史書『漢書』地理志には、紀元前1世紀ごろの日本（倭）の様子として「倭人が100余りの国に分かれて暮らしており、楽浪郡（現在の朝鮮半島北部にあたる中国の役所）に使者を送ってきた」と記されています。" },
+    { correct: 1, rationale: "金印が正解です。中国の歴史書『後漢書』東夷伝（ごかんじょとういでん）に、西暦57年に漢の光武帝が倭の奴国の使者に「印綬（ハンコ）」を授けたと記録されており、これが江戸時代に福岡県の志賀島で発見された「金印」と一致します。「漢委奴国王」と刻まれています。" },
+    { correct: 2, rationale: "卑弥呼が正解です。中国の『魏志』倭人伝（ぎしわじんでん）によると、2世紀後半に倭国で大きな内乱（倭国大乱）が起きた後、各国が共同で卑弥呼を女王に立てることで乱が収まりました。卑弥呼は239年に中国の「魏」に使者を送り、「親魏倭王（しんぎわおう）」の称号を授かっています。" },
+    { correct: 1, rationale: "「稲作の開始によって富の蓄積が可能になり、土地や米をめぐる争いが起きたから」が正解です。縄文時代の狩猟・採集と違い、お米は長期間「蓄える」ことができます。これにより、多くのお米を持つ者（強者・富豪）とそうでない者の間に貧富の差が生まれ、さらに水田に適した豊かな土地や水をめぐって「むら」同士が武力で奪い合う本格的な戦争が始まりました。" }
+];
+
+let userAnswers = new Array(quizMetaData.length).fill(null);
+
+function selectOption(qIdx, oIdx) {
+    if (document.getElementById('score-section').style.display === 'block') return;
+
+    for (let i = 0; i < 4; i++) {
+        const btn = document.getElementById(`btn-${qIdx}-${i}`);
+        if (i === oIdx) {
+            btn.style.borderColor = 'var(--primary-color)';
+            btn.style.backgroundColor = '#f5ebe0';
+            btn.style.fontWeight = 'bold';
+        } else {
+            btn.style.borderColor = '#e0d0c0';
+            btn.style.backgroundColor = '#fdfefe';
+            btn.style.fontWeight = 'normal';
+        }
+    }
+    userAnswers[qIdx] = oIdx;
+}
+
+function toggleHint(qIdx) {
+    const hintDiv = document.getElementById(`hint-${qIdx}`);
+    hintDiv.style.display = hintDiv.style.display === 'block' ? 'none' : 'block';
+}
+
+function calculateScore() {
+    const unanswered = userAnswers.map((ans, idx) => ans === null ? idx + 1 : null).filter(v => v !== null);
+    if (unanswered.length > 0) {
+        alert(`未回答の問題があります。第 ${unanswered.join(', ')} 問に答えてください。`);
+        return;
+    }
+
+    let score = 0;
+
+    quizMetaData.forEach((q, qIdx) => {
+        const userAns = userAnswers[qIdx];
+        const resultBox = document.getElementById(`result-${qIdx}`);
+        
+        for (let i = 0; i < 4; i++) {
+            document.getElementById(`btn-${qIdx}-${i}`).disabled = true;
+        }
+
+        const selectedBtn = document.getElementById(`btn-${qIdx}-${userAns}`);
+        const correctBtn = document.getElementById(`btn-${qIdx}-${q.correct}`);
+
+        if (userAns === q.correct) {
+            score++;
+            selectedBtn.className = 'option-btn correct';
+            resultBox.className = 'result-box show correct-box';
+            resultBox.innerHTML = `<div class="result-title">🌾 正解！</div><div>${q.rationale}</div>`;
+        } else {
+            selectedBtn.className = 'option-btn incorrect';
+            correctBtn.className = 'option-btn correct';
+            resultBox.className = 'result-box show incorrect-box';
+            resultBox.innerHTML = `<div class="result-title">⚠️ 不正解...（正解は ${String.fromCharCode(65 + q.correct)}）</div><div>${q.rationale}</div>`;
+        }
+    });
+
+    document.getElementById('submit-btn').style.display = 'none';
+    const scoreSection = document.getElementById('score-section');
+    scoreSection.style.display = 'block';
+    document.getElementById('score-display').innerText = `${score} / ${quizMetaData.length}`;
+
+    let comment = '';
+    if (score === 10) comment = '満点パーフェクト！弥生時代の知識は完璧です！稲作による社会の変化（貧富の差・戦争）、金属器の使い分け、そして3大中国史書（漢書・後漢書・魏志倭人伝）の記録まで、すべて正確に理解できています！';
+    else if (score >= 7) comment = '素晴らしい高得点！「吉野ヶ里遺跡＝環濠集落」「金印＝57年・奴国」「卑弥呼＝魏志倭人伝」といったテスト最頻出のキーフレーズがしっかり定着しています。自信を持って大丈夫です！';
+    else if (score >= 4) comment = '合格点クリアです！弥生時代を覚えるポイントは、稲作が始まったことで「蓄え（富）」ができ、それをめぐる「戦争」が始まって国がまとまっていった、という歴史の流れを意識することです。解説を読んで整理しておきましょう。';
+    else comment = 'まずは「縄文時代との違い」を整理しよう！土器の特徴（薄くて硬い）、道具（石包丁、高床倉庫）、そして有名な「吉野ヶ里遺跡（佐賀）」と「金印（福岡・志賀島）」の名前を覚えるだけで、点数はガラッと上がるよ！';
+    
+    document.getElementById('score-comment').innerText = comment;
+    scoreSection.scrollIntoView({ behavior: 'smooth' });
+}
+
+function restartQuiz() {
+    userAnswers = new Array(quizMetaData.length).fill(null);
+    document.getElementById('submit-btn').style.display = 'block';
+    document.getElementById('score-section').style.display = 'none';
+    
+    quizMetaData.forEach((q, qIdx) => {
+        const resultBox = document.getElementById(`result-${qIdx}`);
+        resultBox.className = 'result-box';
+        resultBox.innerHTML = '';
+        
+        for (let i = 0; i < 4; i++) {
+            const btn = document.getElementById(`btn-${qIdx}-${i}`);
+            btn.disabled = false;
+            btn.className = 'option-btn';
+            btn.style = '';
+        }
+        document.getElementById(`hint-${qIdx}`).style.display = 'none';
+    });
+
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+}
+</script>
+
+</body>
+</html>
