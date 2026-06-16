@@ -1,0 +1,536 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>中1地理：オセアニア州 クイズ</title>
+    <style>
+        :root {
+            --primary-color: #2980b9;
+            --accent-color: #e67e22;
+            --success-color: #2ecc71;
+            --error-color: #e74c3c;
+            --bg-color: #eaf2f8;
+            --card-bg: #ffffff;
+            --text-color: #2c3e50;
+        }
+
+        body {
+            font-family: 'Helvetica Neue', Arial, 'Hiragino Kaku Gothic ProN', 'Hiragino Sans', Meiryo, sans-serif;
+            background-color: var(--bg-color);
+            color: var(--text-color);
+            margin: 0;
+            padding: 20px;
+            line-height: 1.6;
+        }
+
+        .container {
+            max-width: 800px;
+            margin: 0 auto;
+        }
+
+        header {
+            text-align: center;
+            margin-bottom: 30px;
+            padding: 20px;
+            background: linear-gradient(135deg, #2980b9, #2471a3);
+            color: white;
+            border-radius: 10px;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+            border-bottom: 5px solid var(--accent-color);
+        }
+
+        header h1 {
+            margin: 0 0 10px 0;
+            font-size: 24px;
+        }
+
+        header p {
+            margin: 0;
+            font-size: 14px;
+            opacity: 0.9;
+        }
+
+        .quiz-card {
+            background-color: var(--card-bg);
+            border-radius: 10px;
+            padding: 25px;
+            margin-bottom: 25px;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.05);
+        }
+
+        .question-num {
+            font-weight: bold;
+            color: var(--accent-color);
+            font-size: 14px;
+            text-transform: uppercase;
+            margin-bottom: 5px;
+            display: block;
+        }
+
+        .question-text {
+            font-size: 18px;
+            font-weight: bold;
+            margin-top: 0;
+            margin-bottom: 20px;
+        }
+
+        .options-list {
+            list-style: none;
+            padding: 0;
+            margin: 0 0 15px 0;
+        }
+
+        .option-item {
+            margin-bottom: 10px;
+        }
+
+        .option-btn {
+            width: 100%;
+            text-align: left;
+            padding: 12px 15px;
+            background-color: #f8f9fa;
+            border: 2px solid #e9ecef;
+            border-radius: 6px;
+            cursor: pointer;
+            font-size: 15px;
+            transition: all 0.2s ease;
+        }
+
+        .option-btn:hover:not(:disabled) {
+            background-color: #e9ecef;
+            border-color: #ced4da;
+        }
+
+        .option-btn:disabled {
+            cursor: not-allowed;
+            color: #6c757d;
+        }
+
+        .option-btn.correct {
+            background-color: #d4edda;
+            border-color: var(--success-color);
+            color: #155724;
+            font-weight: bold;
+        }
+
+        .option-btn.incorrect {
+            background-color: #f8d7da;
+            border-color: var(--error-color);
+            color: #721c24;
+        }
+
+        .hint-block {
+            margin-bottom: 15px;
+        }
+
+        .hint-btn {
+            background: none;
+            border: none;
+            color: #7f8c8d;
+            cursor: pointer;
+            font-size: 13px;
+            text-decoration: underline;
+            padding: 0;
+        }
+
+        .hint-text {
+            display: none;
+            background-color: #fff3cd;
+            color: #856404;
+            padding: 10px;
+            border-radius: 5px;
+            font-size: 13px;
+            margin-top: 5px;
+            border-left: 4px solid #ffc107;
+        }
+
+        .result-box {
+            display: none;
+            margin-top: 15px;
+            padding: 15px;
+            border-radius: 6px;
+            font-size: 14px;
+        }
+
+        .result-box.show {
+            display: block;
+        }
+
+        .result-box.correct-box {
+            background-color: #e2f0d9;
+            color: #2c5217;
+            border: 1px solid #c5e1b2;
+        }
+
+        .result-box.incorrect-box {
+            background-color: #fbe5e5;
+            color: #631c1c;
+            border: 1px solid #f3c2c2;
+        }
+
+        .result-title {
+            font-weight: bold;
+            margin-bottom: 5px;
+            font-size: 15px;
+        }
+
+        .score-section {
+            text-align: center;
+            background-color: var(--primary-color);
+            color: white;
+            padding: 30px;
+            border-radius: 10px;
+            margin-top: 30px;
+            display: none;
+        }
+
+        .score-num {
+            font-size: 48px;
+            font-weight: bold;
+            color: #f1c40f;
+            margin: 10px 0;
+        }
+
+        .restart-btn {
+            background-color: var(--accent-color);
+            color: white;
+            border: none;
+            padding: 12px 25px;
+            font-size: 16px;
+            border-radius: 5px;
+            cursor: pointer;
+            font-weight: bold;
+            margin-top: 15px;
+        }
+
+        .submit-all-btn {
+            display: block;
+            width: 100%;
+            background-color: var(--primary-color);
+            color: white;
+            border: none;
+            padding: 15px;
+            font-size: 18px;
+            font-weight: bold;
+            border-radius: 8px;
+            cursor: pointer;
+            margin-top: 20px;
+        }
+
+        .submit-all-btn:hover {
+            background-color: #1f618d;
+        }
+
+        .ad-container {
+            text-align: center;
+            margin: 20px 0 35px 0;
+            min-height: 90px;
+        }
+    </style>
+</head>
+<body>
+
+<div class="container">
+    <header>
+        <h1>中1地理：オセアニア州 クイズ</h1>
+        <p>オーストラリアやニュージーランドの自然・気候、先住民の歴史、大規模な牧畜や鉱産資源の特色を総まとめ！</p>
+    </header>
+
+    <div id="quiz-container">
+        <div class="quiz-card" id="card-0">
+            <span class="question-num">第 1 問</span>
+            <p class="question-text">オーストラリア大陸の東海岸沿いに広がる、世界最大級の美しいサンゴ礁（しょう）の地帯を何といいますか？</p>
+            <div class="hint-block">
+                <button class="hint-btn" onclick="toggleHint(0)">💡 ヒントを表示</button>
+                <div class="hint-text" id="hint-0">カタカナで「グ」から始まる、長さ約2000kmにおよぶ大サンゴ礁で、世界自然遺産にも登録されています。日本語では「大堡礁（だいほしょう）」とも呼ばれます。</div>
+            </div>
+            <ul class="options-list">
+                <li class="option-item"><button class="option-btn" id="btn-0-0" onclick="selectOption(0, 0)">A: グレートサンディ砂漠</button></li>
+                <li class="option-item"><button class="option-btn" id="btn-0-1" onclick="selectOption(0, 1)">B: グレートバリアリーフ</button></li>
+                <li class="option-item"><button class="option-btn" id="btn-0-2" onclick="selectOption(0, 2)">C: フィヨルドランド</button></li>
+                <li class="option-item"><button class="option-btn" id="btn-0-3" onclick="selectOption(0, 3)">D: クック海峡</button></li>
+            </ul>
+            <div class="result-box" id="result-0"></div>
+        </div>
+
+        <div class="quiz-card" id="card-1">
+            <span class="question-num">第 2 問</span>
+            <p class="question-text">オーストラリアの大陸に古くから先住し、ヨーロッパ人が渡来する前から自然と共生した独自の文化を持っていた先住民を何と呼びますか？</p>
+            <div class="hint-block">
+                <button class="hint-btn" onclick="toggleHint(1)">💡 ヒントを表示</button>
+                <div class="hint-text" id="hint-1">カタカナ5文字の名前です。ブーメランを狩猟に用いたり、「ディジュリドゥ」という木製の管楽器を奏でたりする文化を持っています。</div>
+            </div>
+            <ul class="options-list">
+                <li class="option-item"><button class="option-btn" id="btn-1-0" onclick="selectOption(1, 0)">A: マオリ</button></li>
+                <li class="option-item"><button class="option-btn" id="btn-1-1" onclick="selectOption(1, 1)">B: イヌイット</button></li>
+                <li class="option-item"><button class="option-btn" id="btn-1-2" onclick="selectOption(1, 2)">C: アボリジニ</button></li>
+                <li class="option-item"><button class="option-btn" id="btn-1-3" onclick="selectOption(1, 3)">D: ネイティブアメリカン</button></li>
+            </ul>
+            <div class="result-box" id="result-1"></div>
+        </div>
+
+        <div class="quiz-card" id="card-2">
+            <span class="question-num">第 3 問</span>
+            <p class="question-text">オーストラリアのお隣の島国「ニュージーランド」の先住民で、ラグビーの試合前に行う伝統の踊り「ハカ」でも有名な人々を何と呼びますか？</p>
+            <div class="hint-block">
+                <button class="hint-btn" onclick="toggleHint(2)">💡 ヒントを表示</button>
+                <div class="hint-text" id="hint-2">カタカナ3文字の名前です。ポリネシア系の民族で、現在でもニュージーランドの文化や社会（言葉や儀式など）に強く息づいています。</div>
+            </div>
+            <ul class="options-list">
+                <li class="option-item"><button class="option-btn" id="btn-2-0" onclick="selectOption(2, 0)">A: マオリ</button></li>
+                <li class="option-item"><button class="option-btn" id="btn-2-1" onclick="selectOption(2, 1)">B: メスチソ</button></li>
+                <li class="option-item"><button class="option-btn" id="btn-2-2" onclick="selectOption(2, 2)">C: アボリジニ</button></li>
+                <li class="option-item"><button class="option-btn" id="btn-2-3" onclick="selectOption(2, 3)">D: ムラート</button></li>
+            </ul>
+            <div class="result-box" id="result-2"></div>
+        </div>
+
+        <div class="ad-container">
+            <script src="https://adm.shinobi.jp/s/8883b8c96c219279b7215cf3521e8aed"></script>
+            </div>
+
+        <div class="quiz-card" id="card-3">
+            <span class="question-num">第 4 問</span>
+            <p class="question-text">オーストラリアやニュージーランドは、かつてどこの国の植民地だった歴史的背景から、現在でも国旗のデザインにその国のマーク（ユニオンジャック）が入っているでしょう？</p>
+            <div class="hint-block">
+                <button class="hint-btn" onclick="toggleHint(3)">💡 ヒントを表示</button>
+                <div class="hint-text" id="hint-3">ヨーロッパ島国の近代大国です。オセアニア州では現在も「英語」が公用語として話されており、キリスト教信者が多いのもこの国の影響です。</div>
+            </div>
+            <ul class="options-list">
+                <li class="option-item"><button class="option-btn" id="btn-3-0" onclick="selectOption(3, 0)">A: スペイン</button></li>
+                <li class="option-item"><button class="option-btn" id="btn-3-1" onclick="selectOption(3, 1)">B: フランス</button></li>
+                <li class="option-item"><button class="option-btn" id="btn-3-2" onclick="selectOption(3, 2)">C: イギリス</button></li>
+                <li class="option-item"><button class="option-btn" id="btn-3-3" onclick="selectOption(3, 3)">D: オランダ</button></li>
+            </ul>
+            <div class="result-box" id="result-3"></div>
+        </div>
+
+        <div class="quiz-card" id="card-4">
+            <span class="question-num">第 5 問</span>
+            <p class="question-text">オーストラリアの「農業（牧畜）」の気候に合わせた特徴について、年間降水量が300mm〜500mm程度の、やや乾燥した東部・南部の内陸平原で最も盛んに飼育されている家畜は何でしょう？</p>
+            <div class="hint-block">
+                <button class="hint-btn" onclick="toggleHint(4)">💡 ヒントを表示</button>
+                <div class="hint-text" id="hint-4">漢字1文字の動物です。オーストラリアは、この動物から取れる「羊毛（ウール）」の生産・輸出量が世界トップクラスです。</div>
+            </div>
+            <ul class="options-list">
+                <li class="option-item"><button class="option-btn" id="btn-4-0" onclick="selectOption(4, 0)">A: 牛（うし）</button></li>
+                <li class="option-item"><button class="option-btn" id="btn-4-1" onclick="selectOption(4, 1)">B: 羊（ひつじ）</button></li>
+                <li class="option-item"><button class="option-btn" id="btn-4-2" onclick="selectOption(4, 2)">C: 豚（ぶた）</button></li>
+                <li class="option-item"><button class="option-btn" id="btn-4-3" onclick="selectOption(4, 3)">D: 馬（うま）</button></li>
+            </ul>
+            <div class="result-box" id="result-4"></div>
+        </div>
+
+        <div class="quiz-card" id="card-5">
+            <span class="question-num">第 6 問</span>
+            <p class="question-text">オーストラリアの「鉱産資源」について、なだらかで古い「古期造山帯」である東部の山脈（グレートディバイディング山脈）周辺で非常に多く採掘され、日本にも大量に輸出されているエネルギー資源は何でしょう？</p>
+            <div class="hint-block">
+                <button class="hint-btn" onclick="toggleHint(5)">💡 ヒントを表示</button>
+                <div class="hint-text" id="hint-5">漢字2文字の黒い化石燃料です。火力発電や鉄鋼業の燃料として使われます。オーストラリアの鉱産資源は「東が炭（すみ）、西が鉄（てつ）」と覚えるのが地理の鉄則です。</div>
+            </div>
+            <ul class="options-list">
+                <li class="option-item"><button class="option-btn" id="btn-5-0" onclick="selectOption(5, 0)">A: 石炭</button></li>
+                <li class="option-item"><button class="option-btn" id="btn-5-1" onclick="selectOption(5, 1)">B: 鉄鉱石</button></li>
+                <li class="option-item"><button class="option-btn" id="btn-5-2" onclick="selectOption(5, 2)">C: 原油（石油）</button></li>
+                <li class="option-item"><button class="option-btn" id="btn-5-3" onclick="selectOption(5, 3)">D: 銅鉱石</button></li>
+            </ul>
+            <div class="result-box" id="result-5"></div>
+        </div>
+
+        <div class="ad-container">
+            <script src="https://adm.shinobi.jp/s/8883b8c96c219279b7215cf3521e8aed"></script>
+            </div>
+
+        <div class="quiz-card" id="card-6">
+            <span class="question-num">第 7 問</span>
+            <p class="question-text">オーストラリアの西部（盾状地や砂漠地帯）で世界トップクラスの産出量を誇り、地表を階段状に削りながら直接削り取る「露天掘り（ろてんぼり）」が行われている金属資源は何でしょう？</p>
+            <div class="hint-block">
+                <button class="hint-btn" onclick="toggleHint(6)">💡 ヒントを表示</button>
+                <div class="hint-text" id="hint-6">漢字3文字の資源です。日本の鉄鋼業（自動車などの鋼鉄づくり）に絶対に欠かせない資源で、日本はこの資源の半分以上をオーストラリアから輸入しています。</div>
+            </div>
+            <ul class="options-list">
+                <li class="option-item"><button class="option-btn" id="btn-6-0" onclick="selectOption(6, 0)">A: 石炭</button></li>
+                <li class="option-item"><button class="option-btn" id="btn-6-1" onclick="selectOption(6, 1)">B: ボーキサイト</button></li>
+                <li class="option-item"><button class="option-btn" id="btn-6-2" onclick="selectOption(6, 2)">C: 鉄鉱石</button></li>
+                <li class="option-item"><button class="option-btn" id="btn-6-3" onclick="selectOption(6, 3)">D: タングステン</button></li>
+            </ul>
+            <div class="result-box" id="result-6"></div>
+        </div>
+
+        <div class="quiz-card" id="card-7">
+            <span class="question-num">第 8 問</span>
+            <p class="question-text">オーストラリアがかつて行っていた、ヨーロッパ系以外の白人以外の移民（アジア系など）の移住を厳しく制限した差別の的な政策を何といいますか？（※現在は廃止されています）</p>
+            <div class="hint-block">
+                <button class="hint-btn" onclick="toggleHint(7)">💡 ヒントを表示</button>
+                <div class="hint-text" id="hint-7">漢字4文字で「〇〇主義」と言います。1970年代に完全に廃止され、現在はさまざまな民族の文化を互いに尊重し合う「多文化社会（たぶんかしゃかい）」へと生まれ変わりました。</div>
+            </div>
+            <ul class="options-list">
+                <li class="option-item"><button class="option-btn" id="btn-7-0" onclick="selectOption(7, 0)">A: アパルトヘイト（人種隔離）</button></li>
+                <li class="option-item"><button class="option-btn" id="btn-7-1" onclick="selectOption(7, 1)">B: 白豪主義（はくごうしゅぎ）</button></li>
+                <li class="option-item"><button class="option-btn" id="btn-7-2" onclick="selectOption(7, 2)">C: 自由放任主義</button></li>
+                <li class="option-item"><button class="option-btn" id="btn-7-3" onclick="selectOption(7, 3)">D: 排他的一国主義</button></li>
+            </ul>
+            <div class="result-box" id="result-7"></div>
+        </div>
+
+        <div class="quiz-card" id="card-8">
+            <span class="question-num">第 9 問</span>
+            <p class="question-text">オーストラリアやニュージーランドは、かつてヨーロッパ（イギリスなど）との貿易が中心でしたが、現在はどこの地域との経済的・貿易的な結びつきが最も強くなっていますか？</p>
+            <div class="hint-block">
+                <button class="hint-btn" onclick="toggleHint(8)">💡 ヒントを表示</button>
+                <div class="hint-text" id="hint-8">地理的に距離が近い国々（日本、中国、韓国、ASEANの国々など）が含まれる地域です。地理の教科書では、この結びつきを「〇〇太平洋地域」と呼びます。</div>
+            </div>
+            <ul class="options-list">
+                <li class="option-item"><button class="option-btn" id="btn-8-0" onclick="selectOption(8, 0)">A: アフリカ地域</button></li>
+                <li class="option-item"><button class="option-btn" id="btn-8-1" onclick="selectOption(8, 1)">B: 南アメリカ地域</button></li>
+                <li class="option-item"><button class="option-btn" id="btn-8-2" onclick="selectOption(8, 2)">C: アジア太平洋地域</button></li>
+                <li class="option-item"><button class="option-btn" id="btn-8-3" onclick="selectOption(8, 3)">D: 北大西洋地域</button></li>
+            </ul>
+            <div class="result-box" id="result-8"></div>
+        </div>
+
+        <div class="ad-container">
+            <script src="https://adm.shinobi.jp/s/8883b8c96c219279b7215cf3521e8aed"></script>
+            </div>
+
+        <div class="quiz-card" id="card-9">
+            <span class="question-num">第 10 問</span>
+            <p class="question-text">日本や中国、アメリカ、オーストラリアなどが加わり、太平洋を取り囲む国や地域が経済的な協力を深めるために組織している、アルファベット4文字の国際組織（アジア太平洋経済協力会議）は何でしょう？</p>
+            <div class="hint-block">
+                <button class="hint-btn" onclick="toggleHint(9)">💡 ヒントを表示</button>
+                <div class="hint-text" id="hint-9">「エイペック」と読みます。オーストラリアはこの組織の結成（1989年）を呼びかけるなど、アジアの一員としての経済活動をリードしています。</div>
+            </div>
+            <ul class="options-list">
+                <li class="option-item"><button class="option-btn" id="btn-9-0" onclick="selectOption(9, 0)">A: ASEAN</button></li>
+                <li class="option-item"><button class="option-btn" id="btn-9-1" onclick="selectOption(9, 1)">B: APEC</button></li>
+                <li class="option-item"><button class="option-btn" id="btn-9-2" onclick="selectOption(9, 2)">C: EU</button></li>
+                <li class="option-item"><button class="option-btn" id="btn-9-3" onclick="selectOption(9, 3)">D: OPEC</button></li>
+            </ul>
+            <div class="result-box" id="result-9"></div>
+        </div>
+    </div>
+
+    <button id="submit-btn" class="submit-all-btn" onclick="calculateScore()">採点する</button>
+
+    <div id="score-section" class="score-section">
+        <h2>結果発表</h2>
+        <p>あなたの正解数は...</p>
+        <div class="score-num" id="score-display">0 / 10</div>
+        <p id="score-comment"></p>
+        <button class="restart-btn" onclick="restartQuiz()">もう一度挑戦する</button>
+    </div>
+</div>
+
+<script>
+const quizMetaData = [
+    { correct: 1, rationale: "グレートバリアリーフが正解です。オーストラリア北東部のクイーンズランド州沖に広がる、全長2000kmを超える世界最大のサンゴ礁地帯です。豊かな海洋生態系の宝庫ですが、近年の地球温暖化による海面水温の上昇で、サンゴが白くなる「白化（はっか）現象」が深刻な問題になっています。" },
+    { correct: 2, rationale: "アボリジニが正解です。数万年前からオーストラリア大陸に暮らしてきた先住民です。18世紀末にイギリス人の植民が始まると、土地を奪われ人口が激減する苦難の歴史を歩みました。現在は、彼らの聖地である巨大な一枚岩「ウルル（エアーズロック）」の管理権が返還されるなど、権利の尊重が進んでいます。" },
+    { correct: 0, rationale: "マオリが正解です。ニュージーランドに先住するポリネシア系の民族です。ラグビーの代表チーム（オールブラックス）が試合前に踊る「ハカ」は有名です。マオリ語は現在、英語とともにニュージーランドの公用語として認められ、手厚く保護されています。" },
+    { correct: 2, rationale: "イギリスが正解です。18世紀後半にクック船長が到達して以降、オーストラリアやニュージーランドはイギリスの植民地（最初は流刑地など）として開発されました。そのため国旗の左上にイギリスのマーク（ユニオンジャック）があり、スポーツ（クリケット、ラグビー）や生活文化にもイギリスの伝統が深く残っています。" },
+    { correct: 1, rationale: "羊（ひつじ）が正解です。オーストラリアの農業は、降水量に完全に対応しています。東部山脈の西側（やや乾燥）では「羊」の放牧（メリノ種という良質なウール用）、さらに乾燥する内陸では「羊」の粗放的な放牧、逆に雨の多い北東部や沿岸部では「牛（肉牛・乳牛）」の飼育や小麦栽培が行われています。" },
+    { correct: 0, rationale: "石炭が正解です。東部の古期造山帯（なだらかな古い山脈）であるグレートディバイディング山脈周辺では、「石炭」が豊富に採掘されます。日本の主要な輸入相手国であり、日本のエネルギーや鉄鋼産業を支えています。" },
+    { correct: 2, rationale: "鉄鉱石が正解です。オーストラリア西部（非常に古い安定陸塊の地層）では、質の高い「鉄鉱石」が大量に採掘されます。巨大な重機で地面を階段状に削る「露天掘り」が行われ、そのまま鉄道で港へ運ばれ、日本や中国へ輸出されます。【東の石炭・西の鉄鉱石】は、テストの鉄板知識です。" },
+    { correct: 1, rationale: "白豪主義（はくごうしゅぎ）が正解です。白人（主にイギリス系移民）を中心とした国づくりを目指し、アジア系など有色人種の移民を排除した政策です。しかし労働力不足やアジアとの経済関係の重視から1973年に完全撤廃され、現在はさまざまな文化を認める「多文化社会」へと転換しました。" },
+    { correct: 2, rationale: "アジア太平洋地域が正解です。1960年代頃までは、歴史的な繋がりの強いヨーロッパ（イギリスなど）への輸出が中心でしたが、イギリスがEU（欧州連合）に加盟して結びつきが薄れたことや、地理的な近さから、現在は日本・中国・韓国やASEANなど「アジア太平洋地域」が最大の貿易相手となっています。" },
+    { correct: 1, rationale: "APEC（アジア太平洋経済協力会議）が正解です。1989年にオーストラリアの首相の提案などによって発足した経済協力の枠組みです。環太平洋の国々（日本、アメリカ、中国、東南アジア、オーストラリアなど）が参加し、貿易の自由化や経済発展を目指して話し合いを行っています。" }
+];
+
+let userAnswers = new Array(quizMetaData.length).fill(null);
+
+function selectOption(qIdx, oIdx) {
+    if (document.getElementById('score-section').style.display === 'block') return;
+
+    for (let i = 0; i < 4; i++) {
+        const btn = document.getElementById(`btn-${qIdx}-${i}`);
+        if (i === oIdx) {
+            btn.style.borderColor = 'var(--primary-color)';
+            btn.style.backgroundColor = '#eaf2f8';
+            btn.style.fontWeight = 'bold';
+        } else {
+            btn.style.borderColor = '#e9ecef';
+            btn.style.backgroundColor = '#f8f9fa';
+            btn.style.fontWeight = 'normal';
+        }
+    }
+    userAnswers[qIdx] = oIdx;
+}
+
+function toggleHint(qIdx) {
+    const hintDiv = document.getElementById(`hint-${qIdx}`);
+    hintDiv.style.display = hintDiv.style.display === 'block' ? 'none' : 'block';
+}
+
+function calculateScore() {
+    const unanswered = userAnswers.map((ans, idx) => ans === null ? idx + 1 : null).filter(v => v !== null);
+    if (unanswered.length > 0) {
+        alert(`未回答の問題があります。第 ${unanswered.join(', ')} 問に答えてください。`);
+        return;
+    }
+
+    let score = 0;
+
+    quizMetaData.forEach((q, qIdx) => {
+        const userAns = userAnswers[qIdx];
+        const resultBox = document.getElementById(`result-${qIdx}`);
+        
+        for (let i = 0; i < 4; i++) {
+            document.getElementById(`btn-${qIdx}-${i}`).disabled = true;
+        }
+
+        const selectedBtn = document.getElementById(`btn-${qIdx}-${userAns}`);
+        const correctBtn = document.getElementById(`btn-${qIdx}-${q.correct}`);
+
+        if (userAns === q.correct) {
+            score++;
+            selectedBtn.className = 'option-btn correct';
+            resultBox.className = 'result-box show correct-box';
+            resultBox.innerHTML = `<div class="result-title">🦘 正解！</div><div>${q.rationale}</div>`;
+        } else {
+            selectedBtn.className = 'option-btn incorrect';
+            correctBtn.className = 'option-btn correct';
+            resultBox.className = 'result-box show incorrect-box';
+            resultBox.innerHTML = `<div class="result-title">⚠️ 不正解...（正解は ${String.fromCharCode(65 + q.correct)}）</div><div>${q.rationale}</div>`;
+        }
+    });
+
+    document.getElementById('submit-btn').style.display = 'none';
+    const scoreSection = document.getElementById('score-section');
+    scoreSection.style.display = 'block';
+    document.getElementById('score-display').innerText = `${score} / ${quizMetaData.length}`;
+
+    let comment = '';
+    if (score === 10) comment = '満点パーフェクト！オセアニア州の地理は完璧に極めましたね！アボリジニやマオリの歴史、降水量に応じた牧畜、東の石炭・西の鉄鉱石、白豪主義から多文化社会への移り変わりまで、完璧な知識です！';
+    else if (score >= 7) comment = '素晴らしい高得点！テスト最頻出の「アボリジニ・マオリの区別」や「石炭と鉄鉱石の分布」「白豪主義」「APEC」といった最重要ワードが完璧に定着しています。自信を持って本番に臨んでください！';
+    else if (score >= 4) comment = '合格点クリアです！オセアニアを攻略するコツは、オーストラリアの資源を覚えること（東の山脈＝石炭、西の砂漠＝鉄鉱石、北の熱帯＝ボーキサイト）と、かつてのイギリスとの結びつきから、現在のアジア太平洋（APEC）への変化の流れを掴むことです。解説で復習しましょう。';
+    else comment = 'まずは地図帳でオーストラリアの「グレートディバイディング山脈」の位置を確認して、その東と西で採れる資源（東が石炭、西が鉄鉱石）を整理してみよう！さらに先住民の「アボリジニ（豪）」と「マオリ（新）」のコンビを覚えるだけで、点数が一気にアップするよ！';
+    
+    document.getElementById('score-comment').innerText = comment;
+    scoreSection.scrollIntoView({ behavior: 'smooth' });
+}
+
+function restartQuiz() {
+    userAnswers = new Array(quizMetaData.length).fill(null);
+    document.getElementById('submit-btn').style.display = 'block';
+    document.getElementById('score-section').style.display = 'none';
+    
+    quizMetaData.forEach((q, qIdx) => {
+        const resultBox = document.getElementById(`result-${qIdx}`);
+        resultBox.className = 'result-box';
+        resultBox.innerHTML = '';
+        
+        for (let i = 0; i < 4; i++) {
+            const btn = document.getElementById(`btn-${qIdx}-${i}`);
+            btn.disabled = false;
+            btn.className = 'option-btn';
+            btn.style = '';
+        }
+        document.getElementById(`hint-${qIdx}`).style.display = 'none';
+    });
+
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+}
+</script>
+
+</body>
+</html>
