@@ -1,0 +1,535 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>中1理科：生物2章 クイズ</title>
+    <style>
+        :root {
+            --primary-color: #e67e22;
+            --accent-color: #d35400;
+            --success-color: #27ae60;
+            --error-color: #c0392b;
+            --bg-color: #fff5e6;
+            --card-bg: #ffffff;
+            --text-color: #2c3e50;
+        }
+
+        body {
+            font-family: 'Helvetica Neue', Arial, 'Hiragino Kaku Gothic ProN', 'Hiragino Sans', Meiryo, sans-serif;
+            background-color: var(--bg-color);
+            color: var(--text-color);
+            margin: 0;
+            padding: 20px;
+            line-height: 1.6;
+        }
+
+        .container {
+            max-width: 800px;
+            margin: 0 auto;
+        }
+
+        header {
+            text-align: center;
+            margin-bottom: 30px;
+            padding: 20px;
+            background: linear-gradient(135deg, #e67e22, #a04000);
+            color: white;
+            border-radius: 10px;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+        }
+
+        header h1 {
+            margin: 0 0 10px 0;
+            font-size: 24px;
+        }
+
+        header p {
+            margin: 0;
+            font-size: 14px;
+            opacity: 0.9;
+        }
+
+        .quiz-card {
+            background-color: var(--card-bg);
+            border-radius: 10px;
+            padding: 25px;
+            margin-bottom: 25px;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.05);
+        }
+
+        .question-num {
+            font-weight: bold;
+            color: var(--accent-color);
+            font-size: 14px;
+            text-transform: uppercase;
+            margin-bottom: 5px;
+            display: block;
+        }
+
+        .question-text {
+            font-size: 18px;
+            font-weight: bold;
+            margin-top: 0;
+            margin-bottom: 20px;
+        }
+
+        .options-list {
+            list-style: none;
+            padding: 0;
+            margin: 0 0 15px 0;
+        }
+
+        .option-item {
+            margin-bottom: 10px;
+        }
+
+        .option-btn {
+            width: 100%;
+            text-align: left;
+            padding: 12px 15px;
+            background-color: #f8f9fa;
+            border: 2px solid #e9ecef;
+            border-radius: 6px;
+            cursor: pointer;
+            font-size: 15px;
+            transition: all 0.2s ease;
+        }
+
+        .option-btn:hover:not(:disabled) {
+            background-color: #e9ecef;
+            border-color: #ced4da;
+        }
+
+        .option-btn:disabled {
+            cursor: not-allowed;
+            color: #6c757d;
+        }
+
+        .option-btn.correct {
+            background-color: #d4edda;
+            border-color: var(--success-color);
+            color: #155724;
+            font-weight: bold;
+        }
+
+        .option-btn.incorrect {
+            background-color: #f8d7da;
+            border-color: var(--error-color);
+            color: #721c24;
+        }
+
+        .hint-block {
+            margin-bottom: 15px;
+        }
+
+        .hint-btn {
+            background: none;
+            border: none;
+            color: #7f8c8d;
+            cursor: pointer;
+            font-size: 13px;
+            text-decoration: underline;
+            padding: 0;
+        }
+
+        .hint-text {
+            display: none;
+            background-color: #fff3cd;
+            color: #856404;
+            padding: 10px;
+            border-radius: 5px;
+            font-size: 13px;
+            margin-top: 5px;
+            border-left: 4px solid #ffc107;
+        }
+
+        .result-box {
+            display: none;
+            margin-top: 15px;
+            padding: 15px;
+            border-radius: 6px;
+            font-size: 14px;
+        }
+
+        .result-box.show {
+            display: block;
+        }
+
+        .result-box.correct-box {
+            background-color: #e2f0d9;
+            color: #2c5217;
+            border: 1px solid #c5e1b2;
+        }
+
+        .result-box.incorrect-box {
+            background-color: #fbe5e5;
+            color: #631c1c;
+            border: 1px solid #f3c2c2;
+        }
+
+        .result-title {
+            font-weight: bold;
+            margin-bottom: 5px;
+            font-size: 15px;
+        }
+
+        .score-section {
+            text-align: center;
+            background-color: #2c3e50;
+            color: white;
+            padding: 30px;
+            border-radius: 10px;
+            margin-top: 30px;
+            display: none;
+        }
+
+        .score-num {
+            font-size: 48px;
+            font-weight: bold;
+            color: #f1c40f;
+            margin: 10px 0;
+        }
+
+        .restart-btn {
+            background-color: #e67e22;
+            color: white;
+            border: none;
+            padding: 12px 25px;
+            font-size: 16px;
+            border-radius: 5px;
+            cursor: pointer;
+            font-weight: bold;
+            margin-top: 15px;
+        }
+
+        .submit-all-btn {
+            display: block;
+            width: 100%;
+            background-color: var(--primary-color);
+            color: white;
+            border: none;
+            padding: 15px;
+            font-size: 18px;
+            font-weight: bold;
+            border-radius: 8px;
+            cursor: pointer;
+            margin-top: 20px;
+        }
+
+        .submit-all-btn:hover {
+            background-color: #d35400;
+        }
+
+        .ad-container {
+            text-align: center;
+            margin: 20px 0 35px 0;
+            min-height: 90px;
+        }
+    </style>
+</head>
+<body>
+
+<div class="container">
+    <header>
+        <h1>中学1年理科：生物2章 クイズ</h1>
+        <p>身のまわりの動物の分類、特徴、体のつくりについて、脊椎動物から無脊椎動物までテストによく出る10問です！</p>
+    </header>
+
+    <div id="quiz-container">
+        <div class="quiz-card" id="card-0">
+            <span class="question-num">第 1 問</span>
+            <p class="question-text">メダカやライオンのように、体に「背骨（せぼね）」を持つ動物のグループを何といいますか？</p>
+            <div class="hint-block">
+                <button class="hint-btn" onclick="toggleHint(0)">💡 ヒントを表示</button>
+                <div class="hint-text" id="hint-0">漢字4文字です。「脊（せな、せぼね）」という難しい漢字が使われます。</div>
+            </div>
+            <ul class="options-list">
+                <li class="option-item"><button class="option-btn" id="btn-0-0" onclick="selectOption(0, 0)">A: 軟体動物（なんたいどうぶつ）</button></li>
+                <li class="option-item"><button class="option-btn" id="btn-0-1" onclick="selectOption(0, 1)">B: 節足動物（せっそくどうぶつ）</button></li>
+                <li class="option-item"><button class="option-btn" id="btn-0-2" onclick="selectOption(0, 2)">C: 脊椎動物（せきついどうぶつ）</button></li>
+                <li class="option-item"><button class="option-btn" id="btn-0-3" onclick="selectOption(0, 3)">D: 無脊椎動物（むせきついどうぶつ）</button></li>
+            </ul>
+            <div class="result-box" id="result-0"></div>
+        </div>
+
+        <div class="quiz-card" id="card-1">
+            <span class="question-num">第 2 問</span>
+            <p class="question-text">脊椎動物の「増え方」のうち、親の体内である程度育ってから、人間のように子が生まれてくる増やし方を何といいますか？</p>
+            <div class="hint-block">
+                <button class="hint-btn" onclick="toggleHint(1)">💡 ヒントを表示</button>
+                <div class="hint-text" id="hint-1">卵を産んで増やす「卵生（らんせい）」に対して、お腹の中で赤ちゃん（胎児）を育てて産む方法です。</div>
+            </div>
+            <ul class="options-list">
+                <li class="option-item"><button class="option-btn" id="btn-1-0" onclick="selectOption(1, 0)">A: 卵生（らんせい）</button></li>
+                <li class="option-item"><button class="option-btn" id="btn-1-1" onclick="selectOption(1, 1)">B: 胎生（たいせい）</button></li>
+                <li class="option-item"><button class="option-btn" id="btn-1-2" onclick="selectOption(1, 2)">C: 胞子（ほうし）</button></li>
+                <li class="option-item"><button class="option-btn" id="btn-1-3" onclick="selectOption(1, 3)">D: 分裂（ぶんれつ）</button></li>
+            </ul>
+            <div class="result-box" id="result-1"></div>
+        </div>
+
+        <div class="quiz-card" id="card-2">
+            <span class="question-num">第 3 問</span>
+            <p class="question-text">脊椎動物のうち、鳥類と哺乳類に共通する「まわりの温度が変化しても、体温がほぼ一定に保たれる」動物のグループを何といいますか？</p>
+            <div class="hint-block">
+                <button class="hint-btn" onclick="toggleHint(2)">💡 ヒントを表示</button>
+                <div class="hint-text" id="hint-2">「常に（恒に）同じ温度」という意味の漢字が使われます。魚類、両生類、爬虫類はこれとは異なり、まわりの温度で体温が変わる「変温動物」です。</div>
+            </div>
+            <ul class="options-list">
+                <li class="option-item"><button class="option-btn" id="btn-2-0" onclick="selectOption(2, 0)">A: 変温動物（へんおんどうぶつ）</button></li>
+                <li class="option-item"><button class="option-btn" id="btn-2-1" onclick="selectOption(2, 1)">B: 恒温動物（こうおんどうぶつ）</button></li>
+                <li class="option-item"><button class="option-btn" id="btn-2-2" onclick="selectOption(2, 2)">C: 冷血動物（れいけつどうぶつ）</button></li>
+                <li class="option-item"><button class="option-btn" id="btn-2-3" onclick="selectOption(2, 3)">D: 温血動物（おんけつどうぶつ）</button></li>
+            </ul>
+            <div class="result-box" id="result-2"></div>
+        </div>
+
+        <div class="ad-container">
+            <script src="https://adm.shinobi.jp/s/8883b8c96c219279b7215cf3521e8aed"></script>
+            </div>
+
+        <div class="quiz-card" id="card-3">
+            <span class="question-num">第 4 問</span>
+            <p class="question-text">イモリとヤモリは名前が似ていますが、生物としての分類グループが異なります。正しい組み合わせはどれでしょう？</p>
+            <div class="hint-block">
+                <button class="hint-btn" onclick="toggleHint(3)">💡 ヒントを表示</button>
+                <div class="hint-text" id="hint-3">「井守（イモリ）」は井戸（水辺）を守り、幼生はえらで、成体は肺と皮膚で呼吸します。「家守（ヤモリ）」は家（陸上）を守り、一生肺で呼吸し、殻のある卵を産みます。</div>
+            </div>
+            <ul class="options-list">
+                <li class="option-item"><button class="option-btn" id="btn-3-0" onclick="selectOption(3, 0)">A: イモリ：両生類 / ヤモリ：爬虫類</button></li>
+                <li class="option-item"><button class="option-btn" id="btn-3-1" onclick="selectOption(3, 1)">B: イモリ：爬虫類 / ヤモリ：両生類</button></li>
+                <li class="option-item"><button class="option-btn" id="btn-3-2" onclick="selectOption(3, 2)">C: イモリ：両生類 / ヤモリ：哺乳類</button></li>
+                <li class="option-item"><button class="option-btn" id="btn-3-3" onclick="selectOption(3, 3)">D: 両方とも爬虫類</button></li>
+            </ul>
+            <div class="result-box" id="result-3"></div>
+        </div>
+
+        <div class="quiz-card" id="card-4">
+            <span class="question-num">第 5 問</span>
+            <p class="question-text">カエルなどの「両生類」の呼吸の仕方について、正しい説明はどれでしょう？</p>
+            <div class="hint-block">
+                <button class="hint-btn" onclick="toggleHint(4)">💡 ヒントを表示</button>
+                <div class="hint-text" id="hint-4">カエルの子ども（オタマジャクシ）は水中で暮らし、大人のカエルは陸上でも暮らせます。生活場所が変わると呼吸の仕方も変わります。</div>
+            </div>
+            <ul class="options-list">
+                <li class="option-item"><button class="option-btn" id="btn-4-0" onclick="selectOption(4, 0)">A: 子ども（幼生）も大人（成体）も一生えらだけで呼吸する。</button></li>
+                <li class="option-item"><button class="option-btn" id="btn-4-1" onclick="selectOption(4, 1)">B: 子ども（幼生）も大人（成体）も一生肺だけで呼吸する。</button></li>
+                <li class="option-item"><button class="option-btn" id="btn-4-2" onclick="selectOption(4, 2)">C: 子ども（幼生）は肺で呼吸し、大人（成体）になるとえらと皮膚で呼吸する。</button></li>
+                <li class="option-item"><button class="option-btn" id="btn-4-3" onclick="selectOption(4, 3)">D: 子ども（幼生）はえらで呼吸し、大人（成体）になると肺と皮膚で呼吸する。</button></li>
+            </ul>
+            <div class="result-box" id="result-4"></div>
+        </div>
+
+        <div class="quiz-card" id="card-5">
+            <span class="question-num">第 6 問</span>
+            <p class="question-text">カブトムシやザリガニのように、体に背骨がなく、体が「外骨格（がいこっこく）」でおおわれ、足にたくさんの「節（ふし）」がある動物のグループを何といいますか？</p>
+            <div class="hint-block">
+                <button class="hint-btn" onclick="toggleHint(5)">💡 ヒントを表示</button>
+                <div class="hint-text" id="hint-5">「関節（節）のある足を持つ動物」という意味の漢字4文字の名前です。無脊椎動物の中で最も種類が多いグループです。</div>
+            </div>
+            <ul class="options-list">
+                <li class="option-item"><button class="option-btn" id="btn-5-0" onclick="selectOption(5, 0)">A: 軟体動物（なんたいどうぶつ）</button></li>
+                <li class="option-item"><button class="option-btn" id="btn-5-1" onclick="selectOption(5, 1)">B: 節足動物（せっそくどうぶつ）</button></li>
+                <li class="option-item"><button class="option-btn" id="btn-5-2" onclick="selectOption(5, 2)">C: 環形動物（かんけいどうぶつ）</button></li>
+                <li class="option-item"><button class="option-btn" id="btn-5-3" onclick="selectOption(5, 3)">D: 脊椎動物</button></li>
+            </ul>
+            <div class="result-box" id="result-5"></div>
+        </div>
+
+        <div class="ad-container">
+            <script src="https://adm.shinobi.jp/s/8883b8c96c219279b7215cf3521e8aed"></script>
+            </div>
+
+        <div class="quiz-card" id="card-6">
+            <span class="question-num">第 7 問</span>
+            <p class="question-text">バッタやチョウなどの「昆虫類」の体は、大きく3つの部分に分かれています。その正しい組み合わせはどれでしょう？</p>
+            <div class="hint-block">
+                <button class="hint-btn" onclick="toggleHint(6)">💡 ヒントを表示</button>
+                <div class="hint-text" id="hint-6">上から順に、目や触角がある部分、足や羽がついている部分、内臓が集まっている部分の3つです。足（6本）がどこから生えているかもテストでよく聞かれます。</div>
+            </div>
+            <ul class="options-list">
+                <li class="option-item"><button class="option-btn" id="btn-6-0" onclick="selectOption(6, 0)">A: 頭部（とうぶ）・胸部（きょうぶ）・腹部（ふくぶ）</button></li>
+                <li class="option-item"><button class="option-btn" id="btn-6-1" onclick="selectOption(6, 1)">B: 頭部（とうぶ）・胴部（どうぶ）・尾部（びぶ）</button></li>
+                <li class="option-item"><button class="option-btn" id="btn-6-2" onclick="selectOption(6, 2)">C: 頭胸部（とうきょうぶ）・腹部（ふくぶ）</button></li>
+                <li class="option-item"><button class="option-btn" id="btn-6-3" onclick="selectOption(6, 3)">D: 首（くび）・胴（どう）・足（あし）</button></li>
+            </ul>
+            <div class="result-box" id="result-6"></div>
+        </div>
+
+        <div class="quiz-card" id="card-7">
+            <span class="question-num">第 8 問</span>
+            <p class="question-text">アサリやマイマイ（カタツムリ）、タコやイカのように、骨がなく、内臓が「外套膜（がいとうまく）」という筋肉質の膜に包まれている無脊椎動物を何といいますか？</p>
+            <div class="hint-block">
+                <button class="hint-btn" onclick="toggleHint(7)">💡 ヒントを表示</button>
+                <div class="hint-text" id="hint-7">「柔らかい体を持つ動物」という意味の漢字4文字のグループ名です。体に筋肉の節（ふし）がないことも特徴です。</div>
+            </div>
+            <ul class="options-list">
+                <li class="option-item"><button class="option-btn" id="btn-7-0" onclick="selectOption(7, 0)">A: 甲殻類（こうかくるい）</button></li>
+                <li class="option-item"><button class="option-btn" id="btn-7-1" onclick="selectOption(7, 1)">B: 節足動物（せっそくどうぶつ）</button></li>
+                <li class="option-item"><button class="option-btn" id="btn-7-2" onclick="selectOption(7, 2)">C: 軟体動物（なんたいどうぶつ）</button></li>
+                <li class="option-item"><button class="option-btn" id="btn-7-3" onclick="selectOption(7, 3)">D: 棘皮動物（きょくひどうぶつ）</button></li>
+            </ul>
+            <div class="result-box" id="result-7"></div>
+        </div>
+
+        <div class="quiz-card" id="card-8">
+            <span class="question-num">第 9 問</span>
+            <p class="question-text">草食動物（シマウマなど）と肉食動物（ライオンなど）の「目のつき方」と「視野」について、正しい説明はどれでしょう？</p>
+            <div class="hint-block">
+                <button class="hint-btn" onclick="toggleHint(8)">💡 ヒントを表示</button>
+                <div class="hint-text" id="hint-8">シマウマは敵（肉食動物）にいち早く気づく必要があり、ライオンは獲物との距離を正確に測る必要があります。それぞれの暮らしに有利な目のつき方をしています。</div>
+            </div>
+            <ul class="options-list">
+                <li class="option-item"><button class="option-btn" id="btn-8-0" onclick="selectOption(8, 0)">A: 草食動物は目が前に向いてつき、両目の重なる視野が広い。</button></li>
+                <li class="option-item"><button class="option-btn" id="btn-8-1" onclick="selectOption(8, 1)">B: 肉食動物は目が横に向いてつき、まわりを広く見渡せる。</button></li>
+                <li class="option-item"><button class="option-btn" id="btn-8-2" onclick="selectOption(8, 2)">C: 草食動物は目が横に向いてつき、まわりを広く見渡せる視野を持つ。</button></li>
+                <li class="option-item"><button class="option-btn" id="btn-8-3" onclick="selectOption(8, 3)">D: 肉食動物も草食動物も、目のつき方や視野の広さは全く同じである。</button></li>
+            </ul>
+            <div class="result-box" id="result-8"></div>
+        </div>
+
+        <div class="ad-container">
+            <script src="https://adm.shinobi.jp/s/8883b8c96c219279b7215cf3521e8aed"></script>
+            </div>
+
+        <div class="quiz-card" id="card-9">
+            <span class="question-num">第 10 問</span>
+            <p class="question-text">次の動物のうち、クジラと同じ「哺乳類（ほにゅうるい）」に分類される動物はどれでしょう？</p>
+            <div class="hint-block">
+                <button class="hint-btn" onclick="toggleHint(9)">💡 ヒントを表示</button>
+                <div class="hint-text" id="hint-9">哺乳類の特徴は、胎生（お腹の中で育てて産む）であり、母乳で子どもを育てることです。一見、魚や鳥に見える生き物の中にひっかけ問題としてよく出ます。</div>
+            </div>
+            <ul class="options-list">
+                <li class="option-item"><button class="option-btn" id="btn-9-0" onclick="selectOption(9, 0)">A: サメ</button></li>
+                <li class="option-item"><button class="option-btn" id="btn-9-1" onclick="selectOption(9, 1)">B: ペンギン</button></li>
+                <li class="option-item"><button class="option-btn" id="btn-9-2" onclick="selectOption(9, 2)">C: コウモリ</button></li>
+                <li class="option-item"><button class="option-btn" id="btn-9-3" onclick="selectOption(9, 3)">D: サンショウウオ</button></li>
+            </ul>
+            <div class="result-box" id="result-9"></div>
+        </div>
+    </div>
+
+    <button id="submit-btn" class="submit-all-btn" onclick="calculateScore()">採点する</button>
+
+    <div id="score-section" class="score-section">
+        <h2>結果発表</h2>
+        <p>あなたの正解数は...</p>
+        <div class="score-num" id="score-display">0 / 10</div>
+        <p id="score-comment"></p>
+        <button class="restart-btn" onclick="restartQuiz()">もう一度挑戦する</button>
+    </div>
+</div>
+
+<script>
+const quizMetaData = [
+    { correct: 2, rationale: "脊椎動物が正解です。魚類・両生類・爬虫類・鳥類・哺乳類の5つのグループがこれに属します。これに対して背骨を持たない動物を「無脊椎動物」といいます。" },
+    { correct: 1, rationale: "胎生（たいせい）が作解です。哺乳類だけの大きな特徴で、母体の胎内で卵からかえり、ある程度育ってから生まれます。一方、親が卵を産み、卵から子がかえる増え方を「卵生（らんせい）」といいます。" },
+    { correct: 1, rationale: "恒温動物（こうおんどうぶつ）が正解です。まわりの温度に関係なく体温を一定に保つことができるため、寒い地域や冬でも活発に活動できます。鳥類と哺乳類のみが該当します。" },
+    { correct: 0, rationale: "A が正解です。イモリはカエルと同じ「両生類」で、皮膚が湿っており水辺に生息します。ヤモリはトカゲと同じ「爬虫類」で、体表が鱗（うろこ）でおおわれ、乾燥に強いのが特徴です。" },
+    { correct: 3, rationale: "D が正解です。両生類の子ども（オタマジャクシ）は水中で「えら」と「皮膚」で呼吸しますが、大人になると陸上で生活できるようになり、「肺」と「皮膚」で呼吸するようになります。湿った皮膚を保つことが不可欠です。" },
+    { correct: 1, rationale: "節足動物が正解です。昆虫類（バッタなど）や甲殻類（カニ、ザリガニなど）、クモ類、ムカデ類などが含まれます。体を守る硬い「外骨格」を持つため、成長にともなって「脱皮（だっぴ）」をします。" },
+    { correct: 0, rationale: "A が正解です。昆虫の体は「頭部・胸部・腹部」の3つに分かれています。なお、テストの超重要ひっかけとして、6本の足や羽はすべて「胸部」から生えているという点を覚えておきましょう。" },
+    { correct: 2, rationale: "軟体動物が正解です。内臓が筋肉質の「外套膜（がいとうまく）」でおおわれているのが最大の特徴です。アサリの貝殻やイカの甲（骨のようなもの）は、外套膜から分泌されてできたものです。" },
+    { correct: 2, rationale: "C が正解です。シマウマなどの草食動物は、目が横向きについているため「真後ろ以外をほぼ見渡せる広い視野」を持ち、天敵を早く見つけられます。一方、ライオンなどの肉食動物は目が前に向いてつき、「立体的に見える（距離が測れる）視野」が広いため、獲物を捕らえやすくなっています。" },
+    { correct: 2, rationale: "コウモリが正解です。コウモリは空を飛びますが、鳥類ではなく「哺乳類」です（赤ちゃんを産み、母乳で育てます）。サメは魚類、ペンギンは鳥類、サンショウウオは両生類に分類されます。" }
+];
+
+let userAnswers = new Array(quizMetaData.length).fill(null);
+
+function selectOption(qIdx, oIdx) {
+    if (document.getElementById('score-section').style.display === 'block') return;
+
+    for (let i = 0; i < 4; i++) {
+        const btn = document.getElementById(`btn-${qIdx}-${i}`);
+        if (i === oIdx) {
+            btn.style.borderColor = 'var(--primary-color)';
+            btn.style.backgroundColor = '#fff3e0';
+            btn.style.fontWeight = 'bold';
+        } else {
+            btn.style.borderColor = '#e9ecef';
+            btn.style.backgroundColor = '#f8f9fa';
+            btn.style.fontWeight = 'normal';
+        }
+    }
+    userAnswers[qIdx] = oIdx;
+}
+
+function toggleHint(qIdx) {
+    const hintDiv = document.getElementById(`hint-${qIdx}`);
+    hintDiv.style.display = hintDiv.style.display === 'block' ? 'none' : 'block';
+}
+
+function calculateScore() {
+    const unanswered = userAnswers.map((ans, idx) => ans === null ? idx + 1 : null).filter(v => v !== null);
+    if (unanswered.length > 0) {
+        alert(`未回答の問題があります。第 ${unanswered.join(', ')} 問に答えてください。`);
+        return;
+    }
+
+    let score = 0;
+
+    quizMetaData.forEach((q, qIdx) => {
+        const userAns = userAnswers[qIdx];
+        const resultBox = document.getElementById(`result-${qIdx}`);
+        
+        for (let i = 0; i < 4; i++) {
+            document.getElementById(`btn-${qIdx}-${i}`).disabled = true;
+        }
+
+        const selectedBtn = document.getElementById(`btn-${qIdx}-${userAns}`);
+        const correctBtn = document.getElementById(`btn-${qIdx}-${q.correct}`);
+
+        if (userAns === q.correct) {
+            score++;
+            selectedBtn.className = 'option-btn correct';
+            resultBox.className = 'result-box show correct-box';
+            resultBox.innerHTML = `<div class="result-title">🐾 正解！</div><div>${q.rationale}</div>`;
+        } else {
+            selectedBtn.className = 'option-btn incorrect';
+            correctBtn.className = 'option-btn correct';
+            resultBox.className = 'result-box show incorrect-box';
+            resultBox.innerHTML = `<div class="result-title">⚠️ 不正解...（正解は ${String.fromCharCode(65 + q.correct)}）</div><div>${q.rationale}</div>`;
+        }
+    });
+
+    document.getElementById('submit-btn').style.display = 'none';
+    const scoreSection = document.getElementById('score-section');
+    scoreSection.style.display = 'block';
+    document.getElementById('score-display').innerText = `${score} / ${quizMetaData.length}`;
+
+    let comment = '';
+    if (score === 10) comment = '完璧！素晴らしいです！脊椎動物5分類の特徴や、節足・軟体動物の違い、草食・肉食動物の視野の違いまで完全にマスターしています！';
+    else if (score >= 7) comment = '高得点です！イモリとヤモリの分類や、昆虫の体のつくりなど、テストで間違えやすいポイントをよく抑えられています。';
+    else if (score >= 4) comment = '合格点まであと一歩！「恒温動物・変温動物の区別」や「昆虫の足が生えている場所（胸部）」など、勘違いしやすいポイントを解説で確認しておきましょう。';
+    else comment = 'まずは脊椎動物の5つのグループ（魚、両生、爬虫、鳥、哺乳）の表を自分で整理してみるのがオススメ！基本を復習して、もう一度満点を目指そう！';
+    
+    document.getElementById('score-comment').innerText = comment;
+    scoreSection.scrollIntoView({ behavior: 'smooth' });
+}
+
+function restartQuiz() {
+    userAnswers = new Array(quizMetaData.length).fill(null);
+    document.getElementById('submit-btn').style.display = 'block';
+    document.getElementById('score-section').style.display = 'none';
+    
+    quizMetaData.forEach((q, qIdx) => {
+        const resultBox = document.getElementById(`result-${qIdx}`);
+        resultBox.className = 'result-box';
+        resultBox.innerHTML = '';
+        
+        for (let i = 0; i < 4; i++) {
+            const btn = document.getElementById(`btn-${qIdx}-${i}`);
+            btn.disabled = false;
+            btn.className = 'option-btn';
+            btn.style = '';
+        }
+        document.getElementById(`hint-${qIdx}`).style.display = 'none';
+    });
+
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+}
+</script>
+
+</body>
+</html>
