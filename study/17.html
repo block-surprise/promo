@@ -1,0 +1,555 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>中学歴史：奈良時代 クイズ</title>
+    <style>
+        :root {
+            --primary-color: #4a6741;
+            --accent-color: #c0392b;
+            --success-color: #2ecc71;
+            --error-color: #e74c3c;
+            --bg-color: #f4f6f0;
+            --card-bg: #ffffff;
+            --text-color: #2c3e50;
+        }
+
+        body {
+            font-family: 'Helvetica Neue', Arial, 'Hiragino Kaku Gothic ProN', 'Hiragino Sans', Meiryo, sans-serif;
+            background-color: var(--bg-color);
+            color: var(--text-color);
+            margin: 0;
+            padding: 20px;
+            line-height: 1.6;
+        }
+
+        .container {
+            max-width: 800px;
+            margin: 0 auto;
+        }
+
+        header {
+            text-align: center;
+            margin-bottom: 30px;
+            padding: 20px;
+            background: linear-gradient(135deg, #4a6741, #2e4228);
+            color: white;
+            border-radius: 10px;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+            border-bottom: 5px solid var(--accent-color);
+        }
+
+        header h1 {
+            margin: 0 0 10px 0;
+            font-size: 24px;
+        }
+
+        header p {
+            margin: 0;
+            font-size: 14px;
+            opacity: 0.9;
+        }
+
+        .quiz-card {
+            background-color: var(--card-bg);
+            border-radius: 10px;
+            padding: 25px;
+            margin-bottom: 25px;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.05);
+        }
+
+        .question-num {
+            font-weight: bold;
+            color: var(--accent-color);
+            font-size: 14px;
+            text-transform: uppercase;
+            margin-bottom: 5px;
+            display: block;
+        }
+
+        .question-text {
+            font-size: 18px;
+            font-weight: bold;
+            margin-top: 0;
+            margin-bottom: 20px;
+        }
+
+        .options-list {
+            list-style: none;
+            padding: 0;
+            margin: 0 0 15px 0;
+        }
+
+        .option-item {
+            margin-bottom: 10px;
+        }
+
+        .option-btn {
+            width: 100%;
+            text-align: left;
+            padding: 12px 15px;
+            background-color: #fdfefe;
+            border: 2px solid #dcdde1;
+            border-radius: 6px;
+            cursor: pointer;
+            font-size: 15px;
+            transition: all 0.2s ease;
+        }
+
+        .option-btn:hover:not(:disabled) {
+            background-color: #f1f2f6;
+            border-color: #b2bec3;
+        }
+
+        .option-btn:disabled {
+            cursor: not-allowed;
+            color: #7f8c8d;
+        }
+
+        .option-btn.correct {
+            background-color: #d4edda;
+            border-color: var(--success-color);
+            color: #155724;
+            font-weight: bold;
+        }
+
+        .option-btn.incorrect {
+            background-color: #f8d7da;
+            border-color: var(--error-color);
+            color: #721c24;
+        }
+
+        .hint-block {
+            margin-bottom: 15px;
+        }
+
+        .hint-btn {
+            background: none;
+            border: none;
+            color: #7f8c8d;
+            cursor: pointer;
+            font-size: 13px;
+            text-decoration: underline;
+            padding: 0;
+        }
+
+        .hint-text {
+            display: none;
+            background-color: #fff3cd;
+            color: #856404;
+            padding: 10px;
+            border-radius: 5px;
+            font-size: 13px;
+            margin-top: 5px;
+            border-left: 4px solid #ffc107;
+        }
+
+        .result-box {
+            display: none;
+            margin-top: 15px;
+            padding: 15px;
+            border-radius: 6px;
+            font-size: 14px;
+        }
+
+        .result-box.show {
+            display: block;
+        }
+
+        .result-box.correct-box {
+            background-color: #e2f0d9;
+            color: #2c5217;
+            border: 1px solid #c5e1b2;
+        }
+
+        .result-box.incorrect-box {
+            background-color: #fbe5e5;
+            color: #631c1c;
+            border: 1px solid #f3c2c2;
+        }
+
+        .result-title {
+            font-weight: bold;
+            margin-bottom: 5px;
+            font-size: 15px;
+        }
+
+        .score-section {
+            text-align: center;
+            background-color: var(--primary-color);
+            color: white;
+            padding: 30px;
+            border-radius: 10px;
+            margin-top: 30px;
+            display: none;
+        }
+
+        .score-num {
+            font-size: 48px;
+            font-weight: bold;
+            color: #f1c40f;
+            margin: 10px 0;
+        }
+
+        .restart-btn {
+            background-color: var(--accent-color);
+            color: white;
+            border: none;
+            padding: 12px 25px;
+            font-size: 16px;
+            border-radius: 5px;
+            cursor: pointer;
+            font-weight: bold;
+            margin-top: 15px;
+        }
+
+        .submit-all-btn {
+            display: block;
+            width: 100%;
+            background-color: var(--primary-color);
+            color: white;
+            border: none;
+            padding: 15px;
+            font-size: 18px;
+            font-weight: bold;
+            border-radius: 8px;
+            cursor: pointer;
+            margin-top: 20px;
+        }
+
+        .submit-all-btn:hover {
+            background-color: #2e4228;
+        }
+
+        .ad-container {
+            text-align: center;
+            margin: 20px 0 35px 0;
+            min-height: 90px;
+        }
+    </style>
+</head>
+<body>
+
+<div class="container">
+    <header>
+        <h1>中学歴史：奈良時代 クイズ</h1>
+        <p>「なんと（710年）きれいな平城京」から始まる律令国家の完成、仏教による国づくり、変化する土地制度を網羅！</p>
+    </header>
+
+    <div id="quiz-container">
+        <!-- 第1問 -->
+        <div class="quiz-card" id="card-0">
+            <span class="question-num">第 1 問</span>
+            <p class="question-text">西暦710年、元明天皇（げんめいてんのう）によって、唐（中国）の都「長安」にならって奈良に新しく造られた都を何といいますか?</p>
+            <div class="hint-block">
+                <button class="hint-btn" onclick="toggleHint(0)">💡 ヒントを表示</button>
+                <div class="hint-text" id="hint-0">「なんと（710年）立派な〇〇〇」の語呂合わせで覚える、奈良時代の中心となった大きな都です。碁盤の目のように道路が整理されていました。</div>
+            </div>
+            <ul class="options-list">
+                <li class="option-item"><button class="option-btn" id="btn-0-0" onclick="selectOption(0, 0)">A: 藤原京（ふじわらきょう）</button></li>
+                <li class="option-item"><button class="option-btn" id="btn-0-1" onclick="selectOption(0, 1)">B: 平安京（へいあんきょう）</button></li>
+                <li class="option-item"><button class="option-btn" id="btn-0-2" onclick="selectOption(0, 2)">C: 平城京（へいじょうきょう）</button></li>
+                <li class="option-item"><button class="option-btn" id="btn-0-3" onclick="selectOption(0, 3)">D: 難波京（なにわきょう）</button></li>
+            </ul>
+            <div class="result-box" id="result-0"></div>
+        </div>
+
+        <!-- 第2問 -->
+        <div class="quiz-card" id="card-1">
+            <span class="question-num">第 2 問</span>
+            <p class="question-text">奈良時代、政府が唐の優れた制度や文化を直接日本へ取り入れるために、危険を冒して海を渡らせた使節を何といいますか?</p>
+            <div class="hint-block">
+                <button class="hint-btn" onclick="toggleHint(1)">💡 ヒントを表示</button>
+                <div class="hint-text" id="hint-1">漢字3文字の使節です。留学生の阿倍仲麻呂（あべのなかまろ）らが同行したことでも有名です。のちの894年に菅原道真によって廃止を訴えられたのは「遣唐使（けんとうし）」です。</div>
+            </div>
+            <ul class="options-list">
+                <li class="option-item"><button class="option-btn" id="btn-1-0" onclick="selectOption(1, 0)">A: 遣隋使（けんずいし）</button></li>
+                <li class="option-item"><button class="option-btn" id="btn-1-1" onclick="selectOption(1, 1)">B: 遣唐使（けんとうし）</button></li>
+                <li class="option-item"><button class="option-btn" id="btn-1-2" onclick="selectOption(1, 2)">C: 朝鮮通信使（ちょうせんつうしんし）</button></li>
+                <li class="option-item"><button class="option-btn" id="btn-1-3" onclick="selectOption(1, 3)">D: 南蛮使節（なんばんしせつ）</button></li>
+            </ul>
+            <div class="result-box" id="result-1"></div>
+        </div>
+
+        <!-- 第3問 -->
+        <div class="quiz-card" id="card-2">
+            <span class="question-num">第 3 問</span>
+            <p class="question-text">律令制度のもとで、6歳以上のすべての人々に国から一定の土地（口分田）を与え、その人が死ぬと国に土地を返させる仕組みを何といいますか?</p>
+            <div class="hint-block">
+                <button class="hint-btn" onclick="toggleHint(2)">💡 ヒントを表示</button>
+                <div class="hint-text" id="hint-2">漢字4文字の法です。「口分田（くぶんでん）」というキーワードと完全にセットになっています。</div>
+            </div>
+            <ul class="options-list">
+                <li class="option-item"><button class="option-btn" id="btn-2-0" onclick="selectOption(2, 0)">A: 墾田永年私財法（こんでんえいねんしざいほう）</button></li>
+                <li class="option-item"><button class="option-btn" id="btn-2-1" onclick="selectOption(2, 1)">B: 三世一身の法（さんぜいっしんのほう）</button></li>
+                <li class="option-item"><button class="option-btn" id="btn-2-2" onclick="selectOption(2, 2)">C: 班田収授法（はんでんしゅうじゅのほう）</button></li>
+                <li class="option-item"><button class="option-btn" id="btn-2-3" onclick="selectOption(2, 3)">D: 地租改正法（ちそかいせいほう）</button></li>
+            </ul>
+            <div class="result-box" id="result-2"></div>
+        </div>
+
+        <!-- 【指定位置①】第3問の後の広告 -->
+        <div class="ad-container">
+            <!-- admax -->
+            <script src="https://adm.shinobi.jp/s/8883b8c96c219279b7215cf3521e8aed"></script>
+            <!-- admax -->
+        </div>
+
+        <!-- 第4問 -->
+        <div class="quiz-card" id="card-3">
+            <span class="question-num">第 4 問</span>
+            <p class="question-text">当時の農民に課せられた重い税のうち、「収穫した稲の3%程度を納める税」を何といいますか?</p>
+            <div class="hint-block">
+                <button class="hint-btn" onclick="toggleHint(3)">💡 ヒントを表示</button>
+                <div class="hint-text" id="hint-3">漢字1文字の税です。農民には、このほかに地方の特産物を納める「調（ちょう）」や、布を納める「庸（よう）」、防人（さきもり）などの重い兵役がありました。</div>
+            </div>
+            <ul class="options-list">
+                <li class="option-item"><button class="option-btn" id="btn-3-0" onclick="selectOption(3, 0)">A: 租（そ）</button></li>
+                <li class="option-item"><button class="option-btn" id="btn-3-1" onclick="selectOption(3, 1)">B: 庸（よう）</button></li>
+                <li class="option-item"><button class="option-btn" id="btn-3-2" onclick="selectOption(3, 2)">C: 調（ちょう）</button></li>
+                <li class="option-item"><button class="option-btn" id="btn-3-3" onclick="selectOption(3, 3)">D: 雑徭（ぞうよう）</button></li>
+            </ul>
+            <div class="result-box" id="result-3"></div>
+        </div>
+
+        <!-- 第5問 -->
+        <div class="quiz-card" id="card-4">
+            <span class="question-num">第 5 問</span>
+            <p class="question-text">相次ぐ政治の混乱や伝染病（天然痘）から国を守るため、仏教の力を信じて全国に国分寺を建て、奈良に東大寺の大仏を作らせた天皇は誰でしょう?</p>
+            <div class="hint-block">
+                <button class="hint-btn" onclick="toggleHint(4)">💡 ヒントを表示</button>
+                <div class="hint-text" id="hint-4">漢字4文字の天皇です。大仏（東大寺）といえばこの天皇！テストにも必ず出る、奈良時代を代表する主役です。</div>
+            </div>
+            <ul class="options-list">
+                <li class="option-item"><button class="option-btn" id="btn-4-0" onclick="selectOption(4, 0)">A: 天武天皇（てんむてんのう）</button></li>
+                <li class="option-item"><button class="option-btn" id="btn-4-1" onclick="selectOption(4, 1)">B: 聖武天皇（しょうむてんのう）</button></li>
+                <li class="option-item"><button class="option-btn" id="btn-4-2" onclick="selectOption(4, 2)">C: 桓武天皇（かんむてんのう）</button></li>
+                <li class="option-item"><button class="option-btn" id="btn-4-3" onclick="selectOption(4, 3)">D: 推古天皇（すいこてんのう）</button></li>
+            </ul>
+            <div class="result-box" id="result-4"></div>
+        </div>
+
+        <!-- 第6問 -->
+        <div class="quiz-card" id="card-5">
+            <span class="question-num">第 6 問</span>
+            <p class="question-text">5回の航海失敗で両目を失明しながらも、正しい仏教の戒律を伝えるために日本へ渡り、奈良に唐招提寺（とうしょうだいじ）を開いた高僧は誰でしょう?</p>
+            <div class="hint-block">
+                <button class="hint-btn" onclick="toggleHint(5)">💡 ヒントを表示</button>
+                <div class="hint-text" id="hint-5">漢字2文字のお坊さんです。唐（中国）から命がけで来日し、日本の仏教のレベルを大きく引き上げました。</div>
+            </div>
+            <ul class="options-list">
+                <li class="option-item"><button class="option-btn" id="btn-5-0" onclick="selectOption(5, 0)">A: 行基（ぎょうき）</button></li>
+                <li class="option-item"><button class="option-btn" id="btn-5-1" onclick="selectOption(5, 1)">B: 鑑真（がんじん）</button></li>
+                <li class="option-item"><button class="option-btn" id="btn-5-2" onclick="selectOption(5, 2)">C: 最澄（さいちょう）</button></li>
+                <li class="option-item"><button class="option-btn" id="btn-5-3" onclick="selectOption(5, 3)">D: 空海（くうかい）</button></li>
+            </ul>
+            <div class="result-box" id="result-5"></div>
+        </div>
+
+        <!-- 【指定位置②】第6問の後の広告 -->
+        <div class="ad-container">
+            <!-- admax -->
+            <script src="https://adm.shinobi.jp/s/8883b8c96c219279b7215cf3521e8aed"></script>
+            <!-- admax -->
+        </div>
+
+        <!-- 第7問 -->
+        <div class="quiz-card" id="card-6">
+            <span class="question-num">第 7 問</span>
+            <p class="question-text">東大寺の北西に位置する、聖武天皇の愛用品やシルクロードを経て伝わったペルシャ風の宝物などが多数保管されている、高床の「校倉造（あぜくらづくり）」で有名な倉庫は何でしょう?</p>
+            <div class="hint-block">
+                <button class="hint-btn" onclick="toggleHint(6)">💡 ヒントを表示</button>
+                <div class="hint-text" id="hint-6">漢字3文字の建物です。三角形の木材を組み合わせて作られた壁が特徴で、宝物を乾燥から守ってきました。</div>
+            </div>
+            <ul class="options-list">
+                <li class="option-item"><button class="option-btn" id="btn-6-0" onclick="selectOption(6, 0)">A: 正倉院（しょうそういん）</button></li>
+                <li class="option-item"><button class="option-btn" id="btn-6-1" onclick="selectOption(6, 1)">B: 法隆寺（ほうりゅうじ）</button></li>
+                <li class="option-item"><button class="option-btn" id="btn-6-2" onclick="selectOption(6, 2)">C: 瑞巌寺（ずいがんじ）</button></li>
+                <li class="option-item"><button class="option-btn" id="btn-6-3" onclick="selectOption(6, 3)">D: 金剛峯寺（こんごうぶじ）</button></li>
+            </ul>
+            <div class="result-box" id="result-6"></div>
+        </div>
+
+        <!-- 第8問 -->
+        <div class="quiz-card" id="card-7">
+            <span class="question-num">第 8 問</span>
+            <p class="question-text">西暦743年、重い税から逃げ出して口分田が荒れ果てたため、新しく開墾（かいこん）した土地は「永遠に自分の土地にして良い」と認めた法律は何でしょう?</p>
+            <div class="hint-block">
+                <button class="hint-btn" onclick="toggleHint(7)">💡 ヒントを表示</button>
+                <div class="hint-text" id="hint-7">漢字7文字の、歴史上きわめて重要な法律です。「土地の永久私有」を認めたことで、公地公民の原則が崩れ、のちの「荘園（しょうえん）」が生まれる原因になりました。</div>
+            </div>
+            <ul class="options-list">
+                <li class="option-item"><button class="option-btn" id="btn-7-0" onclick="selectOption(7, 0)">A: 大宝律令（たいほうりつりょう）</button></li>
+                <li class="option-item"><button class="option-btn" id="btn-7-1" onclick="selectOption(7, 1)">B: 武家諸法度（ぶけしょはっと）</button></li>
+                <li class="option-item"><button class="option-btn" id="btn-7-2" onclick="selectOption(7, 2)">C: 三世一身の法（さんぜいっしんのほう）</button></li>
+                <li class="option-item"><button class="option-btn" id="btn-7-3" onclick="selectOption(7, 3)">D: 墾田永年私財法（こんでんえいねんしざいほう）</button></li>
+            </ul>
+            <div class="result-box" id="result-7"></div>
+        </div>
+
+        <!-- 第9問 -->
+        <div class="quiz-card" id="card-8">
+            <span class="question-num">第 9 問</span>
+            <p class="question-text">奈良時代にまとめられた書物のうち、大伴家持（おおとものやかもち）らが編集し、防人（さきもり）や農民、天皇などの歌が約4500首も収められた、日本最古の和歌集は何でしょう?</p>
+            <div class="hint-block">
+                <button class="hint-btn" onclick="toggleHint(8)">💡 ヒントを表示</button>
+                <div class="hint-text" id="hint-8">漢字3文字の和歌集です。「万の言の葉（たくさんの歌）を集めたもの」という意味があります。ちなみに地方の地理や特産物をまとめたのは「風土記（ふどき）」です。</div>
+            </div>
+            <ul class="options-list">
+                <li class="option-item"><button class="option-btn" id="btn-8-0" onclick="selectOption(8, 0)">A: 古今和歌集（こきんわかしゅう）</button></li>
+                <li class="option-item"><button class="option-btn" id="btn-8-1" onclick="selectOption(8, 1)">B: 万葉集（まんようしゅう）</button></li>
+                <li class="option-item"><button class="option-btn" id="btn-8-2" onclick="selectOption(8, 2)">C: 新古今和歌集（しんこきんわかしゅう）</button></li>
+                <li class="option-item"><button class="option-btn" id="btn-8-3" onclick="selectOption(8, 3)">D: 日本書紀（にほんしょき）</button></li>
+            </ul>
+            <div class="result-box" id="result-8"></div>
+        </div>
+
+        <!-- 【指定位置③】第9問の後の広告 -->
+        <div class="ad-container">
+            <!-- admax -->
+            <script src="https://adm.shinobi.jp/s/8883b8c96c219279b7215cf3521e8aed"></script>
+            <!-- admax -->
+        </div>
+
+        <!-- 第10問 -->
+        <div class="quiz-card" id="card-9">
+            <span class="question-num">第 10 問</span>
+            <p class="question-text">奈良時代の文化は、唐の進んだ文化や、シルクロードを経由したペルシャ・インドなどの国際的な影響を強く受けました。この聖武天皇の時代の文化を何文化と呼びますか?</p>
+            <div class="hint-block">
+                <button class="hint-btn" onclick="toggleHint(9)">💡 ヒントを表示</button>
+                <div class="hint-text" id="hint-9">漢字3文字の文化名です。東大寺大仏殿など、平城京を中心に栄えた国際色豊かな仏教文化を指します。（※聖徳太子の時代は飛鳥文化、平安時代は国風文化です）</div>
+            </div>
+            <ul class="options-list">
+                <li class="option-item"><button class="option-btn" id="btn-9-0" onclick="selectOption(9, 0)">A: 飛鳥文化（あすかぶんか）</button></li>
+                <li class="option-item"><button class="option-btn" id="btn-9-1" onclick="selectOption(9, 1)">B: 天平文化（てんぴょうぶんか）</button></li>
+                <li class="option-item"><button class="option-btn" id="btn-9-2" onclick="selectOption(9, 2)">C: 国風文化（こくふうぶんか）</button></li>
+                <li class="option-item"><button class="option-btn" id="btn-9-3" onclick="selectOption(9, 3)">D: 白鳳文化（はくほうぶんか）</button></li>
+            </ul>
+            <div class="result-box" id="result-9"></div>
+        </div>
+    </div>
+
+    <button id="submit-btn" class="submit-all-btn" onclick="calculateScore()">採点する</button>
+
+    <div id="score-section" class="score-section">
+        <h2>結果発表</h2>
+        <p>あなたの正解数は...</p>
+        <div class="score-num" id="score-display">0 / 10</div>
+        <p id="score-comment"></p>
+        <button class="restart-btn" onclick="restartQuiz()">もう一度挑戦する</button>
+    </div>
+</div>
+
+<script>
+const quizMetaData = [
+    { correct: 2, rationale: "平城京（へいじょうきょう）が正解です。710年に元明天皇によって奈良に造られました。中国（唐）の都である長安を手本にし、中央を南北に通る「朱雀大路（すざくおおじ）」を挟んで、左京と右京に分かれた美しい碁盤の目状の都市計画がなされていました。" },
+    { correct: 1, rationale: "遣唐使（けんとうし）が正解です。唐の優れた政治制度や仏教、進んだ文化を学ぶため、およそ20年に1回の頻度で、数製の船に分乗して派遣されました。東シナ海の荒波を超える命がけの航海であり、日本の国家体制づくりに計り知れない影響を与えました。" },
+    { correct: 2, rationale: "班田収授法（はんでんしゅうじゅのほう）が正解です。戸籍に基づいて6歳以上の男女に国から「口分田（くぶんでん）」が与えられ、一生のあいだ耕作する権利が認められました。ただし本人が死亡すると国に返す義務があり、売買は禁止されていました。これが大化の改新で掲げられた「公地公民」の根幹制度です。" },
+    { correct: 0, rationale: "租（そ）が正解です。口分田の面積（収穫量）に応じて、収穫した稲の約3%を政府に納める最も基本的な税です。一見軽く見えますが、特産物を都まで自力で運ぶ「調（ちょう）」、中央での労役の代わりに布を出す「庸（よう）」、さらには九州北部の防衛に向かう「防人（さきもり）」などの兵役があり、農民の生活は極めて過酷でした。" },
+    { correct: 1, rationale: "聖武天皇（しょうむてんのう）が正解です。奈良時代の中期、貴族の権力争いや天然痘の流行など、社会不安が続きました。これらを仏教の教え（鎮護国家思想）によって鎮めようと考え、全国に国分寺・国分尼寺の建設を命じ、都の東大寺に巨大な「大仏」を建立しました。" },
+    { correct: 1, rationale: "鑑真（がんじん）が正解です。日本の僧であった普照（ふしょう）らに招かれ、日本に正しい仏教の戒律（僧侶になるためのルール）を伝えるため、唐から渡航を試みました。暴風雨や役人の妨害、さらには自身の失明という苦難を乗り越え、6回目でようやく日本の土を踏みました。" },
+    { correct: 0, rationale: "正倉院（しょうそういん）が正解です。東大寺にある、校倉造（あぜくらづくり）と呼ばれる、断面が三角形の木材を組み合わせて造られた高床式の倉庫です。聖武天皇が愛用した遺品や、シルクロードを経由して唐やペルシャ、インドから運ばれた数々の国際的な一級品が最高の状態で現在まで保管されてきました。" },
+    { correct: 3, rationale: "墾田永年私財法（こんでんえいねんしざいほう）が正解です。農民が重税から逃げ出し、口分田が荒れ果てたため、政府は開墾を奨励するために743年にこの法を出しました。「新しく耕した土地は、永久に自分の私有地にして良い」としたため、有力な貴族や寺社が競って広い土地を囲い込み、のちの「荘園（しょうえん）」へと発展しました。" },
+    { correct: 1, rationale: "万葉集（まんようしゅう）が正解です。奈良時代の末期にまとめられた日本最古の歌集です。天皇や貴族の洗練された歌だけでなく、九州を守る兵士の悲哀を歌った「防人の歌（さきもりのうた）」や、東日本の農民の歌、さらには山上憶良（やまのうえのおくら）の「貧窮問答歌」など、当時のリアルな民衆の生活を伝える歌も多く含まれています。" },
+    { correct: 1, rationale: "天平文化（てんぴょうぶんか）が正解です。聖武天皇の時代の元号「天平」にちなんだ文化名です。遣唐使がもたらした唐の先進文化や、シルクロードを通じた西アジア（ペルシャなど）の国際的な色合いが極めて濃い、華やかな仏教文化が花開きました。" }
+];
+
+let userAnswers = new Array(quizMetaData.length).fill(null);
+
+function selectOption(qIdx, oIdx) {
+    if (document.getElementById('score-section').style.display === 'block') return;
+
+    for (let i = 0; i < 4; i++) {
+        const btn = document.getElementById(`btn-${qIdx}-${i}`);
+        if (i === oIdx) {
+            btn.style.borderColor = 'var(--primary-color)';
+            btn.style.backgroundColor = '#eaf2f8';
+            btn.style.fontWeight = 'bold';
+        } else {
+            btn.style.borderColor = '#dcdde1';
+            btn.style.backgroundColor = '#fdfefe';
+            btn.style.fontWeight = 'normal';
+        }
+    }
+    userAnswers[qIdx] = oIdx;
+}
+
+function toggleHint(qIdx) {
+    const hintDiv = document.getElementById(`hint-${qIdx}`);
+    hintDiv.style.display = hintDiv.style.display === 'block' ? 'none' : 'block';
+}
+
+function calculateScore() {
+    const unanswered = userAnswers.map((ans, idx) => ans === null ? idx + 1 : null).filter(v => v !== null);
+    if (unanswered.length > 0) {
+        alert(`未回答の問題があります。第 ${unanswered.join(', ')} 問に答えてください。`);
+        return;
+    }
+
+    let score = 0;
+
+    quizMetaData.forEach((q, qIdx) => {
+        const userAns = userAnswers[qIdx];
+        const resultBox = document.getElementById(`result-${qIdx}`);
+        
+        for (let i = 0; i < 4; i++) {
+            document.getElementById(`btn-${qIdx}-${i}`).disabled = true;
+        }
+
+        const selectedBtn = document.getElementById(`btn-${qIdx}-${userAns}`);
+        const correctBtn = document.getElementById(`btn-${qIdx}-${q.correct}`);
+
+        if (userAns === q.correct) {
+            score++;
+            selectedBtn.className = 'option-btn correct';
+            resultBox.className = 'result-box show correct-box';
+            resultBox.innerHTML = `<div class="result-title">🌸 正解！</div><div>${q.rationale}</div>`;
+        } else {
+            selectedBtn.className = 'option-btn incorrect';
+            correctBtn.className = 'option-btn correct';
+            resultBox.className = 'result-box show incorrect-box';
+            resultBox.innerHTML = `<div class="result-title">⚠️ 不正解...（正解は ${String.fromCharCode(65 + q.correct)}）</div><div>${q.rationale}</div>`;
+        }
+    });
+
+    document.getElementById('submit-btn').style.display = 'none';
+    const scoreSection = document.getElementById('score-section');
+    scoreSection.style.display = 'block';
+    document.getElementById('score-display').innerText = `${score} / ${quizMetaData.length}`;
+
+    let comment = '';
+    if (score === 10) comment = '満点パーフェクト！奈良時代の歴史マスターですね！平城京の構造、厳しい租・庸・調の税制、聖武天皇と鑑真の仏教政策、精度としての崩壊（墾田永年私財法）まで完璧な理解です！';
+    else if (score >= 7) comment = '素晴らしい高得点！「東大寺大仏＝聖武天皇」「正倉院＝校倉造」「永久私有＝墾田永年私財法」といった定期テスト・入試の頻出セットが確実に頭に入っています。この調子で進みましょう！';
+    else if (score >= 4) comment = '合格点クリアです！奈良時代は「税負担に苦しんだ農民が土地を捨てて逃げた結果、班田収授の仕組みが行き詰まり、墾田永年私財法という新しい土地制度に変わっていった」という因果関係を捉えると一気に暗記が楽になりますよ！';
+    else comment = 'まずは最重要の3大キーワード、「平城京（710年）」「聖武天皇（大仏・東大寺）」「墾田永年私財法（土地が自分のものになる）」を覚えよう！これらを軸にして、解説を読みながらもう一度解き直してみてね！';
+    
+    document.getElementById('score-comment').innerText = comment;
+    scoreSection.scrollIntoView({ behavior: 'smooth' });
+}
+
+function restartQuiz() {
+    userAnswers = new Array(quizMetaData.length).fill(null);
+    document.getElementById('submit-btn').style.display = 'block';
+    document.getElementById('score-section').style.display = 'none';
+    
+    quizMetaData.forEach((q, qIdx) => {
+        const resultBox = document.getElementById(`result-${qIdx}`);
+        resultBox.className = 'result-box';
+        resultBox.innerHTML = '';
+        
+        for (let i = 0; i < 4; i++) {
+            const btn = document.getElementById(`btn-${qIdx}-${i}`);
+            btn.disabled = false;
+            btn.className = 'option-btn';
+            btn.style = '';
+        }
+        document.getElementById(`hint-${qIdx}`).style.display = 'none';
+    });
+
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+}
+</script>
+
+</body>
+</html>
