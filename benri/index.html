@@ -6,7 +6,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>みんなの便利ツール | ブロックサプライズ</title>
-    <meta name="description" content="割り勘計算、日数計算、単位変換、文字数カウント、パスワード生成、今日の運勢。毎日使える無料の便利ツールを集めました。登録不要・スマホOK。">
+    <meta name="description" content="割り勘計算、日数計算、単位変換、文字数カウント、パスワード生成、今日の運勢。毎日使える無料の便利ツールを集めました。登録不要・スマホOK。お役立ちブログも更新中。">
     <link rel="icon" href="../IMG_3967.png">
     <link rel="apple-touch-icon" href="../IMG_3967.png">
     <meta name="google-adsense-account" content="ca-pub-3571574988222927">
@@ -18,85 +18,146 @@
   gtag('config', 'G-10WGHJWSXK');
 </script>
     <style>
-        :root { --bg-color: #f8f9fa; --card-bg: #ffffff; --text-color: #333; --accent-color: #007aff; }
+        :root {
+            --bg: #f4f7fb; --card: #ffffff; --text: #2b2f36; --sub: #6b7280;
+            --accent: #007aff; --accent2: #00b894;
+        }
+        * { box-sizing: border-box; }
         body {
             font-family: "Helvetica Neue", Arial, "Hiragino Kaku Gothic ProN", "Hiragino Sans", Meiryo, sans-serif;
-            background-color: var(--bg-color); color: var(--text-color);
-            margin: 0; padding: 40px 20px; line-height: 1.6;
+            background: var(--bg); color: var(--text);
+            margin: 0; padding: 0 20px 48px; line-height: 1.7; overflow-x: hidden;
         }
-        header { text-align: center; margin-bottom: 40px; }
-        h1 { font-size: 2rem; letter-spacing: 1px; margin-bottom: 8px; }
-        header p { color: #666; margin: 0; }
+        .hero {
+            width: 100vw; margin-left: calc(50% - 50vw); margin-right: calc(50% - 50vw);
+            background: linear-gradient(135deg, #007aff, #00b894);
+            color: #fff; text-align: center; padding: 52px 20px 44px;
+        }
+        .hero h1 { font-size: 2.1rem; margin: 0 0 10px; letter-spacing: 1px; }
+        .hero p { margin: 0; opacity: 0.92; }
+        .hero .chips { margin-top: 18px; }
+        .hero .chips span {
+            display: inline-block; background: rgba(255,255,255,0.18); border: 1px solid rgba(255,255,255,0.35);
+            border-radius: 999px; padding: 4px 14px; font-size: 0.8rem; margin: 0 3px;
+        }
         .container {
-            max-width: 1000px; margin: 0 auto;
-            display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 25px;
+            max-width: 1000px; margin: 36px auto 0;
+            display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 22px;
         }
         .card {
-            background: var(--card-bg); border-radius: 12px; padding: 24px 20px;
-            box-shadow: 0 4px 6px rgba(0,0,0,0.05);
+            background: var(--card); border-radius: 16px; padding: 26px 22px;
+            box-shadow: 0 6px 18px rgba(0,0,0,0.05);
             transition: transform 0.2s ease, box-shadow 0.2s ease;
             text-decoration: none; color: inherit;
-            display: flex; flex-direction: column; border: 1px solid #eee;
+            display: flex; flex-direction: column; border-top: 5px solid var(--accent);
         }
-        .card:hover { transform: translateY(-5px); box-shadow: 0 8px 15px rgba(0,0,0,0.1); border-color: var(--accent-color); }
-        .card .emoji { font-size: 2.2rem; margin-bottom: 10px; }
-        .card h2 { margin: 0 0 10px 0; font-size: 1.25rem; color: var(--accent-color); }
-        .card p { margin: 0; font-size: 0.9rem; color: #666; flex-grow: 1; }
-        .badge { display: inline-block; margin-top: 15px; font-size: 0.75rem; font-weight: bold; color: var(--accent-color); text-transform: uppercase; }
-        .ad-slot { text-align: center; margin: 30px auto 0; min-height: 50px; }
-        footer { text-align: center; margin-top: 50px; font-size: 0.8rem; color: #999; }
+        .card:hover { transform: translateY(-5px); box-shadow: 0 14px 28px rgba(0,0,0,0.09); }
+        .card.c-green { border-top-color: #00b894; }
+        .card.c-orange { border-top-color: #ff8c42; }
+        .card.c-purple { border-top-color: #7c5cff; }
+        .card.c-pink { border-top-color: #ff5c8a; }
+        .card.c-teal { border-top-color: #00acc1; }
+        .card .emoji {
+            font-size: 1.9rem; width: 58px; height: 58px; border-radius: 50%;
+            background: #f0f7ff; display: flex; align-items: center; justify-content: center; margin-bottom: 14px;
+        }
+        .card h2 { margin: 0 0 8px 0; font-size: 1.22rem; }
+        .card p { margin: 0; font-size: 0.9rem; color: var(--sub); flex-grow: 1; }
+        .badge { display: inline-block; margin-top: 14px; font-size: 0.72rem; font-weight: bold; color: var(--accent); letter-spacing: 1px; }
+        .section { max-width: 820px; margin: 52px auto 0; }
+        .section h2 { font-size: 1.35rem; border-left: 5px solid var(--accent); padding-left: 12px; }
+        .section p { color: #444; }
+        .blog-list { display: grid; gap: 14px; }
+        .blog-item {
+            background: var(--card); border-radius: 12px; padding: 18px 20px; text-decoration: none; color: inherit;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.04); display: block; border: 1px solid #eef1f5;
+        }
+        .blog-item:hover { border-color: var(--accent); }
+        .blog-item h3 { margin: 0 0 6px; font-size: 1.05rem; color: var(--accent); }
+        .blog-item p { margin: 0; font-size: 0.88rem; color: var(--sub); }
+        .ad-slot {
+            width: 100vw; margin-left: calc(50% - 50vw); margin-right: calc(50% - 50vw);
+            text-align: center; padding: 14px 0; margin-top: 44px; margin-bottom: 0;
+        }
+        footer { text-align: center; margin-top: 44px; font-size: 0.8rem; color: #999; }
         footer a { color: #999; }
     </style>
 </head>
 <body>
 
-    <header>
+    <div class="hero">
         <h1>🧰 みんなの便利ツール</h1>
-        <p>登録不要・無料・スマホOK。毎日の「ちょっと困った」を解決します</p>
-    </header>
+        <p>登録不要・無料・スマホOK。毎日の「ちょっと困った」を、その場で解決します。</p>
+        <div class="chips"><span>全ツール無料</span><span>登録いらず</span><span>スマホ対応</span></div>
+    </div>
 
     <div class="container">
         <a href="warikan.html" class="card">
             <div class="emoji">💴</div>
             <h2>割り勘計算</h2>
-            <p>飲み会やランチの割り勘を一発計算。端数の切り上げ・切り捨てにも対応して、集金額まで分かります。</p>
-            <span class="badge">計算</span>
+            <p>飲み会やランチの割り勘を一発計算。「1人だけ多く払う」設定や、端数の切り上げ・切り捨てにも対応。集金額とお釣りまで分かります。</p>
+            <span class="badge">計算ツール</span>
         </a>
 
-        <a href="days.html" class="card">
+        <a href="days.html" class="card c-green">
             <div class="emoji">📅</div>
             <h2>日数計算</h2>
-            <p>「あのイベントまであと何日？」「2つの日付の間は何日？」がすぐ分かる。記念日や締め切りの確認に。</p>
-            <span class="badge">計算</span>
+            <p>「あのイベントまであと何日？」「◯日後は何月何日？」がすぐ分かる。記念日、試験日、締め切りのカウントダウンに。</p>
+            <span class="badge">計算ツール</span>
         </a>
 
-        <a href="convert.html" class="card">
+        <a href="convert.html" class="card c-orange">
             <div class="emoji">🔁</div>
             <h2>単位変換</h2>
-            <p>長さ・重さ・温度・面積（㎡／坪／畳）をまとめて変換。料理、買い物、引っ越し、旅行に便利。</p>
-            <span class="badge">変換</span>
+            <p>長さ・重さ・温度・面積（㎡／坪／畳）に加えて、料理の単位（大さじ・カップ）とデータ量（GB・MB）も変換できます。</p>
+            <span class="badge">変換ツール</span>
         </a>
 
-        <a href="counter.html" class="card">
+        <a href="counter.html" class="card c-purple">
             <div class="emoji">✍️</div>
             <h2>文字数カウント</h2>
-            <p>レポートや作文、SNS投稿の文字数をリアルタイムで数えます。原稿用紙換算や行数も表示。</p>
-            <span class="badge">文章</span>
+            <p>レポートや作文、SNS投稿の文字数をリアルタイム表示。原稿用紙換算、行数、140字まであと何字かも分かります。</p>
+            <span class="badge">文章ツール</span>
         </a>
 
-        <a href="password.html" class="card">
+        <a href="password.html" class="card c-pink">
             <div class="emoji">🔐</div>
             <h2>パスワード生成</h2>
-            <p>安全なランダムパスワードをワンタップで作成。長さや文字の種類を選べて、そのままコピーできます。</p>
+            <p>安全なランダムパスワードをワンタップで作成。強さメーターと生成履歴つきで、コピーもそのままできます。</p>
             <span class="badge">セキュリティ</span>
         </a>
 
-        <a href="uranai.html" class="card">
+        <a href="uranai.html" class="card c-teal">
             <div class="emoji">🔮</div>
             <h2>今日の運勢</h2>
-            <p>今日の運勢は大吉？ラッキーナンバーとラッキーカラーも分かる、朝の習慣にしたい小さな占い。</p>
+            <p>今日の運勢は大吉？総合運に加えて、恋愛運・仕事運・金運と、ラッキーナンバー＆カラーもチェックできます。</p>
             <span class="badge">毎日更新</span>
         </a>
+    </div>
+
+    <div class="section">
+        <h2>このサイトについて</h2>
+        <p>「みんなの便利ツール」は、日常生活の中でふと必要になる計算や変換を、アプリのインストールも会員登録もなしで使えるようにした無料ツール集です。飲み会の割り勘、引っ越しの部屋探しでの坪計算、レポートの文字数チェック、新しいアカウントを作るときのパスワード生成など、「今すぐ知りたい」にすぐ答えることを目指しています。</p>
+        <p>すべての計算はあなたのスマホやパソコンの中だけで行われ、入力した内容がサーバーに送られることはありません。パスワード生成も端末内で完結するので、安心して使えます。ブックマークしておくと、いざというときにすぐ開けて便利です。</p>
+    </div>
+
+    <div class="section">
+        <h2>📝 お役立ちブログ</h2>
+        <div class="blog-list">
+            <a href="blog/warikan-manner.html" class="blog-item">
+                <h3>割り勘のマナーとコツ｜スマートに精算する5つのポイント</h3>
+                <p>飲み会の精算でモメないための基本マナーと、端数の扱い方、幹事が得する工夫をまとめました。</p>
+            </a>
+            <a href="blog/password-anzen.html" class="blog-item">
+                <h3>安全なパスワードの作り方｜使い回しが危ない理由と管理のコツ</h3>
+                <p>「誕生日+名前」がなぜ危ないのか。強くて覚えやすいパスワードの考え方と、管理アプリの使い方を解説します。</p>
+            </a>
+            <a href="blog/tsubo-guide.html" class="blog-item">
+                <h3>坪・畳・㎡の換算ガイド｜部屋探しで失敗しない広さの目安</h3>
+                <p>不動産広告の「30㎡」「6畳」「10坪」は結局どれくらい広い？換算表と、暮らしのイメージで解説します。</p>
+            </a>
+        </div>
+        <p style="margin-top: 14px;"><a href="blog/index.html" style="color: var(--accent); font-weight: bold;">ブログの記事一覧を見る →</a></p>
     </div>
 
     <div class="ad-slot">

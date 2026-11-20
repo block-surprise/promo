@@ -6,7 +6,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>割り勘計算 | みんなの便利ツール</title>
-    <meta name="description" content="合計金額と人数を入れるだけ。一人あたりの金額と集金総額がすぐ分かる割り勘計算機。端数の切り上げ・切り捨て対応。">
+    <meta name="description" content="合計金額と人数を入れるだけ。一人あたりの金額と集金総額がすぐ分かる割り勘計算機。「1人だけ多く払う」設定と端数の切り上げ・切り捨てに対応。">
     <link rel="icon" href="../IMG_3967.png">
     <link rel="apple-touch-icon" href="../IMG_3967.png">
     <meta name="google-adsense-account" content="ca-pub-3571574988222927">
@@ -18,39 +18,55 @@
   gtag('config', 'G-10WGHJWSXK');
 </script>
     <style>
-        :root { --bg-color: #f8f9fa; --card-bg: #ffffff; --text-color: #333; --accent-color: #007aff; }
+        :root { --bg: #f4f7fb; --card: #ffffff; --text: #2b2f36; --sub: #6b7280; --accent: #007aff; }
+        * { box-sizing: border-box; }
         body {
             font-family: "Helvetica Neue", Arial, "Hiragino Kaku Gothic ProN", "Hiragino Sans", Meiryo, sans-serif;
-            background-color: var(--bg-color); color: var(--text-color);
-            margin: 0; padding: 40px 20px; line-height: 1.6;
+            background: var(--bg); color: var(--text);
+            margin: 0; padding: 0 20px 48px; line-height: 1.7; overflow-x: hidden;
         }
-        .wrap { max-width: 560px; margin: 0 auto; }
-        header { text-align: center; margin-bottom: 30px; }
-        h1 { font-size: 1.8rem; margin-bottom: 8px; }
-        header p { color: #666; margin: 0; }
+        .wrap { max-width: 640px; margin: 0 auto; }
+        .site-header { display: flex; justify-content: space-between; align-items: center; padding: 16px 0 0; }
+        .site-header a.logo { font-weight: 900; text-decoration: none; color: var(--text); }
+        .site-header a.back { color: var(--accent); text-decoration: none; font-size: 0.9rem; font-weight: bold; }
+        header.page-head { text-align: center; margin: 26px 0 26px; }
+        header.page-head h1 { font-size: 1.8rem; margin: 0 0 6px; }
+        header.page-head p { color: var(--sub); margin: 0; }
         .card {
-            background: var(--card-bg); border-radius: 12px; padding: 28px 24px;
-            box-shadow: 0 4px 6px rgba(0,0,0,0.05); border: 1px solid #eee;
+            background: var(--card); border-radius: 16px; padding: 28px 24px;
+            box-shadow: 0 6px 18px rgba(0,0,0,0.05); border-top: 5px solid var(--accent);
         }
         label { display: block; font-weight: bold; font-size: 0.9rem; margin: 18px 0 6px; }
         label:first-child { margin-top: 0; }
+        label .opt { font-weight: normal; color: var(--sub); font-size: 0.8rem; }
         input, select {
-            width: 100%; padding: 12px; font-size: 1.1rem; border: 1px solid #ddd;
-            border-radius: 8px; box-sizing: border-box; background: #fff;
+            width: 100%; padding: 13px; font-size: 1.1rem; border: 1px solid #ddd;
+            border-radius: 10px; background: #fff;
         }
-        .result {
-            margin-top: 26px; background: #f0f7ff; border-radius: 10px; padding: 20px; text-align: center;
+        input:focus, select:focus { outline: 2px solid var(--accent); border-color: var(--accent); }
+        .result { margin-top: 26px; background: #f0f7ff; border-radius: 12px; padding: 20px; text-align: center; }
+        .result .per { font-size: 1.9rem; font-weight: 900; color: var(--accent); line-height: 1.4; }
+        .result .sub { font-size: 0.9rem; color: var(--sub); margin-top: 8px; }
+        .text-section { margin-top: 44px; }
+        .text-section h2 { font-size: 1.25rem; border-left: 5px solid var(--accent); padding-left: 12px; }
+        .text-section h3 { font-size: 1.05rem; margin-top: 22px; }
+        .text-section p, .text-section li { color: #444; }
+        .ad-slot {
+            width: 100vw; margin-left: calc(50% - 50vw); margin-right: calc(50% - 50vw);
+            text-align: center; padding: 14px 0; margin-top: 36px;
         }
-        .result .per { font-size: 2rem; font-weight: 900; color: var(--accent-color); }
-        .result .sub { font-size: 0.9rem; color: #666; margin-top: 8px; }
-        .ad-slot { text-align: center; margin: 26px auto 0; min-height: 50px; }
-        footer { text-align: center; margin-top: 40px; font-size: 0.8rem; color: #999; }
+        footer { text-align: center; margin-top: 36px; font-size: 0.8rem; color: #999; }
         footer a { color: #999; }
     </style>
 </head>
 <body>
 <div class="wrap">
-    <header>
+    <div class="site-header">
+        <a class="logo" href="index.html">🧰 みんなの便利ツール</a>
+        <a class="back" href="index.html">ツール一覧 →</a>
+    </div>
+
+    <header class="page-head">
         <h1>💴 割り勘計算</h1>
         <p>金額と人数を入れるだけで、一人あたりが分かります</p>
     </header>
@@ -71,6 +87,9 @@
             <option value="1down">1円単位で切り捨て</option>
         </select>
 
+        <label for="special">1人だけ多く払う場合の金額（円）<span class="opt">― 幹事や先輩が多めに払うとき。空欄なら通常の割り勘</span></label>
+        <input type="number" id="special" inputmode="numeric" placeholder="例：5000（1人分）" min="0">
+
         <div class="result" id="result">
             <div class="per">― 円</div>
             <div class="sub">金額と人数を入力してください</div>
@@ -79,6 +98,21 @@
 
     <div class="ad-slot">
         <script src="https://adm.shinobi.jp/s/8883b8c96c219279b7215cf3521e8aed"></script>
+    </div>
+
+    <div class="text-section">
+        <h2>割り勘計算の使い方</h2>
+        <p>合計金額と人数を入力すると、一人あたりの支払額がその場で計算されます。端数の処理は5種類から選べます。飲み会の集金では「100円単位で切り上げ」がおすすめです。お釣りの小銭をやり取りしなくて済み、余った分は幹事の手間賃や次の会の足しにできます。</p>
+        <h3>「1人だけ多く払う」機能について</h3>
+        <p>幹事や先輩、誕生日の主役以外の誰かが多めに負担する場面では、その1人の金額を入力してください。残りの金額を、残りの人数で割り勘した結果が表示されます。たとえば合計12,000円・4人で、1人が5,000円払う場合、残り7,000円を3人で割る計算になります。</p>
+        <h3>割り勘でモメないコツ</h3>
+        <ul>
+            <li>精算方法は、お店を出る前に決めておく</li>
+            <li>端数は「切り上げて集めて、余りは幹事へ」が一番スムーズ</li>
+            <li>多く飲んだ人・あまり食べていない人がいる場合は、先に差額を調整する</li>
+            <li>集金はその場で完了させる。後日の振込は忘れがち</li>
+        </ul>
+        <p>もっと詳しく知りたい人は、ブログ記事「<a href="blog/warikan-manner.html" style="color: var(--accent);">割り勘のマナーとコツ｜スマートに精算する5つのポイント</a>」もどうぞ。</p>
     </div>
 
     <footer>
@@ -91,37 +125,56 @@
     const totalEl = document.getElementById('total');
     const peopleEl = document.getElementById('people');
     const roundEl = document.getElementById('round');
+    const specialEl = document.getElementById('special');
     const resultEl = document.getElementById('result');
+
+    function applyRounding(raw, mode) {
+        if (mode === '100up') return Math.ceil(raw / 100) * 100;
+        if (mode === '10up') return Math.ceil(raw / 10) * 10;
+        if (mode === '1up') return Math.ceil(raw);
+        if (mode === '1down') return Math.floor(raw);
+        return Math.round(raw * 100) / 100;
+    }
 
     function calc() {
         const total = parseFloat(totalEl.value);
         const people = parseInt(peopleEl.value, 10);
+        const special = parseFloat(specialEl.value) || 0;
+
         if (!total || total <= 0 || !people || people <= 0) {
             resultEl.innerHTML = '<div class="per">― 円</div><div class="sub">金額と人数を入力してください</div>';
             return;
         }
-        const raw = total / people;
-        const mode = roundEl.value;
-        let per;
-        if (mode === '100up') per = Math.ceil(raw / 100) * 100;
-        else if (mode === '10up') per = Math.ceil(raw / 10) * 10;
-        else if (mode === '1up') per = Math.ceil(raw);
-        else if (mode === '1down') per = Math.floor(raw);
-        else per = Math.round(raw * 100) / 100;
 
+        // 1人だけ多く払うケース
+        if (special > 0 && people >= 2 && special < total) {
+            const restTotal = total - special;
+            const restPeople = people - 1;
+            const per = applyRounding(restTotal / restPeople, roundEl.value);
+            const collected = special + per * restPeople;
+            const diff = collected - total;
+            let diffText = "ぴったり集まります";
+            if (diff > 0) diffText = `集めると ${diff.toLocaleString()} 円余ります`;
+            if (diff < 0) diffText = `集めると ${Math.abs(diff).toLocaleString()} 円不足します`;
+            resultEl.innerHTML =
+                `<div class="per">多く払う人 ${special.toLocaleString()} 円<br>その他の人 一人 ${per.toLocaleString()} 円</div>` +
+                `<div class="sub">合計 ${collected.toLocaleString()} 円集まります（請求額 ${total.toLocaleString()} 円）<br>${diffText}</div>`;
+            return;
+        }
+
+        const per = applyRounding(total / people, roundEl.value);
         const collected = per * people;
         const diff = collected - total;
-        let diffText;
+        let diffText = "ぴったり集まります";
         if (diff > 0) diffText = `集めると ${diff.toLocaleString()} 円余ります`;
-        else if (diff < 0) diffText = `集めると ${Math.abs(diff).toLocaleString()} 円不足します`;
-        else diffText = "ぴったり集まります";
+        if (diff < 0) diffText = `集めると ${Math.abs(diff).toLocaleString()} 円不足します`;
 
         resultEl.innerHTML =
             `<div class="per">一人 ${per.toLocaleString()} 円</div>` +
             `<div class="sub">${people}人で集めると合計 ${collected.toLocaleString()} 円（請求額 ${total.toLocaleString()} 円）<br>${diffText}</div>`;
     }
 
-    [totalEl, peopleEl, roundEl].forEach((el) => {
+    [totalEl, peopleEl, roundEl, specialEl].forEach((el) => {
         el.addEventListener('input', calc);
         el.addEventListener('change', calc);
     });

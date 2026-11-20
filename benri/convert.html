@@ -6,7 +6,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>単位変換 | みんなの便利ツール</title>
-    <meta name="description" content="長さ・重さ・温度・面積（㎡／坪／畳）の単位変換がまとめてできる無料ツール。インチ、ポンド、華氏、坪の換算も一発。">
+    <meta name="description" content="長さ・重さ・温度・面積（㎡／坪／畳）・料理（大さじ／カップ）・データ量（GB／MB）の単位変換がまとめてできる無料ツール。">
     <link rel="icon" href="../IMG_3967.png">
     <link rel="apple-touch-icon" href="../IMG_3967.png">
     <meta name="google-adsense-account" content="ca-pub-3571574988222927">
@@ -18,46 +18,69 @@
   gtag('config', 'G-10WGHJWSXK');
 </script>
     <style>
-        :root { --bg-color: #f8f9fa; --card-bg: #ffffff; --text-color: #333; --accent-color: #007aff; }
+        :root { --bg: #f4f7fb; --card: #ffffff; --text: #2b2f36; --sub: #6b7280; --accent: #ff8c42; }
+        * { box-sizing: border-box; }
         body {
             font-family: "Helvetica Neue", Arial, "Hiragino Kaku Gothic ProN", "Hiragino Sans", Meiryo, sans-serif;
-            background-color: var(--bg-color); color: var(--text-color);
-            margin: 0; padding: 40px 20px; line-height: 1.6;
+            background: var(--bg); color: var(--text);
+            margin: 0; padding: 0 20px 48px; line-height: 1.7; overflow-x: hidden;
         }
-        .wrap { max-width: 560px; margin: 0 auto; }
-        header { text-align: center; margin-bottom: 30px; }
-        h1 { font-size: 1.8rem; margin-bottom: 8px; }
-        header p { color: #666; margin: 0; }
+        .wrap { max-width: 640px; margin: 0 auto; }
+        .site-header { display: flex; justify-content: space-between; align-items: center; padding: 16px 0 0; }
+        .site-header a.logo { font-weight: 900; text-decoration: none; color: var(--text); }
+        .site-header a.back { color: var(--accent); text-decoration: none; font-size: 0.9rem; font-weight: bold; }
+        header.page-head { text-align: center; margin: 26px 0; }
+        header.page-head h1 { font-size: 1.8rem; margin: 0 0 6px; }
+        header.page-head p { color: var(--sub); margin: 0; }
         .card {
-            background: var(--card-bg); border-radius: 12px; padding: 28px 24px;
-            box-shadow: 0 4px 6px rgba(0,0,0,0.05); border: 1px solid #eee;
+            background: var(--card); border-radius: 16px; padding: 28px 24px;
+            box-shadow: 0 6px 18px rgba(0,0,0,0.05); border-top: 5px solid var(--accent);
         }
         .tabs { display: flex; gap: 8px; flex-wrap: wrap; margin-bottom: 20px; }
         .tab {
-            flex: 1; min-width: 70px; padding: 10px 4px; border: 1px solid #ddd; background: #fff;
-            border-radius: 8px; font-weight: bold; cursor: pointer; font-size: 0.95rem;
+            flex: 1; min-width: 84px; padding: 10px 4px; border: 1px solid #ddd; background: #fff;
+            border-radius: 10px; font-weight: bold; cursor: pointer; font-size: 0.92rem;
         }
-        .tab.active { background: var(--accent-color); color: #fff; border-color: var(--accent-color); }
+        .tab.active { background: var(--accent); color: #fff; border-color: var(--accent); }
         label { display: block; font-weight: bold; font-size: 0.9rem; margin: 14px 0 6px; }
         input, select {
             width: 100%; padding: 12px; font-size: 1.1rem; border: 1px solid #ddd;
-            border-radius: 8px; box-sizing: border-box; background: #fff;
+            border-radius: 10px; background: #fff;
         }
-        .arrow { text-align: center; font-size: 1.3rem; margin: 10px 0 0; }
+        input:focus, select:focus { outline: 2px solid var(--accent); border-color: var(--accent); }
+        .swap-row { text-align: center; margin: 12px 0 0; }
+        .swap-row button {
+            background: #fff4ea; border: 1px solid var(--accent); color: #e06f1a;
+            border-radius: 999px; padding: 6px 18px; font-weight: bold; cursor: pointer; font-size: 0.9rem;
+        }
         .result {
-            margin-top: 18px; background: #f0f7ff; border-radius: 10px; padding: 18px; text-align: center;
-            font-size: 1.5rem; font-weight: 900; color: var(--accent-color); word-break: break-all;
+            margin-top: 18px; background: #fff4ea; border-radius: 12px; padding: 18px; text-align: center;
+            font-size: 1.4rem; font-weight: 900; color: #e06f1a; word-break: break-all;
         }
-        .ad-slot { text-align: center; margin: 26px auto 0; min-height: 50px; }
-        footer { text-align: center; margin-top: 40px; font-size: 0.8rem; color: #999; }
+        .text-section { margin-top: 44px; }
+        .text-section h2 { font-size: 1.25rem; border-left: 5px solid var(--accent); padding-left: 12px; }
+        .text-section p, .text-section li { color: #444; }
+        .text-section table { width: 100%; border-collapse: collapse; margin: 14px 0; font-size: 0.92rem; }
+        .text-section th, .text-section td { border: 1px solid #e3e7ee; padding: 8px 10px; text-align: left; }
+        .text-section th { background: #f7f9fc; }
+        .ad-slot {
+            width: 100vw; margin-left: calc(50% - 50vw); margin-right: calc(50% - 50vw);
+            text-align: center; padding: 14px 0; margin-top: 36px;
+        }
+        footer { text-align: center; margin-top: 36px; font-size: 0.8rem; color: #999; }
         footer a { color: #999; }
     </style>
 </head>
 <body>
 <div class="wrap">
-    <header>
+    <div class="site-header">
+        <a class="logo" href="index.html">🧰 みんなの便利ツール</a>
+        <a class="back" href="index.html">ツール一覧 →</a>
+    </div>
+
+    <header class="page-head">
         <h1>🔁 単位変換</h1>
-        <p>長さ・重さ・温度・面積をまとめて変換</p>
+        <p>長さ・重さ・温度・面積・料理・データ量をまとめて変換</p>
     </header>
 
     <div class="card">
@@ -69,7 +92,7 @@
         <label for="from">変換元の単位</label>
         <select id="from"></select>
 
-        <div class="arrow">⬇️</div>
+        <div class="swap-row"><button type="button" id="btn-swap">⇅ 変換元と変換先を入れ替える</button></div>
 
         <label for="to">変換先の単位</label>
         <select id="to"></select>
@@ -81,6 +104,23 @@
         <script src="https://adm.shinobi.jp/s/8883b8c96c219279b7215cf3521e8aed"></script>
     </div>
 
+    <div class="text-section">
+        <h2>よく使う換算の早見表</h2>
+        <table>
+            <tr><th>単位</th><th>換算</th><th>使う場面</th></tr>
+            <tr><td>1 インチ</td><td>2.54 cm</td><td>スマホやテレビの画面サイズ</td></tr>
+            <tr><td>1 ポンド</td><td>約 453.6 g</td><td>海外の食品や体重表示</td></tr>
+            <tr><td>華氏 100°F</td><td>摂氏 約 37.8°C</td><td>海外の天気予報や体温</td></tr>
+            <tr><td>1 坪</td><td>約 3.306 ㎡（畳 約2畳分）</td><td>土地や部屋の広さ</td></tr>
+            <tr><td>1 畳（中京間）</td><td>約 1.656 ㎡</td><td>和室の広さ</td></tr>
+            <tr><td>大さじ 1</td><td>15 ml（小さじ 3杯分）</td><td>料理の計量</td></tr>
+            <tr><td>1 カップ</td><td>200 ml</td><td>日本の計量カップ</td></tr>
+            <tr><td>1 GB</td><td>1,000 MB（※）</td><td>スマホの容量や通信量</td></tr>
+        </table>
+        <p>（※）データ量はメーカー表記の10進換算（1GB = 1,000MB）で計算しています。パソコンのOS表示では 1GB = 1,024MB で計算されることがあり、表示容量が少なく見えるのはこのためです。</p>
+        <p>部屋探しの広さについては、ブログ記事「<a href="blog/tsubo-guide.html" style="color: var(--accent);">坪・畳・㎡の換算ガイド</a>」で、暮らしのイメージとあわせて詳しく解説しています。</p>
+    </div>
+
     <footer>
         <p><a href="index.html">← みんなの便利ツールへもどる</a>　|　<a href="../index.html">運営サイト一覧</a></p>
         <p>&copy; 2026 Block Surprise <a href="../privacy.html">プライバシーポリシー</a></p>
@@ -88,47 +128,30 @@
 </div>
 
 <script>
-    // 各カテゴリ：基準単位への換算係数（温度だけ特別処理）
     const CATEGORIES = {
         length: {
             label: "長さ",
-            units: {
-                "ミリメートル (mm)": 0.001,
-                "センチメートル (cm)": 0.01,
-                "メートル (m)": 1,
-                "キロメートル (km)": 1000,
-                "インチ": 0.0254,
-                "フィート": 0.3048,
-                "マイル": 1609.344
-            }
+            units: { "ミリメートル (mm)": 0.001, "センチメートル (cm)": 0.01, "メートル (m)": 1, "キロメートル (km)": 1000, "インチ": 0.0254, "フィート": 0.3048, "マイル": 1609.344 }
         },
         weight: {
             label: "重さ",
-            units: {
-                "グラム (g)": 1,
-                "キログラム (kg)": 1000,
-                "トン (t)": 1000000,
-                "ポンド (lb)": 453.59237,
-                "オンス (oz)": 28.349523125
-            }
+            units: { "グラム (g)": 1, "キログラム (kg)": 1000, "トン (t)": 1000000, "ポンド (lb)": 453.59237, "オンス (oz)": 28.349523125 }
         },
         temp: {
             label: "温度",
-            units: {
-                "摂氏 (°C)": "c",
-                "華氏 (°F)": "f",
-                "ケルビン (K)": "k"
-            }
+            units: { "摂氏 (°C)": "c", "華氏 (°F)": "f", "ケルビン (K)": "k" }
         },
         area: {
             label: "面積",
-            units: {
-                "平方メートル (㎡)": 1,
-                "坪": 3.305785,
-                "畳（中京間）": 1.6562,
-                "アール (a)": 100,
-                "ヘクタール (ha)": 10000
-            }
+            units: { "平方メートル (㎡)": 1, "坪": 3.305785, "畳（中京間）": 1.6562, "アール (a)": 100, "ヘクタール (ha)": 10000 }
+        },
+        cooking: {
+            label: "料理",
+            units: { "ミリリットル (ml)": 1, "リットル (L)": 1000, "小さじ": 5, "大さじ": 15, "カップ (200ml)": 200, "合（米）": 180 }
+        },
+        data: {
+            label: "データ量",
+            units: { "バイト (B)": 1, "キロバイト (KB)": 1000, "メガバイト (MB)": 1000000, "ギガバイト (GB)": 1000000000, "テラバイト (TB)": 1000000000000 }
         }
     };
 
@@ -189,6 +212,13 @@
         }
         resultEl.innerText = `${value.toLocaleString()} ${fromEl.value} ＝ ${formatNumber(out)} ${toEl.value}`;
     }
+
+    document.getElementById('btn-swap').addEventListener('click', () => {
+        const tmp = fromEl.selectedIndex;
+        fromEl.selectedIndex = toEl.selectedIndex;
+        toEl.selectedIndex = tmp;
+        convert();
+    });
 
     [valueEl, fromEl, toEl].forEach((el) => {
         el.addEventListener('input', convert);
