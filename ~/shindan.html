@@ -1,0 +1,187 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-3571574988222927"
+     crossorigin="anonymous"></script>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>マイクラモブ診断 | みんなの広場</title>
+    <meta name="description" content="5つの質問に答えるだけ！あなたをマイクラのモブに例えると何タイプ？クリーパー、エンダーマン、村人…結果を友達と比べてみよう。">
+    <link rel="icon" href="../IMG_3967.png">
+    <link rel="apple-touch-icon" href="../IMG_3967.png">
+    <meta name="google-adsense-account" content="ca-pub-3571574988222927">
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-10WGHJWSXK"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
+  gtag('config', 'G-10WGHJWSXK');
+</script>
+    <style>
+        :root { --bg-color: #f8f9fa; --card-bg: #ffffff; --text-color: #333; --accent-color: #007aff; }
+        body {
+            font-family: "Helvetica Neue", Arial, "Hiragino Kaku Gothic ProN", "Hiragino Sans", Meiryo, sans-serif;
+            background-color: var(--bg-color); color: var(--text-color);
+            margin: 0; padding: 40px 20px; line-height: 1.6;
+        }
+        .wrap { max-width: 640px; margin: 0 auto; }
+        header { text-align: center; margin-bottom: 30px; }
+        h1 { font-size: 1.8rem; margin-bottom: 8px; }
+        header p { color: #666; margin: 0; }
+        .card {
+            background: var(--card-bg); border-radius: 12px; padding: 30px 24px;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.05); border: 1px solid #eee;
+        }
+        #progress { font-size: 0.8rem; color: #999; font-weight: bold; margin-bottom: 8px; }
+        #question { font-size: 1.2rem; font-weight: bold; margin: 0 0 20px; }
+        .choice {
+            display: block; width: 100%; text-align: left; margin-bottom: 12px;
+            padding: 14px 16px; background: #fdfdfd; border: 1px solid #e5e5e5; border-radius: 10px;
+            font-size: 1rem; cursor: pointer;
+        }
+        .choice:hover { border-color: var(--accent-color); background: #f0f7ff; }
+        .hidden { display: none !important; }
+        #result { text-align: center; }
+        #result-emoji { font-size: 3.5rem; }
+        #result-name { font-size: 1.7rem; font-weight: 900; color: var(--accent-color); margin: 8px 0; }
+        #result-desc { text-align: left; background: #f0f7ff; border-radius: 8px; padding: 14px 16px; }
+        .btn {
+            display: inline-block; margin-top: 22px; padding: 12px 28px;
+            background: var(--accent-color); color: #fff; border: none; border-radius: 8px;
+            font-size: 1rem; font-weight: bold; cursor: pointer;
+        }
+        .btn:hover { opacity: 0.85; }
+        footer { text-align: center; margin-top: 50px; font-size: 0.8rem; color: #999; }
+        footer a { color: #999; }
+    </style>
+</head>
+<body>
+<div class="wrap">
+    <header>
+        <h1>🧪 マイクラモブ診断</h1>
+        <p>5つの質問に直感で答えてね。あなたはどのモブタイプ？</p>
+    </header>
+
+    <div class="card" id="quiz-card">
+        <div id="progress">質問 1 / 5</div>
+        <p id="question"></p>
+        <div id="choices"></div>
+    </div>
+
+    <div class="card hidden" id="result">
+        <div id="result-emoji"></div>
+        <div id="result-name"></div>
+        <p id="result-desc"></p>
+        <button class="btn" onclick="location.reload()">もう一度診断する</button>
+    </div>
+
+    <footer>
+        <p><a href="index.html">← みんなの広場へもどる</a>　|　<a href="../index.html">運営サイト一覧</a></p>
+        <p>&copy; 2026 Block Surprise <a href="../privacy.html">プライバシーポリシー</a></p>
+    </footer>
+</div>
+
+<script>
+    const TYPES = {
+        creeper:   { emoji: "💥", name: "クリーパータイプ", desc: "感情豊かで、盛り上がると一気に爆発するムードメーカー。静かに近づいて、場をドカンと盛り上げるのが得意。ただし調子に乗りすぎると周りを巻き込むことも。あなたのエネルギーはチームの起爆剤です。" },
+        enderman:  { emoji: "🟪", name: "エンダーマンタイプ", desc: "マイペースでミステリアスな収集家タイプ。好きなものへの集中力は抜群で、気づいたら誰よりも詳しくなっていることも。目を合わせるのが少し苦手でも、実は仲間思いな一面があります。" },
+        villager:  { emoji: "🏠", name: "村人タイプ", desc: "平和主義で、みんなと仲良くするのが得意なタイプ。人との関わりの中で力を発揮し、頼まれごとも上手にこなします。コツコツ積み上げる努力家で、周りからの信頼も厚いはず。" },
+        zombie:    { emoji: "🧟", name: "ゾンビタイプ", desc: "一度決めたら諦めない、粘り強さが武器のタイプ。夜に強い夜型人間かもしれません。多少のことではへこたれず、気づけば最後まで残っているのがあなた。持久戦なら誰にも負けません。" },
+        golem:     { emoji: "🛡️", name: "アイアンゴーレムタイプ", desc: "仲間を守る、頼れるガーディアンタイプ。普段は穏やかでも、大事なものを守るときは全力で立ち向かいます。あなたのそばにいると安心する、と言われることが多いはず。" },
+        skeleton:  { emoji: "🏹", name: "スケルトンタイプ", desc: "慎重で観察力のある、距離感の達人タイプ。すぐに飛び込まず、まず様子を見てから動く冷静さがあります。分析力と狙いの正確さで、要所要所で確実に結果を出します。" }
+    };
+
+    const QUESTIONS = [
+        {
+            text: "休みの日、どう過ごすことが多い？",
+            choices: [
+                { text: "友達と集まってワイワイ", type: "creeper" },
+                { text: "一人の時間をとことん楽しむ", type: "enderman" },
+                { text: "家族や近所の人とゆっくり", type: "villager" },
+                { text: "気づいたら夜更かししてる", type: "zombie" }
+            ]
+        },
+        {
+            text: "グループで何かするとき、あなたのポジションは？",
+            choices: [
+                { text: "場を盛り上げる中心人物", type: "creeper" },
+                { text: "一歩引いて全体を見る", type: "skeleton" },
+                { text: "みんなの調整役", type: "villager" },
+                { text: "困ったときの守り役", type: "golem" }
+            ]
+        },
+        {
+            text: "マイクラで一番楽しいのは？",
+            choices: [
+                { text: "TNTでドカンと爆破", type: "creeper" },
+                { text: "レアアイテムを集めること", type: "enderman" },
+                { text: "村を発展させること", type: "villager" },
+                { text: "強い敵と戦うこと", type: "golem" }
+            ]
+        },
+        {
+            text: "あなたの長所をひとことで言うと？",
+            choices: [
+                { text: "粘り強さ", type: "zombie" },
+                { text: "観察力と冷静さ", type: "skeleton" },
+                { text: "集中力", type: "enderman" },
+                { text: "頼りがい", type: "golem" }
+            ]
+        },
+        {
+            text: "苦手なのはどっち？",
+            choices: [
+                { text: "じっと待つこと", type: "creeper" },
+                { text: "人前に出ること", type: "enderman" },
+                { text: "一人ぼっち", type: "villager" },
+                { text: "慌ただしい朝", type: "zombie" }
+            ]
+        }
+    ];
+
+    let current = 0;
+    const scores = {};
+
+    function showQuestion() {
+        const q = QUESTIONS[current];
+        document.getElementById('progress').innerText = `質問 ${current + 1} / ${QUESTIONS.length}`;
+        document.getElementById('question').innerText = q.text;
+        const container = document.getElementById('choices');
+        container.innerHTML = "";
+        q.choices.forEach((c) => {
+            const btn = document.createElement('button');
+            btn.className = "choice";
+            btn.innerText = c.text;
+            btn.onclick = () => {
+                scores[c.type] = (scores[c.type] || 0) + 1;
+                current++;
+                if (current < QUESTIONS.length) {
+                    showQuestion();
+                } else {
+                    showResult();
+                }
+            };
+            container.appendChild(btn);
+        });
+    }
+
+    function showResult() {
+        let best = null;
+        let bestScore = -1;
+        for (const key of Object.keys(TYPES)) {
+            const s = scores[key] || 0;
+            if (s > bestScore) { bestScore = s; best = key; }
+        }
+        const t = TYPES[best];
+        document.getElementById('quiz-card').classList.add('hidden');
+        const result = document.getElementById('result');
+        result.classList.remove('hidden');
+        document.getElementById('result-emoji').innerText = t.emoji;
+        document.getElementById('result-name').innerText = `あなたは「${t.name}」`;
+        document.getElementById('result-desc').innerText = t.desc;
+    }
+
+    showQuestion();
+</script>
+</body>
+</html>
