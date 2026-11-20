@@ -18,67 +18,102 @@
   gtag('config', 'G-10WGHJWSXK');
 </script>
     <style>
-        :root { --bg: #f4f7fb; --card: #ffffff; --text: #2b2f36; --sub: #6b7280; --accent: #00acc1; }
+        :root {
+            --ink: #182230; --sub: #667085; --bg: #f5f7fb; --line: #e6ebf2;
+            --g1: #00acc1; --g2: #007aff; --accent: #0090a8; --tint: #eefafd;
+        }
         * { box-sizing: border-box; }
         body {
             font-family: "Helvetica Neue", Arial, "Hiragino Kaku Gothic ProN", "Hiragino Sans", Meiryo, sans-serif;
-            background: var(--bg); color: var(--text);
-            margin: 0; padding: 0 20px 48px; line-height: 1.7; overflow-x: hidden;
+            background: var(--bg); color: var(--ink); margin: 0; line-height: 1.7;
         }
-        .wrap { max-width: 640px; margin: 0 auto; }
-        .site-header { display: flex; justify-content: space-between; align-items: center; padding: 16px 0 0; }
-        .site-header a.logo { font-weight: 900; text-decoration: none; color: var(--text); }
-        .site-header a.back { color: var(--accent); text-decoration: none; font-size: 0.9rem; font-weight: bold; }
-        header.page-head { text-align: center; margin: 26px 0; }
-        header.page-head h1 { font-size: 1.8rem; margin: 0 0 6px; }
-        header.page-head p { color: var(--sub); margin: 0; }
+        .band {
+            background: linear-gradient(120deg, var(--g1), var(--g2)); color: #fff;
+            padding: 16px 0 74px; border-radius: 0 0 30px 30px; position: relative; overflow: hidden;
+        }
+        .band::after {
+            content: ""; position: absolute; width: 260px; height: 260px; border-radius: 50%;
+            background: rgba(255,255,255,0.12); right: -90px; top: -120px;
+        }
+        .band-inner { max-width: 720px; margin: 0 auto; padding: 0 20px; position: relative; z-index: 1; }
+        .nav { display: flex; justify-content: space-between; align-items: center; }
+        .nav a.logo { color: #fff; font-weight: 900; text-decoration: none; }
+        .nav a.back {
+            color: #fff; text-decoration: none; font-size: 0.85rem; font-weight: bold;
+            border: 1px solid rgba(255,255,255,0.55); border-radius: 999px; padding: 4px 14px;
+        }
+        .band .head { display: flex; align-items: center; gap: 16px; margin-top: 26px; }
+        .band .tile {
+            width: 64px; height: 64px; flex: 0 0 64px; border-radius: 18px; font-size: 2rem;
+            background: rgba(255,255,255,0.18); border: 1px solid rgba(255,255,255,0.4);
+            display: flex; align-items: center; justify-content: center;
+        }
+        .band h1 { font-size: 1.75rem; margin: 0; }
+        .band p.lead { margin: 4px 0 0; opacity: 0.92; font-size: 0.95rem; }
+        .wrap { max-width: 720px; margin: 0 auto; padding: 0 20px; }
         .card {
-            background: var(--card); border-radius: 16px; padding: 30px 24px;
-            box-shadow: 0 6px 18px rgba(0,0,0,0.05); border-top: 5px solid var(--accent); text-align: center;
+            background: #fff; border-radius: 20px; padding: 32px 26px; margin-top: -48px;
+            box-shadow: 0 18px 40px rgba(16,24,40,0.12); border: 1px solid var(--line);
+            position: relative; z-index: 2; text-align: center;
         }
         #date-line { color: var(--sub); font-size: 0.85rem; }
         #fortune { font-size: 3.2rem; font-weight: 900; margin: 8px 0; color: var(--accent); }
         .stars { font-size: 1.2rem; letter-spacing: 3px; color: #ffb300; }
         .sub-fortunes { display: none; gap: 12px; margin-top: 22px; }
         .sub-fortunes.show { display: grid; grid-template-columns: repeat(3, 1fr); }
-        .sub-box { background: #eefafd; border-radius: 12px; padding: 12px 6px; }
+        .sub-box { background: var(--tint); border-radius: 14px; padding: 12px 6px; }
         .sub-box .name { font-size: 0.8rem; font-weight: bold; color: var(--sub); }
         .sub-box .val { font-size: 1.05rem; font-weight: 900; }
         .sub-box .st { font-size: 0.8rem; color: #ffb300; letter-spacing: 1px; }
         .row { display: flex; justify-content: center; gap: 26px; flex-wrap: wrap; margin: 20px 0 4px; }
         .row .item span { display: block; font-size: 0.75rem; color: var(--sub); font-weight: bold; }
         .row .item strong { font-size: 1.05rem; }
-        #advice { background: #eefafd; border-radius: 10px; padding: 14px 16px; font-size: 0.95rem; margin-top: 16px; }
+        #advice { background: var(--tint); border-radius: 12px; padding: 14px 16px; font-size: 0.95rem; margin-top: 16px; }
         .btn {
-            display: inline-block; margin-top: 20px; padding: 13px 30px;
-            background: var(--accent); color: #fff; border: none; border-radius: 10px;
+            display: inline-block; margin-top: 20px; padding: 14px 32px;
+            background: linear-gradient(120deg, var(--g1), var(--g2)); color: #fff; border: none; border-radius: 12px;
             font-size: 1rem; font-weight: bold; cursor: pointer;
         }
-        .btn:hover { opacity: 0.85; }
+        .btn:hover { opacity: 0.88; }
         .note { font-size: 0.8rem; color: var(--sub); text-align: center; margin-top: 14px; }
-        .text-section { margin-top: 44px; }
-        .text-section h2 { font-size: 1.25rem; border-left: 5px solid var(--accent); padding-left: 12px; }
-        .text-section p { color: #444; }
-        .ad-slot {
-            width: 100vw; margin-left: calc(50% - 50vw); margin-right: calc(50% - 50vw);
-            text-align: center; padding: 14px 0; margin-top: 36px;
+        .text-section { margin-top: 46px; }
+        .text-section h2 { font-size: 1.3rem; margin: 0 0 14px; position: relative; padding-bottom: 10px; }
+        .text-section h2::after {
+            content: ""; position: absolute; left: 0; bottom: 0; width: 54px; height: 4px; border-radius: 2px;
+            background: linear-gradient(90deg, var(--g1), var(--g2));
         }
-        footer { text-align: center; margin-top: 36px; font-size: 0.8rem; color: #999; }
+        .text-section p { color: #3c4656; }
+        .rel { margin-top: 46px; }
+        .rel h2 { font-size: 1.05rem; margin: 0 0 12px; color: var(--sub); }
+        .rel-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(140px, 1fr)); gap: 10px; }
+        .rel a {
+            background: #fff; border: 1px solid var(--line); border-radius: 12px; padding: 12px;
+            text-decoration: none; color: var(--ink); font-weight: bold; font-size: 0.9rem; text-align: center;
+        }
+        .rel a:hover { border-color: var(--g1); }
+        footer { text-align: center; margin: 44px 0 40px; font-size: 0.8rem; color: #999; }
         footer a { color: #999; }
     </style>
 </head>
 <body>
-<div class="wrap">
-    <div class="site-header">
-        <a class="logo" href="index.html">🧰 みんなの便利ツール</a>
-        <a class="back" href="index.html">ツール一覧 →</a>
+
+    <div class="band">
+        <div class="band-inner">
+            <div class="nav">
+                <a class="logo" href="index.html">🧰 みんなの便利ツール</a>
+                <a class="back" href="index.html">ツール一覧</a>
+            </div>
+            <div class="head">
+                <div class="tile">🔮</div>
+                <div>
+                    <h1>今日の運勢</h1>
+                    <p class="lead">運勢は日付で決まります。今日一日、何度見ても同じ結果です</p>
+                </div>
+            </div>
+        </div>
     </div>
 
-    <header class="page-head">
-        <h1>🔮 今日の運勢</h1>
-        <p>運勢は日付で決まります。今日一日、何度見ても同じ結果です</p>
-    </header>
-
+<div class="wrap">
     <div class="card">
         <div id="date-line"></div>
         <div id="fortune">？？？</div>
@@ -100,10 +135,6 @@
     </div>
     <p class="note">※ 占いはエンタメです。凶が出ても落ち込まないでね。</p>
 
-    <div class="ad-slot">
-        <script src="https://adm.shinobi.jp/s/8883b8c96c219279b7215cf3521e8aed"></script>
-    </div>
-
     <div class="text-section">
         <h2>この占いについて</h2>
         <p>この占いは、日付をもとに結果を決める仕組みになっています。つまり、同じ日に何度占っても結果は変わらず、翌日になると新しい運勢に切り替わります。「何度も引き直して大吉を出す」ことはできないので、出た結果を今日一日の小さな指針として楽しんでください。</p>
@@ -111,6 +142,20 @@
         <p>朝の支度をしながらチェックするのがおすすめです。凶が出た日は「今日は慎重にいこう」と心構えするだけでも、一日の過ごし方は変わります。</p>
     </div>
 
+    <div class="rel">
+        <h2>ほかのツール</h2>
+        <div class="rel-grid">
+            <a href="warikan.html">💴 割り勘計算</a>
+            <a href="days.html">📅 日数計算</a>
+            <a href="convert.html">🔁 単位変換</a>
+            <a href="counter.html">✍️ 文字数カウント</a>
+        </div>
+    </div>
+</div>
+
+<script src="https://adm.shinobi.jp/s/8883b8c96c219279b7215cf3521e8aed"></script>
+
+<div class="wrap">
     <footer>
         <p><a href="index.html">← みんなの便利ツールへもどる</a>　|　<a href="../index.html">運営サイト一覧</a></p>
         <p>&copy; 2026 Block Surprise <a href="../privacy.html">プライバシーポリシー</a></p>
@@ -159,7 +204,6 @@
         document.getElementById('fortune').innerText = fortune.name;
         document.getElementById('stars').innerText = starText(fortune.stars);
 
-        // 個別運勢（総合運の星に近い範囲でランダムに）
         const subs = ['sub-love', 'sub-work', 'sub-money'];
         subs.forEach((id) => {
             const s = Math.max(1, Math.min(5, fortune.stars + Math.floor(rand() * 3) - 1));

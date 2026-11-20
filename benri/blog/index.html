@@ -18,72 +18,83 @@
   gtag('config', 'G-10WGHJWSXK');
 </script>
     <style>
-        :root { --bg: #f4f7fb; --card: #ffffff; --text: #2b2f36; --sub: #6b7280; --accent: #007aff; }
+        :root { --ink: #182230; --sub: #667085; --bg: #f5f7fb; --line: #e6ebf2; --accent: #007aff; }
         * { box-sizing: border-box; }
         body {
             font-family: "Helvetica Neue", Arial, "Hiragino Kaku Gothic ProN", "Hiragino Sans", Meiryo, sans-serif;
-            background: var(--bg); color: var(--text);
-            margin: 0; padding: 0 20px 48px; line-height: 1.7; overflow-x: hidden;
+            background: var(--bg); color: var(--ink); margin: 0; line-height: 1.7;
         }
-        .wrap { max-width: 760px; margin: 0 auto; }
-        .site-header { display: flex; justify-content: space-between; align-items: center; padding: 16px 0 0; }
-        .site-header a.logo { font-weight: 900; text-decoration: none; color: var(--text); }
-        .site-header a.back { color: var(--accent); text-decoration: none; font-size: 0.9rem; font-weight: bold; }
-        header.page-head { text-align: center; margin: 26px 0 30px; }
-        header.page-head h1 { font-size: 1.8rem; margin: 0 0 6px; }
-        header.page-head p { color: var(--sub); margin: 0; }
+        .band {
+            background: linear-gradient(120deg, #344054, #101828); color: #fff;
+            padding: 16px 0 64px; border-radius: 0 0 30px 30px; position: relative; overflow: hidden;
+        }
+        .band::after {
+            content: ""; position: absolute; width: 260px; height: 260px; border-radius: 50%;
+            background: rgba(255,255,255,0.08); right: -90px; top: -120px;
+        }
+        .band-inner { max-width: 760px; margin: 0 auto; padding: 0 20px; position: relative; z-index: 1; }
+        .nav { display: flex; justify-content: space-between; align-items: center; }
+        .nav a.logo { color: #fff; font-weight: 900; text-decoration: none; }
+        .nav a.back {
+            color: #fff; text-decoration: none; font-size: 0.85rem; font-weight: bold;
+            border: 1px solid rgba(255,255,255,0.55); border-radius: 999px; padding: 4px 14px;
+        }
+        .band h1 { font-size: 1.7rem; margin: 26px 0 6px; }
+        .band p.lead { margin: 0; opacity: 0.85; font-size: 0.95rem; }
+        .wrap { max-width: 760px; margin: 0 auto; padding: 0 20px; }
+        .list { margin-top: -38px; position: relative; z-index: 2; }
         .post {
-            background: var(--card); border-radius: 16px; padding: 24px 22px; margin-bottom: 18px;
-            box-shadow: 0 6px 18px rgba(0,0,0,0.05); text-decoration: none; color: inherit; display: block;
-            border-left: 5px solid var(--accent);
+            background: #fff; border-radius: 18px; padding: 24px 22px; margin-bottom: 16px;
+            box-shadow: 0 14px 30px rgba(16,24,40,0.09); text-decoration: none; color: inherit; display: block;
+            border: 1px solid var(--line); border-left: 6px solid var(--accent);
         }
         .post:hover { transform: translateY(-2px); }
         .post .meta { font-size: 0.78rem; color: var(--sub); margin-bottom: 6px; }
         .post .cat { color: var(--accent); font-weight: bold; }
-        .post h2 { margin: 0 0 8px; font-size: 1.2rem; }
-        .post p { margin: 0; font-size: 0.92rem; color: #555; }
-        .ad-slot {
-            width: 100vw; margin-left: calc(50% - 50vw); margin-right: calc(50% - 50vw);
-            text-align: center; padding: 14px 0; margin-top: 30px;
-        }
-        footer { text-align: center; margin-top: 36px; font-size: 0.8rem; color: #999; }
+        .post h2 { margin: 0 0 8px; font-size: 1.18rem; }
+        .post p { margin: 0; font-size: 0.92rem; color: #4a5568; }
+        footer { text-align: center; margin: 44px 0 40px; font-size: 0.8rem; color: #999; }
         footer a { color: #999; }
     </style>
 </head>
 <body>
+
+    <div class="band">
+        <div class="band-inner">
+            <div class="nav">
+                <a class="logo" href="../index.html">🧰 みんなの便利ツール</a>
+                <a class="back" href="../index.html">ツール一覧</a>
+            </div>
+            <h1>📝 お役立ちブログ</h1>
+            <p class="lead">ツールの使い方から、毎日に役立つ知識まで</p>
+        </div>
+    </div>
+
 <div class="wrap">
-    <div class="site-header">
-        <a class="logo" href="../index.html">🧰 みんなの便利ツール</a>
-        <a class="back" href="../index.html">ツール一覧 →</a>
+    <div class="list">
+        <a href="warikan-manner.html" class="post">
+            <div class="meta"><span class="cat">お金・暮らし</span>　2026年11月20日</div>
+            <h2>割り勘のマナーとコツ｜スマートに精算する5つのポイント</h2>
+            <p>飲み会の精算でモメないための基本マナーと、端数の扱い方、幹事が得する工夫をまとめました。割り勘計算ツールとあわせてどうぞ。</p>
+        </a>
+
+        <a href="password-anzen.html" class="post">
+            <div class="meta"><span class="cat">セキュリティ</span>　2026年11月20日</div>
+            <h2>安全なパスワードの作り方｜使い回しが危ない理由と管理のコツ</h2>
+            <p>「誕生日+名前」がなぜ危ないのか。強くて覚えやすいパスワードの考え方と、パスワード管理アプリの使い方を解説します。</p>
+        </a>
+
+        <a href="tsubo-guide.html" class="post">
+            <div class="meta"><span class="cat">住まい</span>　2026年11月20日</div>
+            <h2>坪・畳・㎡の換算ガイド｜部屋探しで失敗しない広さの目安</h2>
+            <p>不動産広告の「30㎡」「6畳」「10坪」は結局どれくらい広い？換算表と、暮らしのイメージで解説します。</p>
+        </a>
     </div>
+</div>
 
-    <header class="page-head">
-        <h1>📝 お役立ちブログ</h1>
-        <p>ツールの使い方から、毎日に役立つ知識まで</p>
-    </header>
+<script src="https://adm.shinobi.jp/s/8883b8c96c219279b7215cf3521e8aed"></script>
 
-    <a href="warikan-manner.html" class="post">
-        <div class="meta"><span class="cat">お金・暮らし</span>　2026年11月20日</div>
-        <h2>割り勘のマナーとコツ｜スマートに精算する5つのポイント</h2>
-        <p>飲み会の精算でモメないための基本マナーと、端数の扱い方、幹事が得する工夫をまとめました。割り勘計算ツールとあわせてどうぞ。</p>
-    </a>
-
-    <a href="password-anzen.html" class="post">
-        <div class="meta"><span class="cat">セキュリティ</span>　2026年11月20日</div>
-        <h2>安全なパスワードの作り方｜使い回しが危ない理由と管理のコツ</h2>
-        <p>「誕生日+名前」がなぜ危ないのか。強くて覚えやすいパスワードの考え方と、パスワード管理アプリの使い方を解説します。</p>
-    </a>
-
-    <a href="tsubo-guide.html" class="post">
-        <div class="meta"><span class="cat">住まい</span>　2026年11月20日</div>
-        <h2>坪・畳・㎡の換算ガイド｜部屋探しで失敗しない広さの目安</h2>
-        <p>不動産広告の「30㎡」「6畳」「10坪」は結局どれくらい広い？換算表と、暮らしのイメージで解説します。</p>
-    </a>
-
-    <div class="ad-slot">
-        <script src="https://adm.shinobi.jp/s/8883b8c96c219279b7215cf3521e8aed"></script>
-    </div>
-
+<div class="wrap">
     <footer>
         <p><a href="../index.html">← みんなの便利ツールへもどる</a>　|　<a href="../../index.html">運営サイト一覧</a></p>
         <p>&copy; 2026 Block Surprise <a href="../../privacy.html">プライバシーポリシー</a></p>

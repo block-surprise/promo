@@ -18,71 +18,105 @@
   gtag('config', 'G-10WGHJWSXK');
 </script>
     <style>
-        :root { --bg: #f4f7fb; --card: #ffffff; --text: #2b2f36; --sub: #6b7280; --accent: #ff8c42; }
+        :root {
+            --ink: #182230; --sub: #667085; --bg: #f5f7fb; --line: #e6ebf2;
+            --g1: #ff8c42; --g2: #ff5c8a; --accent: #e06f1a; --tint: #fff4ea;
+        }
         * { box-sizing: border-box; }
         body {
             font-family: "Helvetica Neue", Arial, "Hiragino Kaku Gothic ProN", "Hiragino Sans", Meiryo, sans-serif;
-            background: var(--bg); color: var(--text);
-            margin: 0; padding: 0 20px 48px; line-height: 1.7; overflow-x: hidden;
+            background: var(--bg); color: var(--ink); margin: 0; line-height: 1.7;
         }
-        .wrap { max-width: 640px; margin: 0 auto; }
-        .site-header { display: flex; justify-content: space-between; align-items: center; padding: 16px 0 0; }
-        .site-header a.logo { font-weight: 900; text-decoration: none; color: var(--text); }
-        .site-header a.back { color: var(--accent); text-decoration: none; font-size: 0.9rem; font-weight: bold; }
-        header.page-head { text-align: center; margin: 26px 0; }
-        header.page-head h1 { font-size: 1.8rem; margin: 0 0 6px; }
-        header.page-head p { color: var(--sub); margin: 0; }
+        .band {
+            background: linear-gradient(120deg, var(--g1), var(--g2)); color: #fff;
+            padding: 16px 0 74px; border-radius: 0 0 30px 30px; position: relative; overflow: hidden;
+        }
+        .band::after {
+            content: ""; position: absolute; width: 260px; height: 260px; border-radius: 50%;
+            background: rgba(255,255,255,0.12); right: -90px; top: -120px;
+        }
+        .band-inner { max-width: 720px; margin: 0 auto; padding: 0 20px; position: relative; z-index: 1; }
+        .nav { display: flex; justify-content: space-between; align-items: center; }
+        .nav a.logo { color: #fff; font-weight: 900; text-decoration: none; }
+        .nav a.back {
+            color: #fff; text-decoration: none; font-size: 0.85rem; font-weight: bold;
+            border: 1px solid rgba(255,255,255,0.55); border-radius: 999px; padding: 4px 14px;
+        }
+        .band .head { display: flex; align-items: center; gap: 16px; margin-top: 26px; }
+        .band .tile {
+            width: 64px; height: 64px; flex: 0 0 64px; border-radius: 18px; font-size: 2rem;
+            background: rgba(255,255,255,0.18); border: 1px solid rgba(255,255,255,0.4);
+            display: flex; align-items: center; justify-content: center;
+        }
+        .band h1 { font-size: 1.75rem; margin: 0; }
+        .band p.lead { margin: 4px 0 0; opacity: 0.92; font-size: 0.95rem; }
+        .wrap { max-width: 720px; margin: 0 auto; padding: 0 20px; }
         .card {
-            background: var(--card); border-radius: 16px; padding: 28px 24px;
-            box-shadow: 0 6px 18px rgba(0,0,0,0.05); border-top: 5px solid var(--accent);
+            background: #fff; border-radius: 20px; padding: 30px 26px; margin-top: -48px;
+            box-shadow: 0 18px 40px rgba(16,24,40,0.12); border: 1px solid var(--line); position: relative; z-index: 2;
         }
         .tabs { display: flex; gap: 8px; flex-wrap: wrap; margin-bottom: 20px; }
         .tab {
-            flex: 1; min-width: 84px; padding: 10px 4px; border: 1px solid #ddd; background: #fff;
+            flex: 1; min-width: 84px; padding: 10px 4px; border: 1.5px solid var(--line); background: #f8fafc;
             border-radius: 10px; font-weight: bold; cursor: pointer; font-size: 0.92rem;
         }
-        .tab.active { background: var(--accent); color: #fff; border-color: var(--accent); }
+        .tab.active { background: linear-gradient(120deg, var(--g1), var(--g2)); color: #fff; border-color: transparent; }
         label { display: block; font-weight: bold; font-size: 0.9rem; margin: 14px 0 6px; }
         input, select {
-            width: 100%; padding: 12px; font-size: 1.1rem; border: 1px solid #ddd;
-            border-radius: 10px; background: #fff;
+            width: 100%; padding: 13px; font-size: 1.1rem; border: 1.5px solid var(--line);
+            border-radius: 12px; background: #f8fafc;
         }
-        input:focus, select:focus { outline: 2px solid var(--accent); border-color: var(--accent); }
+        input:focus, select:focus { outline: none; border-color: var(--g1); background: #fff; box-shadow: 0 0 0 4px rgba(255,140,66,0.15); }
         .swap-row { text-align: center; margin: 12px 0 0; }
         .swap-row button {
-            background: #fff4ea; border: 1px solid var(--accent); color: #e06f1a;
+            background: var(--tint); border: 1px solid var(--g1); color: var(--accent);
             border-radius: 999px; padding: 6px 18px; font-weight: bold; cursor: pointer; font-size: 0.9rem;
         }
         .result {
-            margin-top: 18px; background: #fff4ea; border-radius: 12px; padding: 18px; text-align: center;
-            font-size: 1.4rem; font-weight: 900; color: #e06f1a; word-break: break-all;
+            margin-top: 18px; background: var(--tint); border-radius: 14px; padding: 18px; text-align: center;
+            font-size: 1.4rem; font-weight: 900; color: var(--accent); word-break: break-all;
         }
-        .text-section { margin-top: 44px; }
-        .text-section h2 { font-size: 1.25rem; border-left: 5px solid var(--accent); padding-left: 12px; }
-        .text-section p, .text-section li { color: #444; }
-        .text-section table { width: 100%; border-collapse: collapse; margin: 14px 0; font-size: 0.92rem; }
-        .text-section th, .text-section td { border: 1px solid #e3e7ee; padding: 8px 10px; text-align: left; }
-        .text-section th { background: #f7f9fc; }
-        .ad-slot {
-            width: 100vw; margin-left: calc(50% - 50vw); margin-right: calc(50% - 50vw);
-            text-align: center; padding: 14px 0; margin-top: 36px;
+        .text-section { margin-top: 46px; }
+        .text-section h2 { font-size: 1.3rem; margin: 0 0 14px; position: relative; padding-bottom: 10px; }
+        .text-section h2::after {
+            content: ""; position: absolute; left: 0; bottom: 0; width: 54px; height: 4px; border-radius: 2px;
+            background: linear-gradient(90deg, var(--g1), var(--g2));
         }
-        footer { text-align: center; margin-top: 36px; font-size: 0.8rem; color: #999; }
+        .text-section p, .text-section li { color: #3c4656; }
+        .text-section table { width: 100%; border-collapse: collapse; margin: 14px 0; font-size: 0.92rem; background: #fff; }
+        .text-section th, .text-section td { border: 1px solid var(--line); padding: 8px 10px; text-align: left; }
+        .text-section th { background: #fff7ef; }
+        .rel { margin-top: 46px; }
+        .rel h2 { font-size: 1.05rem; margin: 0 0 12px; color: var(--sub); }
+        .rel-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(140px, 1fr)); gap: 10px; }
+        .rel a {
+            background: #fff; border: 1px solid var(--line); border-radius: 12px; padding: 12px;
+            text-decoration: none; color: var(--ink); font-weight: bold; font-size: 0.9rem; text-align: center;
+        }
+        .rel a:hover { border-color: var(--g1); }
+        footer { text-align: center; margin: 44px 0 40px; font-size: 0.8rem; color: #999; }
         footer a { color: #999; }
     </style>
 </head>
 <body>
-<div class="wrap">
-    <div class="site-header">
-        <a class="logo" href="index.html">🧰 みんなの便利ツール</a>
-        <a class="back" href="index.html">ツール一覧 →</a>
+
+    <div class="band">
+        <div class="band-inner">
+            <div class="nav">
+                <a class="logo" href="index.html">🧰 みんなの便利ツール</a>
+                <a class="back" href="index.html">ツール一覧</a>
+            </div>
+            <div class="head">
+                <div class="tile">🔁</div>
+                <div>
+                    <h1>単位変換</h1>
+                    <p class="lead">長さ・重さ・温度・面積・料理・データ量をまとめて変換</p>
+                </div>
+            </div>
+        </div>
     </div>
 
-    <header class="page-head">
-        <h1>🔁 単位変換</h1>
-        <p>長さ・重さ・温度・面積・料理・データ量をまとめて変換</p>
-    </header>
-
+<div class="wrap">
     <div class="card">
         <div class="tabs" id="tabs"></div>
 
@@ -98,10 +132,6 @@
         <select id="to"></select>
 
         <div class="result" id="result">値を入力してください</div>
-    </div>
-
-    <div class="ad-slot">
-        <script src="https://adm.shinobi.jp/s/8883b8c96c219279b7215cf3521e8aed"></script>
     </div>
 
     <div class="text-section">
@@ -121,6 +151,20 @@
         <p>部屋探しの広さについては、ブログ記事「<a href="blog/tsubo-guide.html" style="color: var(--accent);">坪・畳・㎡の換算ガイド</a>」で、暮らしのイメージとあわせて詳しく解説しています。</p>
     </div>
 
+    <div class="rel">
+        <h2>ほかのツール</h2>
+        <div class="rel-grid">
+            <a href="warikan.html">💴 割り勘計算</a>
+            <a href="days.html">📅 日数計算</a>
+            <a href="counter.html">✍️ 文字数カウント</a>
+            <a href="password.html">🔐 パスワード生成</a>
+        </div>
+    </div>
+</div>
+
+<script src="https://adm.shinobi.jp/s/8883b8c96c219279b7215cf3521e8aed"></script>
+
+<div class="wrap">
     <footer>
         <p><a href="index.html">← みんなの便利ツールへもどる</a>　|　<a href="../index.html">運営サイト一覧</a></p>
         <p>&copy; 2026 Block Surprise <a href="../privacy.html">プライバシーポリシー</a></p>
