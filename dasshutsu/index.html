@@ -1,0 +1,845 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-3571574988222927"
+     crossorigin="anonymous"></script>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>脱出ゲーム 〜閉ざされた部屋〜 | ブロックサプライズ</title>
+    <meta name="description" content="1人でも、2人協力でも遊べる本格脱出ゲーム。部屋の仕掛けを解いて脱出しよう。協力モードはP2P接続で、ヒントが2人に分かれて表示される本格協力仕様。">
+    <link rel="icon" href="../IMG_3967.png">
+    <link rel="apple-touch-icon" href="../IMG_3967.png">
+    <meta name="google-adsense-account" content="ca-pub-3571574988222927">
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-10WGHJWSXK"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
+  gtag('config', 'G-10WGHJWSXK');
+</script>
+<script src="https://cdn.jsdelivr.net/npm/peerjs@1.5.4/dist/peerjs.min.js"></script>
+    <style>
+        :root {
+            --ink: #182230; --sub: #667085; --bg: #f5f7fb; --line: #e6ebf2;
+            --g1: #344054; --g2: #7c5cff; --accent: #7c5cff;
+        }
+        * { box-sizing: border-box; }
+        body {
+            font-family: "Helvetica Neue", Arial, "Hiragino Kaku Gothic ProN", "Hiragino Sans", Meiryo, sans-serif;
+            background: var(--bg); color: var(--ink); margin: 0; line-height: 1.7;
+        }
+        .band {
+            background: linear-gradient(120deg, #101828, #344054 55%, #7c5cff); color: #fff;
+            padding: 16px 0 64px; border-radius: 0 0 30px 30px; position: relative; overflow: hidden;
+        }
+        .band::after {
+            content: ""; position: absolute; width: 260px; height: 260px; border-radius: 50%;
+            background: rgba(255,255,255,0.08); right: -90px; top: -120px;
+        }
+        .band-inner { max-width: 760px; margin: 0 auto; padding: 0 20px; position: relative; z-index: 1; }
+        .nav { display: flex; justify-content: space-between; align-items: center; }
+        .nav a.logo { color: #fff; font-weight: 900; text-decoration: none; }
+        .nav a.back {
+            color: #fff; text-decoration: none; font-size: 0.85rem; font-weight: bold;
+            border: 1px solid rgba(255,255,255,0.55); border-radius: 999px; padding: 4px 14px;
+        }
+        .band h1 { font-size: 1.9rem; margin: 26px 0 8px; }
+        .band p.lead { margin: 0; opacity: 0.9; max-width: 600px; }
+        .band .chips { margin-top: 16px; }
+        .band .chips span {
+            display: inline-block; background: rgba(255,255,255,0.14); border: 1px solid rgba(255,255,255,0.4);
+            border-radius: 999px; padding: 4px 14px; font-size: 0.78rem; font-weight: bold; margin: 0 3px;
+        }
+        .wrap { max-width: 760px; margin: 0 auto; padding: 0 20px; }
+        .panel {
+            background: #fff; border-radius: 20px; padding: 26px 24px;
+            box-shadow: 0 18px 40px rgba(16,24,40,0.10); border: 1px solid var(--line);
+        }
+        .panel.overlap { margin-top: -38px; position: relative; z-index: 2; }
+        .panel + .panel { margin-top: 20px; }
+        .panel h2 { margin: 0 0 12px; font-size: 1.15rem; }
+        .mode-btn {
+            display: block; width: 100%; text-align: left; margin-top: 12px; padding: 16px 18px;
+            background: #f8fafc; border: 2px solid var(--line); border-radius: 14px; cursor: pointer;
+            font-size: 1rem; color: var(--ink);
+        }
+        .mode-btn:hover { border-color: var(--accent); background: #f5f2ff; }
+        .mode-btn strong { display: block; font-size: 1.05rem; }
+        .mode-btn span { font-size: 0.85rem; color: var(--sub); }
+        .code-row { display: flex; gap: 10px; margin-top: 10px; }
+        .code-row input {
+            flex: 1; padding: 13px; font-size: 1.15rem; text-transform: uppercase; letter-spacing: 3px;
+            border: 1.5px solid var(--line); border-radius: 12px; background: #f8fafc; text-align: center;
+        }
+        .btn {
+            padding: 13px 24px; background: linear-gradient(120deg, #344054, #7c5cff); color: #fff;
+            border: none; border-radius: 12px; font-size: 1rem; font-weight: 900; cursor: pointer;
+        }
+        .btn:hover { opacity: 0.9; }
+        .btn.ghost { background: #fff; color: var(--sub); border: 1px solid var(--line); font-weight: bold; }
+        .btn.big { width: 100%; padding: 16px; font-size: 1.1rem; border-radius: 14px; }
+        .status-msg { margin-top: 12px; font-size: 0.9rem; color: var(--sub); min-height: 1.5em; }
+        .room-code {
+            font-size: 2rem; font-weight: 900; letter-spacing: 6px; text-align: center;
+            background: #f5f2ff; border: 2px dashed var(--accent); border-radius: 14px; padding: 14px; color: var(--accent);
+        }
+        /* ゲーム画面 */
+        #game-screen { display: none; }
+        .game-top {
+            display: flex; justify-content: space-between; align-items: center; gap: 8px;
+            max-width: 760px; margin: 0 auto; padding: 14px 20px 0; flex-wrap: wrap;
+        }
+        .game-top .title { font-weight: 900; }
+        .game-top .timer { font-weight: 900; font-variant-numeric: tabular-nums; background: #fff; border: 1px solid var(--line); border-radius: 999px; padding: 4px 14px; }
+        .game-top .partner { font-size: 0.82rem; color: var(--sub); }
+        .small-btn {
+            background: #fff; border: 1px solid var(--line); border-radius: 999px; padding: 6px 14px;
+            font-size: 0.85rem; font-weight: bold; cursor: pointer; color: var(--ink);
+        }
+        .small-btn:hover { border-color: var(--accent); color: var(--accent); }
+        .room-view {
+            max-width: 760px; margin: 14px auto 0; padding: 0 20px;
+        }
+        .wall {
+            position: relative; border-radius: 20px; min-height: 340px; overflow: hidden;
+            box-shadow: 0 18px 40px rgba(16,24,40,0.14); border: 1px solid var(--line);
+        }
+        .wall-name {
+            position: absolute; top: 12px; left: 16px; background: rgba(0,0,0,0.35); color: #fff;
+            font-size: 0.78rem; font-weight: bold; border-radius: 999px; padding: 3px 12px;
+        }
+        .hotspot {
+            position: absolute; transform: translate(-50%, -50%);
+            background: rgba(255,255,255,0.92); border: 2px solid rgba(255,255,255,0.9);
+            border-radius: 16px; padding: 8px 10px; cursor: pointer; text-align: center;
+            box-shadow: 0 8px 20px rgba(0,0,0,0.25); min-width: 74px;
+        }
+        .hotspot .e { font-size: 1.9rem; display: block; line-height: 1.2; }
+        .hotspot .l { font-size: 0.7rem; font-weight: 900; color: #344054; }
+        .hotspot:hover { outline: 3px solid var(--accent); }
+        .hotspot.done { opacity: 0.75; }
+        .wall-nav {
+            display: flex; justify-content: space-between; align-items: center; margin-top: 12px;
+        }
+        .wall-nav button {
+            background: #fff; border: 1px solid var(--line); border-radius: 999px; padding: 10px 20px;
+            font-weight: 900; cursor: pointer; font-size: 0.95rem;
+        }
+        .wall-nav button:hover { border-color: var(--accent); color: var(--accent); }
+        .wall-nav .compass { font-size: 0.85rem; color: var(--sub); font-weight: bold; }
+        .msg-box {
+            max-width: 760px; margin: 14px auto 0; padding: 0 20px;
+        }
+        .msg-inner {
+            background: #101828; color: #e2e8f0; border-radius: 14px; padding: 14px 18px;
+            font-size: 0.95rem; min-height: 3.2em;
+        }
+        .msg-inner .partner-msg { color: #ffd88a; }
+        .inventory {
+            max-width: 760px; margin: 14px auto 0; padding: 0 20px;
+        }
+        .inv-inner {
+            background: #fff; border: 1px solid var(--line); border-radius: 14px; padding: 12px 16px;
+            display: flex; align-items: center; gap: 10px; flex-wrap: wrap;
+        }
+        .inv-inner .inv-title { font-size: 0.8rem; font-weight: 900; color: var(--sub); }
+        .inv-item {
+            background: #f5f2ff; border: 1px solid #ddd3ff; border-radius: 10px; padding: 6px 12px;
+            font-weight: bold; font-size: 0.9rem;
+        }
+        .inv-empty { font-size: 0.88rem; color: var(--sub); }
+        .quick-msgs { max-width: 760px; margin: 12px auto 0; padding: 0 20px; display: none; gap: 8px; flex-wrap: wrap; }
+        .quick-msgs.show { display: flex; }
+        .quick-msgs button {
+            background: #fff; border: 1px solid var(--line); border-radius: 999px; padding: 7px 14px;
+            font-size: 0.85rem; cursor: pointer; font-weight: bold;
+        }
+        .quick-msgs button:hover { border-color: var(--accent); }
+        /* ズームモーダル */
+        .modal-bg {
+            position: fixed; inset: 0; background: rgba(16,24,40,0.55); display: none;
+            align-items: center; justify-content: center; z-index: 50; padding: 18px;
+        }
+        .modal-bg.show { display: flex; }
+        .modal {
+            background: #fff; border-radius: 20px; padding: 26px 24px; max-width: 480px; width: 100%;
+            max-height: 88vh; overflow-y: auto; box-shadow: 0 30px 60px rgba(0,0,0,0.3);
+        }
+        .modal h3 { margin: 0 0 10px; font-size: 1.25rem; }
+        .modal .scene { font-size: 3.4rem; text-align: center; margin: 8px 0; }
+        .modal p { color: #3c4656; }
+        .modal .actions { display: grid; gap: 10px; margin-top: 16px; }
+        .modal input.code-in {
+            width: 100%; padding: 13px; font-size: 1.3rem; text-align: center; letter-spacing: 6px;
+            border: 1.5px solid var(--line); border-radius: 12px; background: #f8fafc;
+        }
+        .color-btns { display: flex; gap: 10px; justify-content: center; margin: 12px 0; }
+        .color-btn {
+            width: 58px; height: 58px; border-radius: 50%; border: 3px solid #fff; cursor: pointer;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.2); font-size: 0;
+        }
+        .color-dots { text-align: center; font-size: 1.2rem; letter-spacing: 6px; min-height: 1.5em; }
+        .clock-face {
+            width: 150px; height: 150px; border-radius: 50%; border: 6px solid #344054;
+            margin: 10px auto; position: relative; background: #fffef8;
+        }
+        .clock-hand { position: absolute; left: 50%; bottom: 50%; transform-origin: 50% 100%; background: #344054; border-radius: 3px; }
+        .clock-hand.hour { width: 7px; height: 42px; margin-left: -3.5px; }
+        .clock-hand.min { width: 5px; height: 62px; margin-left: -2.5px; background: #e05252; }
+        .clock-dot { position: absolute; left: 50%; top: 50%; width: 12px; height: 12px; margin: -6px; background: #344054; border-radius: 50%; }
+        /* クリア画面 */
+        #clear-screen { display: none; text-align: center; }
+        #clear-screen .big { font-size: 3.6rem; }
+        #clear-screen .time { font-size: 2rem; font-weight: 900; color: var(--accent); }
+        .text-section { max-width: 760px; margin: 40px auto 0; padding: 0 20px; }
+        .text-section h2 { font-size: 1.3rem; margin: 0 0 14px; position: relative; padding-bottom: 10px; }
+        .text-section h2::after {
+            content: ""; position: absolute; left: 0; bottom: 0; width: 54px; height: 4px; border-radius: 2px;
+            background: linear-gradient(90deg, #344054, #7c5cff);
+        }
+        .text-section p, .text-section li { color: #3c4656; }
+        footer { text-align: center; margin: 44px 0 40px; font-size: 0.8rem; color: #999; }
+        footer a { color: #999; }
+    </style>
+</head>
+<body>
+
+<!-- ============ ホーム画面 ============ -->
+<div id="home-screen">
+    <div class="band">
+        <div class="band-inner">
+            <div class="nav">
+                <a class="logo" href="index.html">🔐 脱出ゲーム</a>
+                <a class="back" href="../index.html">運営サイト一覧</a>
+            </div>
+            <h1>脱出ゲーム 〜閉ざされた部屋〜</h1>
+            <p class="lead">目覚めると、見知らぬ部屋に閉じ込められていた。部屋のあちこちを調べて、仕掛けを解いて、ドアを開けて脱出しよう。1人でも、離れた友達と2人協力でも遊べます。</p>
+            <div class="chips"><span>1人プレイOK</span><span>2人協力（P2P）</span><span>本格謎解き</span><span>ヒント機能つき</span></div>
+        </div>
+    </div>
+
+    <div class="wrap">
+        <div class="panel overlap">
+            <h2>▶ 遊び方を選ぶ</h2>
+            <button class="mode-btn" id="btn-solo">
+                <strong>🚪 1人で脱出する</strong>
+                <span>すべてのヒントが自分に見えます。じっくり謎解きしたい人に。</span>
+            </button>
+            <button class="mode-btn" id="btn-create">
+                <strong>👥 ルームを作る（ホスト）</strong>
+                <span>6文字のルームコードを発行して、友達を招待します。</span>
+            </button>
+            <div style="margin-top: 18px;">
+                <strong>🔑 ルームに参加する（ゲスト）</strong>
+                <div class="code-row">
+                    <input type="text" id="join-code" maxlength="6" placeholder="コード6文字" autocomplete="off">
+                    <button class="btn" id="btn-join">参加</button>
+                </div>
+            </div>
+            <div class="status-msg" id="home-status"></div>
+            <div id="room-code-area" style="display: none; margin-top: 14px;">
+                <p style="margin: 0 0 8px; font-size: 0.9rem; color: var(--sub);">このコードを友達に教えてください。友達が参加すると自動で始まります。</p>
+                <div class="room-code" id="room-code">------</div>
+            </div>
+        </div>
+
+        <div class="panel">
+            <h2>🤝 協力モードのルール</h2>
+            <p>協力モードでは、大事なヒントが<strong>2人に半分ずつ</strong>分かれて表示されます。たとえば金庫の番号は、ホストに前半、ゲストに後半だけが見えます。声をかけ合って教え合うのが脱出のコツです。</p>
+            <p>アイテムは2人で共有です。どちらが拾っても、両方のアイテム欄に入ります。そして最後のドアは、<strong>2人が3秒以内に同時にボタン</strong>を押さないと開きません。</p>
+            <p>ゲーム中は「定型メッセージ」ボタンで、相方に合図を送ることもできます。</p>
+        </div>
+    </div>
+
+<script src="https://adm.shinobi.jp/s/8883b8c96c219279b7215cf3521e8aed"></script>
+
+    <div class="text-section">
+        <h2>遊び方</h2>
+        <ul>
+            <li>部屋は4つの壁（北・東・南・西）でできています。左右のボタンで見回せます。</li>
+            <li>気になる場所をタップすると拡大して調べられます。アイテムを取ったり、コードを入力したりできます。</li>
+            <li>詰まったら「💡ヒント」ボタン。今やるべきことを教えてくれます（少しずつ開示されます）。</li>
+            <li>クリアタイムが計測されます。友達とタイムを競うのもおすすめです。</li>
+        </ul>
+    </div>
+
+    <div class="wrap">
+        <footer>
+            <p><a href="../asobi/index.html">あそび広場</a>　|　<a href="../benri/index.html">みんなの便利ツール</a>　|　<a href="../index.html">運営サイト一覧</a></p>
+            <p>&copy; 2026 Block Surprise <a href="../privacy.html">プライバシーポリシー</a></p>
+        </footer>
+    </div>
+</div>
+
+<!-- ============ ゲーム画面 ============ -->
+<div id="game-screen">
+    <div class="game-top">
+        <span class="title">🔐 閉ざされた部屋</span>
+        <span class="timer" id="timer">00:00</span>
+        <span class="partner" id="partner-status"></span>
+        <button class="small-btn" id="btn-hint">💡 ヒント (<span id="hint-count">0</span>)</button>
+        <button class="small-btn" id="btn-quit">やめる</button>
+    </div>
+
+    <div class="room-view">
+        <div class="wall" id="wall"></div>
+        <div class="wall-nav">
+            <button id="btn-left">◀ 左を見る</button>
+            <span class="compass" id="compass">北の壁</span>
+            <button id="btn-right">右を見る ▶</button>
+        </div>
+    </div>
+
+    <div class="msg-box"><div class="msg-inner" id="msg">部屋を調べて、脱出の手がかりを探そう。</div></div>
+
+    <div class="quick-msgs" id="quick-msgs">
+        <button data-qm="0">👀 こっち見て！</button>
+        <button data-qm="1">💡 ヒント分かった！</button>
+        <button data-qm="2">🙏 そっちの番号教えて</button>
+        <button data-qm="3">👌 OK！</button>
+    </div>
+
+    <div class="inventory">
+        <div class="inv-inner">
+            <span class="inv-title">アイテム</span>
+            <span id="inv-list"><span class="inv-empty">まだ何も持っていません</span></span>
+        </div>
+    </div>
+    <div style="height: 40px;"></div>
+</div>
+
+<!-- ============ クリア画面 ============ -->
+<div id="clear-screen">
+    <div class="wrap" style="padding-top: 50px;">
+        <div class="panel">
+            <div class="big">🎉🚪</div>
+            <h2 style="font-size: 1.6rem;">脱出成功！</h2>
+            <p>ドアが開き、外の光が差し込んだ…。お見事です！</p>
+            <div class="time" id="clear-time">00:00</div>
+            <p id="clear-mode" style="color: var(--sub);"></p>
+            <div style="display: grid; gap: 10px; margin-top: 18px;">
+                <button class="btn big" id="btn-again">もう一度遊ぶ</button>
+                <button class="btn ghost big" id="btn-home">ホームへもどる</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- ============ ズームモーダル ============ -->
+<div class="modal-bg" id="modal-bg">
+    <div class="modal" id="modal"></div>
+</div>
+
+<script>
+// ================= 基本・状態 =================
+const $ = (id) => document.getElementById(id);
+let mode = 'solo';   // 'solo' | 'host' | 'guest'
+let role = 'solo';   // ヒント表示の役割 'solo' | 'host' | 'guest'
+let view = 0;        // 0:北 1:東 2:南 3:西
+let currentSpot = null;
+let colorSeq = [];
+let hintsUsed = 0;
+let gameShown = false;
+
+const ITEM_INFO = {
+    driver:   { emoji: '🪛', name: 'ドライバー' },
+    smallkey: { emoji: '🔑', name: '小さい鍵' },
+    doorkey:  { emoji: '🗝️', name: 'ドアの鍵' }
+};
+
+let S = null;
+function freshState() {
+    return {
+        started: false, startAt: 0, clearTime: null,
+        flags: { driver:false, panel:false, smallkey:false, drawer:false, tablet:false,
+                 safe:false, doorkey:false, keyUsed:false, colorOK:false, escaped:false },
+        items: [],
+        presses: { host: 0, guest: 0 },
+        lastMsg: '部屋を調べて、脱出の手がかりを探そう。'
+    };
+}
+const has = (item) => S && S.items.includes(item);
+
+function fmtTime(ms) {
+    const sec = Math.floor(ms / 1000);
+    return String(Math.floor(sec / 60)).padStart(2, '0') + ':' + String(sec % 60).padStart(2, '0');
+}
+
+// ================= 部屋の描画 =================
+const WALLS = [
+    { name: '北の壁', bg: 'linear-gradient(180deg, #93a9cc 0%, #7188ac 70%, #5d7291 100%)', spots: [
+        { id: 'door', emoji: '🚪', label: 'ドア', x: 52, y: 54 },
+        { id: 'painting', emoji: '🖼️', label: '絵画', x: 16, y: 34 }
+    ]},
+    { name: '東の壁', bg: 'linear-gradient(180deg, #a8c8a2 0%, #84a87e 70%, #6b8c66 100%)', spots: [
+        { id: 'bookshelf', emoji: '📚', label: '本棚', x: 32, y: 52 },
+        { id: 'clock', emoji: '🕰️', label: '時計', x: 74, y: 30 }
+    ]},
+    { name: '南の壁', bg: 'linear-gradient(180deg, #d9b48f 0%, #bd9668 70%, #a37c52 100%)', spots: [
+        { id: 'desk', emoji: '🖥️', label: '机', x: 30, y: 54 },
+        { id: 'safe', emoji: '🧰', label: '金庫', x: 74, y: 56 }
+    ]},
+    { name: '西の壁', bg: 'linear-gradient(180deg, #c2a3c8 0%, #a181ab 70%, #85678d 100%)', spots: [
+        { id: 'sofa', emoji: '🛋️', label: 'ソファ', x: 32, y: 56 },
+        { id: 'plant', emoji: '🪴', label: '植木鉢', x: 76, y: 52 }
+    ]}
+];
+
+function spotDone(id) {
+    if (!S) return false;
+    const F = S.flags;
+    switch (id) {
+        case 'plant': return F.driver;
+        case 'bookshelf': return F.smallkey;
+        case 'desk': return F.tablet && F.drawer;
+        case 'safe': return F.safe;
+        case 'door': return F.keyUsed && F.colorOK;
+        default: return false;
+    }
+}
+
+function renderWall() {
+    const wall = WALLS[view];
+    $('compass').innerText = wall.name;
+    const el = $('wall');
+    el.style.background = wall.bg;
+    el.innerHTML = `<span class="wall-name">${wall.name}</span>` + wall.spots.map((sp) =>
+        `<button class="hotspot ${spotDone(sp.id) ? 'done' : ''}" style="left:${sp.x}%; top:${sp.y}%;" onclick="openSpot('${sp.id}')">
+            <span class="e">${sp.emoji}</span><span class="l">${sp.label}</span>
+        </button>`).join('');
+}
+
+function renderInventory() {
+    if (!S || S.items.length === 0) {
+        $('inv-list').innerHTML = '<span class="inv-empty">まだ何も持っていません</span>';
+        return;
+    }
+    $('inv-list').innerHTML = S.items.map((i) =>
+        `<span class="inv-item">${ITEM_INFO[i].emoji} ${ITEM_INFO[i].name}</span>`).join('');
+}
+
+function renderMsg() { $('msg').innerText = S ? S.lastMsg : ''; }
+
+function renderAll() {
+    renderWall();
+    renderInventory();
+    renderMsg();
+    if (mode !== 'solo') {
+        $('partner-status').innerText = conn && conn.open ? '👥 協力プレイ中' : '👥 相方の接続待ち…';
+    }
+    if (currentSpot) {
+        const active = document.activeElement;
+        const typing = active && active.tagName === 'INPUT' && $('modal').contains(active);
+        if (!typing) renderModal();
+    }
+    if (S && S.flags.escaped) showClear();
+}
+
+// ================= ズーム（スポット） =================
+function openSpot(id) {
+    currentSpot = id;
+    colorSeq = [];
+    renderModal();
+    $('modal-bg').classList.add('show');
+}
+function closeSpot() {
+    currentSpot = null;
+    $('modal-bg').classList.remove('show');
+}
+$('modal-bg').addEventListener('click', (e) => { if (e.target === $('modal-bg')) closeSpot(); });
+
+function modalShell(title, scene, bodyHtml, actionsHtml) {
+    return `<h3>${title}</h3><div class="scene">${scene}</div>${bodyHtml}` +
+        `<div class="actions">${actionsHtml || ''}<button class="btn ghost" onclick="closeSpot()">もどる</button></div>`;
+}
+
+function renderModal() {
+    if (!currentSpot || !S) return;
+    const F = S.flags;
+    let html = '';
+    switch (currentSpot) {
+        case 'plant':
+            if (!F.driver) {
+                html = modalShell('植木鉢', '🪴',
+                    '<p>大きな植木鉢。よく見ると、土が少しだけ盛り上がっている。何か埋まっているのかも…。</p>',
+                    '<button class="btn" onclick="doAction(\'take_driver\')">土を掘ってみる</button>');
+            } else {
+                html = modalShell('植木鉢', '🪴', '<p>土は掘り返した跡がある。もう何も埋まっていない。</p>');
+            }
+            break;
+        case 'bookshelf':
+            if (!F.panel) {
+                html = modalShell('本棚', '📚',
+                    '<p>本がぎっしり並んでいる。下のほうに、ネジで止められた小さなパネルがある。</p>' +
+                    (has('driver') ? '<p>ドライバーで開けられそうだ。</p>' : '<p>素手では開けられない。ネジを回す道具が必要そうだ。</p>'),
+                    has('driver') ? '<button class="btn" onclick="doAction(\'open_panel\')">ドライバーでパネルを開ける</button>' : '');
+            } else if (!F.smallkey) {
+                html = modalShell('本棚', '📚',
+                    '<p>パネルが開いている。中に<strong>小さい鍵</strong>が入っていた！</p>',
+                    '<button class="btn" onclick="doAction(\'take_smallkey\')">小さい鍵を取る</button>');
+            } else {
+                html = modalShell('本棚', '📚', '<p>パネルは開いている。中はもう空っぽだ。本の背表紙には「謎は順番に解け」と書かれている。</p>');
+            }
+            break;
+        case 'clock':
+            html = modalShell('時計', '',
+                '<div class="clock-face">' +
+                '<div class="clock-hand hour" style="transform: rotate(222.5deg);"></div>' +
+                '<div class="clock-hand min" style="transform: rotate(150deg);"></div>' +
+                '<div class="clock-dot"></div></div>' +
+                '<p style="text-align:center;">時計は止まっている。針は <strong>7時25分</strong> を指している。</p>');
+            break;
+        case 'desk': {
+            let body = '';
+            if (!F.tablet) {
+                body += '<p>机の上にタブレットがある。画面には「4桁のパスワードを入力」と出ている。</p>' +
+                    '<input class="code-in" id="tablet-code" inputmode="numeric" maxlength="4" placeholder="・・・・">' +
+                    '<button class="btn" onclick="submitTablet()">パスワードを入力する</button>';
+            } else {
+                if (role === 'host') body += '<p>タブレットの画面：<br><strong>「金庫の番号の前半は【 29 】」</strong><br>後半は、相方のタブレットに表示されているようだ…。</p>';
+                else if (role === 'guest') body += '<p>タブレットの画面：<br><strong>「金庫の番号の後半は【 17 】」</strong><br>前半は、相方のタブレットに表示されているようだ…。</p>';
+                else body += '<p>タブレットの画面：<br><strong>「金庫の番号は【 2917 】」</strong></p>';
+            }
+            if (!F.drawer) {
+                body += '<p style="margin-top:14px;">机の引き出しには鍵がかかっている。</p>';
+                if (has('smallkey')) body += '<button class="btn" onclick="doAction(\'open_drawer\')">小さい鍵で引き出しを開ける</button>';
+            } else {
+                body += '<p style="margin-top:14px;">引き出しの中のメモ：<br>「金庫の番号は、タブレットの中に眠っている」</p>';
+            }
+            html = modalShell('机', '🖥️', body);
+            break;
+        }
+        case 'safe':
+            if (!F.safe) {
+                html = modalShell('金庫', '🧰',
+                    '<p>重そうな金庫。4桁の番号錠がついている。</p>' +
+                    '<input class="code-in" id="safe-code" inputmode="numeric" maxlength="4" placeholder="・・・・">',
+                    '<button class="btn" onclick="submitSafe()">番号を合わせて開ける</button>');
+            } else {
+                html = modalShell('金庫', '🧰', '<p>金庫は開いている。中は空っぽだ。（ドアの鍵は入手済み）</p>');
+            }
+            break;
+        case 'painting': {
+            let body = '';
+            if (role === 'host') body = '<p>絵画には花が描かれているが、光の反射で左半分しか見えない。<br><strong>🔴 赤 → 🟡 黄 → ❓ → ❓</strong><br>右半分は相方に見えているかも？</p>';
+            else if (role === 'guest') body = '<p>絵画には花が描かれているが、光の反射で右半分しか見えない。<br><strong>❓ → ❓ → 🔵 青 → 🟢 緑</strong><br>左半分は相方に見えているかも？</p>';
+            else body = '<p>絵画には4つの花が、左から順に描かれている。<br><strong>🔴 赤 → 🟡 黄 → 🔵 青 → 🟢 緑</strong></p>';
+            html = modalShell('絵画', '🖼️', body);
+            break;
+        }
+        case 'sofa':
+            html = modalShell('ソファ', '🛋️',
+                '<p>座り心地の良さそうなソファ。クッションの下に、小さなメモが挟まっていた。</p>' +
+                '<p>メモ：<strong>「タブレットのパスワードは、この部屋の時計が知っている」</strong></p>');
+            break;
+        case 'door': {
+            let body = '<p>出口のドア。電子ロックがかかっている。</p>';
+            body += `<p>🔑 鍵ロック：${F.keyUsed ? '✅ 解除済み' : '🔒 ロック中'}<br>🌈 色ロック：${F.colorOK ? '✅ 解除済み' : '🔒 ロック中'}</p>`;
+            let actions = '';
+            if (!F.keyUsed) {
+                if (has('doorkey')) actions += '<button class="btn" onclick="doAction(\'use_key\')">🗝️ ドアの鍵を使う</button>';
+                else body += '<p>鍵穴がある。ドアの鍵が必要だ。</p>';
+            }
+            if (!F.colorOK) {
+                body += '<p>ドアの横に4色のボタンがある。正しい順番で押すと色ロックが解除されるようだ。</p>' +
+                    '<div class="color-dots" id="color-dots">' + colorSeq.map((c) => ({ red: '🔴', yellow: '🟡', blue: '🔵', green: '🟢' }[c])).join(' ') + '</div>' +
+                    '<div class="color-btns">' +
+                    '<button class="color-btn" style="background:#e05252;" onclick="pressColor(\'red\')">赤</button>' +
+                    '<button class="color-btn" style="background:#f2c230;" onclick="pressColor(\'yellow\')">黄</button>' +
+                    '<button class="color-btn" style="background:#3b82f6;" onclick="pressColor(\'blue\')">青</button>' +
+                    '<button class="color-btn" style="background:#2fbf71;" onclick="pressColor(\'green\')">緑</button>' +
+                    '</div>';
+            }
+            if (F.keyUsed && F.colorOK && !F.escaped) {
+                if (mode === 'solo') {
+                    actions += '<button class="btn" onclick="doAction(\'final_press\')">🚪 脱出する！</button>';
+                } else {
+                    const now = Date.now();
+                    const other = role === 'host' ? 'guest' : 'host';
+                    const mine = S.presses[role] && now - S.presses[role] <= 3000;
+                    const theirs = S.presses[other] && now - S.presses[other] <= 3000;
+                    body += '<p><strong>最終ロック：</strong>2人が<strong>3秒以内に同時に</strong>自分のボタンを押すと開く。</p>';
+                    if (theirs && !mine) body += '<p style="color:#e05252; font-weight:900;">⚡ 相方が押した！急いで押そう！</p>';
+                    if (mine) body += '<p>あなたは押しました。相方を待っています…</p>';
+                    actions += '<button class="btn" onclick="doAction(\'final_press\')">🔘 自分のボタンを押す</button>';
+                }
+            }
+            html = modalShell('ドア', '🚪', body, actions);
+            break;
+        }
+    }
+    $('modal').innerHTML = html;
+}
+
+function submitTablet() {
+    const v = ($('tablet-code') ? $('tablet-code').value : '').trim();
+    doAction('unlock_tablet', { code: v });
+}
+function submitSafe() {
+    const v = ($('safe-code') ? $('safe-code').value : '').trim();
+    doAction('open_safe', { code: v });
+}
+
+const COLOR_ANSWER = ['red', 'yellow', 'blue', 'green'];
+function pressColor(c) {
+    colorSeq.push(c);
+    if (colorSeq.length >= COLOR_ANSWER.length) {
+        const ok = COLOR_ANSWER.every((v, i) => colorSeq[i] === v);
+        colorSeq = [];
+        if (ok) { doAction('color_solved'); return; }
+        S.lastMsg = '色の順番が違うようだ…。絵画をもう一度よく見よう。';
+        renderMsg();
+    }
+    if (currentSpot === 'door') renderModal();
+}
+
+// ================= アクション適用 =================
+function doAction(a, payload) {
+    if (mode === 'guest') {
+        if (conn && conn.open) conn.send({ t: 'act', a: a, payload: payload || {} });
+        return;
+    }
+    applyAction(a, payload || {}, mode === 'host' ? 'host' : 'solo');
+    afterChange();
+}
+
+function applyAction(a, payload, by) {
+    const F = S.flags;
+    switch (a) {
+        case 'take_driver':
+            if (!F.driver) { F.driver = true; S.items.push('driver'); S.lastMsg = '🪛 ドライバーを手に入れた！'; }
+            break;
+        case 'open_panel':
+            if (!F.panel && has('driver')) { F.panel = true; S.lastMsg = 'パネルを開けた！中に何か入っている…'; }
+            break;
+        case 'take_smallkey':
+            if (F.panel && !F.smallkey) { F.smallkey = true; S.items.push('smallkey'); S.lastMsg = '🔑 小さい鍵を手に入れた！'; }
+            break;
+        case 'open_drawer':
+            if (!F.drawer && has('smallkey')) { F.drawer = true; S.lastMsg = '引き出しを開けた！メモが入っている。'; }
+            break;
+        case 'unlock_tablet':
+            if (!F.tablet) {
+                if (payload.code === '0725') { F.tablet = true; S.lastMsg = 'タブレットのロックが解除された！'; }
+                else S.lastMsg = 'パスワードが違うようだ…。ヒントは部屋のどこかに。';
+            }
+            break;
+        case 'open_safe':
+            if (!F.safe) {
+                if (payload.code === '2917') {
+                    F.safe = true; F.doorkey = true; S.items.push('doorkey');
+                    S.lastMsg = '🎉 金庫が開いた！🗝️ ドアの鍵を手に入れた！';
+                } else S.lastMsg = '金庫は開かない。番号が違うようだ。';
+            }
+            break;
+        case 'use_key':
+            if (!F.keyUsed && has('doorkey')) { F.keyUsed = true; S.lastMsg = '🗝️ ドアの鍵を開けた！'; }
+            break;
+        case 'color_solved':
+            if (!F.colorOK) { F.colorOK = true; S.lastMsg = '🌈 色ロックが解除された！カチッという音がした。'; }
+            break;
+        case 'final_press':
+            if (F.keyUsed && F.colorOK && !F.escaped) {
+                if (by === 'solo') { escapeNow(); }
+                else {
+                    S.presses[by] = Date.now();
+                    const other = by === 'host' ? 'guest' : 'host';
+                    if (S.presses[other] && Date.now() - S.presses[other] <= 3000) escapeNow();
+                    else S.lastMsg = '⚡ ' + (by === 'host' ? 'ホスト' : 'ゲスト') + 'がボタンを押した！もう1人が3秒以内に押せば開く！';
+                }
+            }
+            break;
+    }
+}
+
+function escapeNow() {
+    S.flags.escaped = true;
+    S.clearTime = Date.now() - S.startAt;
+    S.lastMsg = '🎉 脱出成功！';
+}
+
+function afterChange() {
+    if (mode === 'host' && conn && conn.open) conn.send({ t: 'state', s: S });
+    renderAll();
+}
+
+// ================= ヒント =================
+const HINTS = [
+    { cond: (F) => !F.driver,   text: '💡 植木鉢を調べてみよう。土に何か埋まっているかも。' },
+    { cond: (F) => !F.panel,    text: '💡 ドライバーで、本棚の下のパネルを開けよう。' },
+    { cond: (F) => !F.smallkey, text: '💡 パネルの中身を取り忘れていない？' },
+    { cond: (F) => !F.drawer,   text: '💡 小さい鍵は、机の引き出しの鍵だよ。' },
+    { cond: (F) => !F.tablet,   text: '💡 タブレットのパスワードは時計の時刻。7時25分 → 「0725」。' },
+    { cond: (F) => !F.safe,     text: '💡 金庫の番号はタブレットの中。協力モードでは2人で教え合って、合わせて「2917」。' },
+    { cond: (F) => !F.keyUsed,  text: '💡 ドアで鍵を使おう。' },
+    { cond: (F) => !F.colorOK,  text: '💡 色の順番は絵画の花。赤 → 黄 → 青 → 緑。協力モードでは相方と教え合おう。' },
+    { cond: () => true,         text: '💡 最後はドアの前。協力モードでは2人が3秒以内に同時にボタンを押そう！' }
+];
+$('btn-hint').addEventListener('click', () => {
+    if (!S) return;
+    const h = HINTS.find((x) => x.cond(S.flags));
+    if (h) {
+        hintsUsed++;
+        $('hint-count').innerText = hintsUsed;
+        $('msg').innerText = h.text;
+    }
+});
+
+// ================= 画面遷移・タイマー =================
+function showGame() {
+    gameShown = true;
+    $('home-screen').style.display = 'none';
+    $('clear-screen').style.display = 'none';
+    $('game-screen').style.display = 'block';
+    if (mode !== 'solo') $('quick-msgs').classList.add('show');
+    renderAll();
+}
+function showClear() {
+    closeSpot();
+    $('game-screen').style.display = 'none';
+    $('clear-screen').style.display = 'block';
+    $('clear-time').innerText = fmtTime(S.clearTime || 0);
+    $('clear-mode').innerText = (mode === 'solo' ? 'ソロプレイ' : '2人協力プレイ') + `　・　ヒント使用 ${hintsUsed} 回`;
+}
+setInterval(() => {
+    if (S && S.started && !S.flags.escaped && gameShown) {
+        $('timer').innerText = fmtTime(Date.now() - S.startAt);
+    }
+    // 同時押しの表示更新（ドアを開いているとき）
+    if (S && currentSpot === 'door' && mode !== 'solo' && S.flags.keyUsed && S.flags.colorOK && !S.flags.escaped) {
+        renderModal();
+    }
+}, 500);
+
+$('btn-left').addEventListener('click', () => { view = (view + 3) % 4; renderWall(); });
+$('btn-right').addEventListener('click', () => { view = (view + 1) % 4; renderWall(); });
+$('btn-quit').addEventListener('click', () => { if (confirm('ゲームをやめてホームに戻りますか？')) location.reload(); });
+$('btn-again').addEventListener('click', () => location.reload());
+$('btn-home').addEventListener('click', () => location.reload());
+
+// ソロ開始
+$('btn-solo').addEventListener('click', () => {
+    mode = 'solo'; role = 'solo';
+    S = freshState();
+    S.started = true; S.startAt = Date.now();
+    showGame();
+});
+</script>
+
+<script>
+// ================= P2P協力（PeerJS） =================
+const PREFIX = 'bs-dasshutsu-';
+const CODE_CHARS = 'ABCDEFGHJKMNPQRSTUVWXYZ23456789';
+let peer = null, conn = null;
+
+const QM_TEXTS = ['👀 こっち見て！', '💡 ヒント分かった！', '🙏 そっちの番号教えて', '👌 OK！'];
+
+function homeStatus(t) { $('home-status').innerText = t; }
+
+function makeCode() {
+    let c = '';
+    for (let i = 0; i < 6; i++) c += CODE_CHARS[Math.floor(Math.random() * CODE_CHARS.length)];
+    return c;
+}
+
+// ホスト：ルーム作成
+$('btn-create').addEventListener('click', () => {
+    if (peer) { homeStatus('すでにルームを作成しています。'); return; }
+    mode = 'host'; role = 'host';
+    const code = makeCode();
+    homeStatus('ルームを作成しています…');
+    try {
+        peer = new Peer(PREFIX + code);
+    } catch (e) {
+        homeStatus('接続の初期化に失敗しました。通信環境を確認してください。');
+        return;
+    }
+    peer.on('open', () => {
+        $('room-code').innerText = code;
+        $('room-code-area').style.display = 'block';
+        homeStatus('友達の参加を待っています…');
+    });
+    peer.on('connection', (c) => {
+        if (conn) { c.close(); return; }
+        conn = c;
+        conn.on('open', () => {
+            S = freshState();
+            S.started = true; S.startAt = Date.now();
+            S.lastMsg = '相方が参加した！2人で協力して脱出しよう。';
+            showGame();
+            conn.send({ t: 'state', s: S });
+        });
+        conn.on('data', (d) => onPeerData(d, 'guest'));
+        conn.on('close', () => {
+            if (!S || !S.flags.escaped) $('partner-status').innerText = '⚠️ 相方が退出しました';
+        });
+    });
+    peer.on('error', (e) => {
+        if (e.type === 'unavailable-id') homeStatus('コードが重複しました。もう一度お試しください。');
+        else homeStatus('接続エラーが発生しました（' + e.type + '）。');
+    });
+});
+
+// ゲスト：ルーム参加
+$('btn-join').addEventListener('click', () => {
+    const code = ($('join-code').value || '').trim().toUpperCase();
+    if (code.length !== 6) { homeStatus('6文字のルームコードを入力してください。'); return; }
+    if (peer) { homeStatus('すでに接続を試みています。'); return; }
+    mode = 'guest'; role = 'guest';
+    homeStatus('ルームに接続しています…');
+    try {
+        peer = new Peer();
+    } catch (e) {
+        homeStatus('接続の初期化に失敗しました。通信環境を確認してください。');
+        return;
+    }
+    peer.on('open', () => {
+        conn = peer.connect(PREFIX + code, { reliable: true });
+        conn.on('open', () => { homeStatus('接続しました。ゲーム開始を待っています…'); });
+        conn.on('data', (d) => onPeerData(d, 'host'));
+        conn.on('close', () => {
+            if (!S || !S.flags.escaped) $('partner-status').innerText = '⚠️ ホストとの接続が切れました';
+        });
+    });
+    peer.on('error', (e) => {
+        if (e.type === 'peer-unavailable') homeStatus('そのコードのルームが見つかりませんでした。コードを確認してください。');
+        else homeStatus('接続エラーが発生しました（' + e.type + '）。');
+    });
+});
+
+// 相手からのデータ受信
+function onPeerData(d, from) {
+    if (!d || !d.t) return;
+    if (d.t === 'state') {
+        // ゲスト側：ホストの状態をそのまま反映
+        S = d.s;
+        if (!gameShown) showGame(); else renderAll();
+        if (S.flags.escaped) showClear();
+    } else if (d.t === 'act') {
+        // ホスト側：ゲストの操作を検証して適用
+        if (mode === 'host' && S) {
+            applyAction(d.a, d.payload || {}, 'guest');
+            afterChange();
+        }
+    } else if (d.t === 'qm') {
+        showPartnerMsg(d.i);
+    }
+}
+
+// 定型メッセージ
+document.querySelectorAll('#quick-msgs button').forEach((b) => {
+    b.addEventListener('click', () => {
+        const i = Number(b.getAttribute('data-qm'));
+        if (conn && conn.open) conn.send({ t: 'qm', i: i });
+        $('msg').innerText = 'あなた：' + QM_TEXTS[i];
+    });
+});
+let qmTimer = null;
+function showPartnerMsg(i) {
+    $('msg').innerHTML = '<span class="partner-msg">相方：' + QM_TEXTS[i] + '</span>';
+    if (qmTimer) clearTimeout(qmTimer);
+    qmTimer = setTimeout(() => { renderMsg(); }, 5000);
+}
+</script>
+</body>
+</html>
