@@ -1,0 +1,294 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-3571574988222927"
+     crossorigin="anonymous"></script>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>コレクションガチャ | あそび広場</title>
+    <meta name="description" content="回して集めるカプセルガチャ。SSRはドラゴンとユニコーン！全14種類のコンプリートを目指そう。コレクションは端末に保存されます。">
+    <link rel="icon" href="../IMG_3967.png">
+    <link rel="apple-touch-icon" href="../IMG_3967.png">
+    <meta name="google-adsense-account" content="ca-pub-3571574988222927">
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-10WGHJWSXK"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
+  gtag('config', 'G-10WGHJWSXK');
+</script>
+    <style>
+        :root {
+            --ink: #182230; --sub: #667085; --bg: #f5f7fb; --line: #e6ebf2;
+            --g1: #7c5cff; --g2: #ff5c8a; --accent: #7c5cff;
+        }
+        * { box-sizing: border-box; }
+        body {
+            font-family: "Helvetica Neue", Arial, "Hiragino Kaku Gothic ProN", "Hiragino Sans", Meiryo, sans-serif;
+            background: var(--bg); color: var(--ink); margin: 0; line-height: 1.7;
+        }
+        .band {
+            background: linear-gradient(120deg, var(--g1), var(--g2)); color: #fff;
+            padding: 16px 0 74px; border-radius: 0 0 30px 30px; position: relative; overflow: hidden;
+        }
+        .band::after {
+            content: ""; position: absolute; width: 260px; height: 260px; border-radius: 50%;
+            background: rgba(255,255,255,0.12); right: -90px; top: -120px;
+        }
+        .band-inner { max-width: 720px; margin: 0 auto; padding: 0 20px; position: relative; z-index: 1; }
+        .nav { display: flex; justify-content: space-between; align-items: center; }
+        .nav a.logo { color: #fff; font-weight: 900; text-decoration: none; }
+        .nav a.back {
+            color: #fff; text-decoration: none; font-size: 0.85rem; font-weight: bold;
+            border: 1px solid rgba(255,255,255,0.55); border-radius: 999px; padding: 4px 14px;
+        }
+        .band .head { display: flex; align-items: center; gap: 16px; margin-top: 26px; }
+        .band .tile {
+            width: 64px; height: 64px; flex: 0 0 64px; border-radius: 18px; font-size: 2rem;
+            background: rgba(255,255,255,0.18); border: 1px solid rgba(255,255,255,0.4);
+            display: flex; align-items: center; justify-content: center;
+        }
+        .band h1 { font-size: 1.75rem; margin: 0; }
+        .band p.lead { margin: 4px 0 0; opacity: 0.92; font-size: 0.95rem; }
+        .wrap { max-width: 720px; margin: 0 auto; padding: 0 20px; }
+        .card {
+            background: #fff; border-radius: 20px; padding: 32px 26px; margin-top: -48px;
+            box-shadow: 0 18px 40px rgba(16,24,40,0.12); border: 1px solid var(--line);
+            position: relative; z-index: 2; text-align: center;
+        }
+        #machine { font-size: 5rem; display: inline-block; }
+        #machine.spinning { animation: bounce 0.8s ease; }
+        @keyframes bounce {
+            0%, 100% { transform: translateY(0); }
+            25% { transform: translateY(-16px) rotate(-4deg); }
+            50% { transform: translateY(0) rotate(3deg); }
+            75% { transform: translateY(-8px) rotate(-2deg); }
+        }
+        .btn {
+            display: inline-block; margin-top: 16px; padding: 15px 38px;
+            background: linear-gradient(120deg, var(--g1), var(--g2)); color: #fff; border: none; border-radius: 999px;
+            font-size: 1.1rem; font-weight: 900; cursor: pointer; box-shadow: 0 10px 22px rgba(124,92,255,0.35);
+        }
+        .btn:hover { opacity: 0.9; }
+        .btn:disabled { opacity: 0.5; }
+        #reveal { display: none; margin-top: 22px; }
+        #reveal.show { display: block; animation: pop 0.5s ease; }
+        @keyframes pop { from { transform: scale(0.7); opacity: 0; } to { transform: scale(1); opacity: 1; } }
+        #reveal-emoji { font-size: 4.2rem; }
+        #reveal-name { font-size: 1.3rem; font-weight: 900; margin-top: 4px; }
+        .rarity { display: inline-block; font-weight: 900; font-size: 0.8rem; border-radius: 999px; padding: 3px 14px; letter-spacing: 2px; }
+        .rarity.SSR { background: linear-gradient(90deg, #ffb300, #ff5c8a); color: #fff; }
+        .rarity.SR { background: #ede9ff; color: #7c5cff; }
+        .rarity.R { background: #e3f2fd; color: #007aff; }
+        .rarity.N { background: #eef1f5; color: #667085; }
+        #reveal-new { color: #e05252; font-weight: 900; font-size: 0.9rem; margin-top: 6px; min-height: 1.4em; }
+        #status { margin-top: 14px; font-size: 0.88rem; color: var(--sub); }
+        .collection { margin-top: 30px; text-align: left; }
+        .collection h2 { font-size: 1.15rem; text-align: center; }
+        .col-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(72px, 1fr)); gap: 10px; margin-top: 14px; }
+        .col-item {
+            background: #f8fafc; border: 1px solid var(--line); border-radius: 14px;
+            padding: 10px 4px; text-align: center;
+        }
+        .col-item .e { font-size: 1.7rem; }
+        .col-item .n { font-size: 0.68rem; color: var(--sub); font-weight: bold; }
+        .col-item.locked { opacity: 0.45; }
+        .col-item .r { font-size: 0.62rem; font-weight: 900; letter-spacing: 1px; }
+        .btn-reset {
+            margin-top: 18px; background: #fff; border: 1px solid var(--line); color: var(--sub);
+            border-radius: 8px; padding: 8px 16px; cursor: pointer; font-size: 0.82rem;
+        }
+        .text-section { margin-top: 46px; }
+        .text-section h2 { font-size: 1.3rem; margin: 0 0 14px; position: relative; padding-bottom: 10px; }
+        .text-section h2::after {
+            content: ""; position: absolute; left: 0; bottom: 0; width: 54px; height: 4px; border-radius: 2px;
+            background: linear-gradient(90deg, var(--g1), var(--g2));
+        }
+        .text-section p { color: #3c4656; }
+        .text-section table { width: 100%; border-collapse: collapse; margin: 12px 0; font-size: 0.92rem; background: #fff; }
+        .text-section th, .text-section td { border: 1px solid var(--line); padding: 8px 10px; text-align: left; }
+        .text-section th { background: #f7f3ff; }
+        .rel { margin-top: 46px; }
+        .rel h2 { font-size: 1.05rem; margin: 0 0 12px; color: var(--sub); }
+        .rel-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(140px, 1fr)); gap: 10px; }
+        .rel a {
+            background: #fff; border: 1px solid var(--line); border-radius: 12px; padding: 12px;
+            text-decoration: none; color: var(--ink); font-weight: bold; font-size: 0.9rem; text-align: center;
+        }
+        .rel a:hover { border-color: var(--g1); }
+        footer { text-align: center; margin: 44px 0 40px; font-size: 0.8rem; color: #999; }
+        footer a { color: #999; }
+    </style>
+</head>
+<body>
+
+    <div class="band">
+        <div class="band-inner">
+            <div class="nav">
+                <a class="logo" href="index.html">🎮 あそび広場</a>
+                <a class="back" href="index.html">ゲーム一覧</a>
+            </div>
+            <div class="head">
+                <div class="tile">🎁</div>
+                <div>
+                    <h1>コレクションガチャ</h1>
+                    <p class="lead">全14種類コンプリートを目指そう！</p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+<div class="wrap">
+    <div class="card">
+        <div id="machine">🎁</div>
+        <div>
+            <button class="btn" id="btn-draw">ガチャを回す</button>
+        </div>
+        <div id="reveal">
+            <span class="rarity N" id="reveal-rarity">N</span>
+            <div id="reveal-emoji">⭐</div>
+            <div id="reveal-name">ほし</div>
+            <div id="reveal-new"></div>
+        </div>
+        <div id="status">読み込み中…</div>
+
+        <div class="collection">
+            <h2>📖 コレクション</h2>
+            <div class="col-grid" id="col-grid"></div>
+            <div style="text-align: center;">
+                <button class="btn-reset" id="btn-reset">コレクションをリセット</button>
+            </div>
+        </div>
+    </div>
+
+    <div class="text-section">
+        <h2>レアリティと確率</h2>
+        <table>
+            <tr><th>レアリティ</th><th>確率</th><th>アイテム</th></tr>
+            <tr><td>SSR</td><td>3%</td><td>ドラゴン、ユニコーン</td></tr>
+            <tr><td>SR</td><td>12%</td><td>キツネ、パンダ、フクロウ</td></tr>
+            <tr><td>R</td><td>35%</td><td>ウサギ、ネコ、イヌ、ブタ</td></tr>
+            <tr><td>N</td><td>50%</td><td>ほし、クローバー、ふうせん、あめ、くまのぬいぐるみ</td></tr>
+        </table>
+        <p>コレクションと回した回数は、あなたの端末に自動で保存されます。同じスマホで開けば、前回の続きから集められます。SSRは100回に3回ほどの確率なので、当たったらかなりラッキーです！</p>
+    </div>
+
+    <div class="rel">
+        <h2>ほかのゲーム</h2>
+        <div class="rel-grid">
+            <a href="omikuji.html">🎋 おみくじ</a>
+            <a href="janken.html">✊ じゃんけんバトル</a>
+            <a href="slot.html">🎰 絵文字スロット</a>
+            <a href="kazuate.html">🔢 数当てゲーム</a>
+        </div>
+    </div>
+</div>
+
+<script src="https://adm.shinobi.jp/s/8883b8c96c219279b7215cf3521e8aed"></script>
+
+<div class="wrap">
+    <footer>
+        <p><a href="index.html">← あそび広場へもどる</a>　|　<a href="../index.html">運営サイト一覧</a></p>
+        <p>&copy; 2026 Block Surprise <a href="../privacy.html">プライバシーポリシー</a></p>
+    </footer>
+</div>
+
+<script>
+    const ITEMS = [
+        { emoji: "🐉", name: "ドラゴン", rarity: "SSR", weight: 1.5 },
+        { emoji: "🦄", name: "ユニコーン", rarity: "SSR", weight: 1.5 },
+        { emoji: "🦊", name: "キツネ", rarity: "SR", weight: 4 },
+        { emoji: "🐼", name: "パンダ", rarity: "SR", weight: 4 },
+        { emoji: "🦉", name: "フクロウ", rarity: "SR", weight: 4 },
+        { emoji: "🐰", name: "ウサギ", rarity: "R", weight: 8.75 },
+        { emoji: "🐱", name: "ネコ", rarity: "R", weight: 8.75 },
+        { emoji: "🐶", name: "イヌ", rarity: "R", weight: 8.75 },
+        { emoji: "🐷", name: "ブタ", rarity: "R", weight: 8.75 },
+        { emoji: "⭐", name: "ほし", rarity: "N", weight: 10 },
+        { emoji: "🍀", name: "クローバー", rarity: "N", weight: 10 },
+        { emoji: "🎈", name: "ふうせん", rarity: "N", weight: 10 },
+        { emoji: "🍬", name: "あめ", rarity: "N", weight: 10 },
+        { emoji: "🧸", name: "くまのぬいぐるみ", rarity: "N", weight: 10 }
+    ];
+    const KEY = "asobi_gacha_v1";
+    let state = { owned: {}, draws: 0 };
+    try {
+        const saved = JSON.parse(localStorage.getItem(KEY) || "null");
+        if (saved && saved.owned) state = saved;
+    } catch (e) {}
+
+    const machine = document.getElementById('machine');
+    const btn = document.getElementById('btn-draw');
+    const reveal = document.getElementById('reveal');
+    const statusEl = document.getElementById('status');
+    const colGrid = document.getElementById('col-grid');
+
+    function save() {
+        try { localStorage.setItem(KEY, JSON.stringify(state)); } catch (e) {}
+    }
+
+    function renderCollection() {
+        colGrid.innerHTML = "";
+        ITEMS.forEach((item, idx) => {
+            const owned = !!state.owned[idx];
+            const div = document.createElement('div');
+            div.className = "col-item" + (owned ? "" : " locked");
+            div.innerHTML = `<div class="e">${owned ? item.emoji : "❓"}</div>` +
+                `<div class="n">${owned ? item.name : "？？？"}</div>` +
+                `<div class="r">${item.rarity}</div>`;
+            colGrid.appendChild(div);
+        });
+        const count = Object.keys(state.owned).length;
+        statusEl.innerText = `コレクション ${count} / ${ITEMS.length} 種類　・　合計 ${state.draws} 回まわしました` +
+            (count === ITEMS.length ? "　🎉 コンプリートおめでとう！" : "");
+    }
+
+    function pickItem() {
+        const total = ITEMS.reduce((s, i) => s + i.weight, 0);
+        let r = Math.random() * total;
+        for (let idx = 0; idx < ITEMS.length; idx++) {
+            r -= ITEMS[idx].weight;
+            if (r <= 0) return idx;
+        }
+        return ITEMS.length - 1;
+    }
+
+    btn.addEventListener('click', () => {
+        btn.disabled = true;
+        reveal.classList.remove('show');
+        machine.classList.remove('spinning');
+        void machine.offsetWidth;
+        machine.classList.add('spinning');
+
+        setTimeout(() => {
+            const idx = pickItem();
+            const item = ITEMS[idx];
+            const isNew = !state.owned[idx];
+            state.owned[idx] = true;
+            state.draws++;
+            save();
+
+            const rarityEl = document.getElementById('reveal-rarity');
+            rarityEl.innerText = item.rarity;
+            rarityEl.className = "rarity " + item.rarity;
+            document.getElementById('reveal-emoji').innerText = item.emoji;
+            document.getElementById('reveal-name').innerText = item.name;
+            document.getElementById('reveal-new').innerText = isNew ? "✨ NEW！初めてゲット！" : "（もう持っています）";
+            reveal.classList.add('show');
+            renderCollection();
+            btn.disabled = false;
+        }, 800);
+    });
+
+    document.getElementById('btn-reset').addEventListener('click', () => {
+        if (!confirm("コレクションと記録をリセットしますか？")) return;
+        state = { owned: {}, draws: 0 };
+        save();
+        reveal.classList.remove('show');
+        renderCollection();
+    });
+
+    renderCollection();
+</script>
+</body>
+</html>
