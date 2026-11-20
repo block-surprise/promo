@@ -1,0 +1,133 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-3571574988222927"
+     crossorigin="anonymous"></script>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>今日の運勢 | みんなの便利ツール</title>
+    <meta name="description" content="今日の運勢を占います。ラッキーナンバー、ラッキーカラー、ラッキーアイテムもチェック。結果は日付で決まるので、毎朝の習慣に。">
+    <link rel="icon" href="../IMG_3967.png">
+    <link rel="apple-touch-icon" href="../IMG_3967.png">
+    <meta name="google-adsense-account" content="ca-pub-3571574988222927">
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-10WGHJWSXK"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
+  gtag('config', 'G-10WGHJWSXK');
+</script>
+    <style>
+        :root { --bg-color: #f8f9fa; --card-bg: #ffffff; --text-color: #333; --accent-color: #007aff; }
+        body {
+            font-family: "Helvetica Neue", Arial, "Hiragino Kaku Gothic ProN", "Hiragino Sans", Meiryo, sans-serif;
+            background-color: var(--bg-color); color: var(--text-color);
+            margin: 0; padding: 40px 20px; line-height: 1.6;
+        }
+        .wrap { max-width: 560px; margin: 0 auto; }
+        header { text-align: center; margin-bottom: 30px; }
+        h1 { font-size: 1.8rem; margin-bottom: 8px; }
+        header p { color: #666; margin: 0; }
+        .card {
+            background: var(--card-bg); border-radius: 12px; padding: 30px 24px;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.05); border: 1px solid #eee; text-align: center;
+        }
+        #date-line { color: #999; font-size: 0.85rem; }
+        #fortune { font-size: 3.2rem; font-weight: 900; margin: 10px 0; color: var(--accent-color); }
+        .stars { font-size: 1.2rem; letter-spacing: 3px; }
+        .row { display: flex; justify-content: center; gap: 26px; flex-wrap: wrap; margin: 20px 0; }
+        .row .item span { display: block; font-size: 0.75rem; color: #999; font-weight: bold; }
+        .row .item strong { font-size: 1.05rem; }
+        #advice { background: #f0f7ff; border-radius: 8px; padding: 14px 16px; font-size: 0.95rem; }
+        .btn {
+            display: inline-block; margin-top: 22px; padding: 12px 28px;
+            background: var(--accent-color); color: #fff; border: none; border-radius: 8px;
+            font-size: 1rem; font-weight: bold; cursor: pointer;
+        }
+        .btn:hover { opacity: 0.85; }
+        .note { font-size: 0.8rem; color: #999; text-align: center; margin-top: 14px; }
+        .ad-slot { text-align: center; margin: 26px auto 0; min-height: 50px; }
+        footer { text-align: center; margin-top: 40px; font-size: 0.8rem; color: #999; }
+        footer a { color: #999; }
+    </style>
+</head>
+<body>
+<div class="wrap">
+    <header>
+        <h1>🔮 今日の運勢</h1>
+        <p>運勢は日付で決まります。今日一日、何度見ても同じ結果です</p>
+    </header>
+
+    <div class="card">
+        <div id="date-line"></div>
+        <div id="fortune">？？？</div>
+        <div class="stars" id="stars"></div>
+        <div class="row">
+            <div class="item"><span>ラッキーナンバー</span><strong id="lucky-number">---</strong></div>
+            <div class="item"><span>ラッキーカラー</span><strong id="lucky-color">---</strong></div>
+            <div class="item"><span>ラッキーアイテム</span><strong id="lucky-item">---</strong></div>
+        </div>
+        <p id="advice">ボタンを押して、今日の運勢を占ってみよう！</p>
+        <button class="btn" id="btn-draw">運勢を占う</button>
+    </div>
+    <p class="note">※ 占いはエンタメです。凶が出ても落ち込まないでね。</p>
+
+    <div class="ad-slot">
+        <script src="https://adm.shinobi.jp/s/8883b8c96c219279b7215cf3521e8aed"></script>
+    </div>
+
+    <footer>
+        <p><a href="index.html">← みんなの便利ツールへもどる</a>　|　<a href="../index.html">運営サイト一覧</a></p>
+        <p>&copy; 2026 Block Surprise <a href="../privacy.html">プライバシーポリシー</a></p>
+    </footer>
+</div>
+
+<script>
+    function seededRandom(seed) {
+        let x = seed;
+        return function() {
+            x = (x * 1103515245 + 12345) % 2147483648;
+            return x / 2147483648;
+        };
+    }
+
+    const FORTUNES = [
+        { name: "大吉", stars: 5, weight: 12, advice: "今日は最強の一日！思い切って挑戦すると、うまくいく予感。新しいことを始めるのにも最適です。" },
+        { name: "中吉", stars: 4, weight: 22, advice: "いい流れが来ています。後回しにしていたことを片付けるチャンスの日。" },
+        { name: "小吉", stars: 3, weight: 24, advice: "小さなラッキーが重なる日。忘れ物チェックをしっかりすれば完璧です。" },
+        { name: "吉", stars: 3, weight: 20, advice: "安定の一日。コツコツ進めたことが、ちゃんと身を結びます。" },
+        { name: "末吉", stars: 2, weight: 14, advice: "後半から運気アップ。午前中は慎重に、午後は大胆にいきましょう。" },
+        { name: "凶", stars: 1, weight: 8, advice: "今日は無理せず安全第一。早めに休んで、明日に備えるのが正解です。" }
+    ];
+    const COLORS = ["赤", "青", "緑", "黄色", "紫", "ピンク", "オレンジ", "白", "黒", "水色", "金色", "銀色"];
+    const ITEMS = ["ハンカチ", "腕時計", "お気に入りのペン", "マグカップ", "イヤホン", "手帳", "折りたたみ傘", "ミントタブレット", "キーホルダー", "エコバッグ", "リップクリーム", "メモ帳"];
+
+    function draw() {
+        const now = new Date();
+        const seed = now.getFullYear() * 10000 + (now.getMonth() + 1) * 100 + now.getDate();
+        const rand = seededRandom(seed);
+
+        document.getElementById('date-line').innerText =
+            `${now.getFullYear()}年${now.getMonth() + 1}月${now.getDate()}日の運勢`;
+
+        const totalWeight = FORTUNES.reduce((s, f) => s + f.weight, 0);
+        let r = rand() * totalWeight;
+        let fortune = FORTUNES[FORTUNES.length - 1];
+        for (const f of FORTUNES) {
+            r -= f.weight;
+            if (r <= 0) { fortune = f; break; }
+        }
+
+        document.getElementById('fortune').innerText = fortune.name;
+        document.getElementById('stars').innerText = "★".repeat(fortune.stars) + "☆".repeat(5 - fortune.stars);
+        document.getElementById('lucky-number').innerText = Math.floor(rand() * 99) + 1;
+        document.getElementById('lucky-color').innerText = COLORS[Math.floor(rand() * COLORS.length)];
+        document.getElementById('lucky-item').innerText = ITEMS[Math.floor(rand() * ITEMS.length)];
+        document.getElementById('advice').innerText = fortune.advice;
+        document.getElementById('btn-draw').innerText = "今日の運勢はこれで確定！";
+    }
+
+    document.getElementById('btn-draw').addEventListener('click', draw);
+</script>
+</body>
+</html>

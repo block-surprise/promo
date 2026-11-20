@@ -1,0 +1,115 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-3571574988222927"
+     crossorigin="anonymous"></script>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>文字数カウント | みんなの便利ツール</title>
+    <meta name="description" content="文章を貼るだけで文字数をリアルタイム表示。空白を除いた文字数、行数、原稿用紙換算まで分かる無料の文字数カウンター。">
+    <link rel="icon" href="../IMG_3967.png">
+    <link rel="apple-touch-icon" href="../IMG_3967.png">
+    <meta name="google-adsense-account" content="ca-pub-3571574988222927">
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-10WGHJWSXK"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
+  gtag('config', 'G-10WGHJWSXK');
+</script>
+    <style>
+        :root { --bg-color: #f8f9fa; --card-bg: #ffffff; --text-color: #333; --accent-color: #007aff; }
+        body {
+            font-family: "Helvetica Neue", Arial, "Hiragino Kaku Gothic ProN", "Hiragino Sans", Meiryo, sans-serif;
+            background-color: var(--bg-color); color: var(--text-color);
+            margin: 0; padding: 40px 20px; line-height: 1.6;
+        }
+        .wrap { max-width: 640px; margin: 0 auto; }
+        header { text-align: center; margin-bottom: 30px; }
+        h1 { font-size: 1.8rem; margin-bottom: 8px; }
+        header p { color: #666; margin: 0; }
+        .card {
+            background: var(--card-bg); border-radius: 12px; padding: 28px 24px;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.05); border: 1px solid #eee;
+        }
+        textarea {
+            width: 100%; min-height: 180px; padding: 14px; font-size: 1rem; line-height: 1.7;
+            border: 1px solid #ddd; border-radius: 8px; box-sizing: border-box; resize: vertical;
+            font-family: inherit;
+        }
+        .stats {
+            display: grid; grid-template-columns: repeat(auto-fit, minmax(130px, 1fr));
+            gap: 12px; margin-top: 18px;
+        }
+        .stat {
+            background: #f0f7ff; border-radius: 10px; padding: 14px; text-align: center;
+        }
+        .stat .num { font-size: 1.5rem; font-weight: 900; color: var(--accent-color); }
+        .stat .name { font-size: 0.78rem; color: #666; font-weight: bold; }
+        .btn-clear {
+            margin-top: 14px; padding: 8px 18px; background: #fff; border: 1px solid #ddd;
+            border-radius: 8px; cursor: pointer; font-size: 0.9rem;
+        }
+        .btn-clear:hover { border-color: var(--accent-color); color: var(--accent-color); }
+        .ad-slot { text-align: center; margin: 26px auto 0; min-height: 50px; }
+        footer { text-align: center; margin-top: 40px; font-size: 0.8rem; color: #999; }
+        footer a { color: #999; }
+    </style>
+</head>
+<body>
+<div class="wrap">
+    <header>
+        <h1>✍️ 文字数カウント</h1>
+        <p>文章を入力すると、その場で文字数を数えます</p>
+    </header>
+
+    <div class="card">
+        <textarea id="text" placeholder="ここに文章を入力、または貼り付けてください"></textarea>
+        <div class="stats">
+            <div class="stat"><div class="num" id="count-all">0</div><div class="name">文字数（全体）</div></div>
+            <div class="stat"><div class="num" id="count-nospace">0</div><div class="name">空白・改行を除く</div></div>
+            <div class="stat"><div class="num" id="count-lines">0</div><div class="name">行数</div></div>
+            <div class="stat"><div class="num" id="count-paper">0</div><div class="name">原稿用紙（400字）</div></div>
+            <div class="stat"><div class="num" id="count-time">0分</div><div class="name">読む目安時間</div></div>
+        </div>
+        <button class="btn-clear" id="btn-clear">クリア</button>
+    </div>
+
+    <div class="ad-slot">
+        <script src="https://adm.shinobi.jp/s/8883b8c96c219279b7215cf3521e8aed"></script>
+    </div>
+
+    <footer>
+        <p><a href="index.html">← みんなの便利ツールへもどる</a>　|　<a href="../index.html">運営サイト一覧</a></p>
+        <p>&copy; 2026 Block Surprise <a href="../privacy.html">プライバシーポリシー</a></p>
+    </footer>
+</div>
+
+<script>
+    const textEl = document.getElementById('text');
+
+    function count() {
+        const text = textEl.value;
+        const all = [...text].length;
+        const noSpace = [...text.replace(/\s/g, '')].length;
+        const lines = text === "" ? 0 : text.split(/\n/).length;
+        const paper = noSpace === 0 ? 0 : Math.ceil(noSpace / 400);
+        const minutes = noSpace === 0 ? 0 : Math.max(1, Math.round(noSpace / 500));
+
+        document.getElementById('count-all').innerText = all.toLocaleString();
+        document.getElementById('count-nospace').innerText = noSpace.toLocaleString();
+        document.getElementById('count-lines').innerText = lines.toLocaleString();
+        document.getElementById('count-paper').innerText = paper.toLocaleString() + "枚";
+        document.getElementById('count-time').innerText = minutes + "分";
+    }
+
+    textEl.addEventListener('input', count);
+    document.getElementById('btn-clear').addEventListener('click', () => {
+        textEl.value = "";
+        count();
+        textEl.focus();
+    });
+    count();
+</script>
+</body>
+</html>

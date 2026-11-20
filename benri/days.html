@@ -1,0 +1,144 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-3571574988222927"
+     crossorigin="anonymous"></script>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>日数計算 | みんなの便利ツール</title>
+    <meta name="description" content="目標の日まであと何日？2つの日付の間は何日ある？日数の計算がすぐできる無料ツール。記念日・締め切り・カウントダウンに。">
+    <link rel="icon" href="../IMG_3967.png">
+    <link rel="apple-touch-icon" href="../IMG_3967.png">
+    <meta name="google-adsense-account" content="ca-pub-3571574988222927">
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-10WGHJWSXK"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
+  gtag('config', 'G-10WGHJWSXK');
+</script>
+    <style>
+        :root { --bg-color: #f8f9fa; --card-bg: #ffffff; --text-color: #333; --accent-color: #007aff; }
+        body {
+            font-family: "Helvetica Neue", Arial, "Hiragino Kaku Gothic ProN", "Hiragino Sans", Meiryo, sans-serif;
+            background-color: var(--bg-color); color: var(--text-color);
+            margin: 0; padding: 40px 20px; line-height: 1.6;
+        }
+        .wrap { max-width: 560px; margin: 0 auto; }
+        header { text-align: center; margin-bottom: 30px; }
+        h1 { font-size: 1.8rem; margin-bottom: 8px; }
+        header p { color: #666; margin: 0; }
+        .card {
+            background: var(--card-bg); border-radius: 12px; padding: 28px 24px;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.05); border: 1px solid #eee; margin-bottom: 24px;
+        }
+        .card h2 { margin-top: 0; font-size: 1.15rem; }
+        label { display: block; font-weight: bold; font-size: 0.9rem; margin: 14px 0 6px; }
+        input[type="date"] {
+            width: 100%; padding: 12px; font-size: 1.05rem; border: 1px solid #ddd;
+            border-radius: 8px; box-sizing: border-box; background: #fff;
+        }
+        .result {
+            margin-top: 18px; background: #f0f7ff; border-radius: 10px; padding: 16px; text-align: center;
+            font-size: 1.3rem; font-weight: 900; color: var(--accent-color); min-height: 1.6em;
+        }
+        .result small { display: block; font-size: 0.85rem; color: #666; font-weight: normal; margin-top: 4px; }
+        .ad-slot { text-align: center; margin: 6px auto 0; min-height: 50px; }
+        footer { text-align: center; margin-top: 40px; font-size: 0.8rem; color: #999; }
+        footer a { color: #999; }
+    </style>
+</head>
+<body>
+<div class="wrap">
+    <header>
+        <h1>📅 日数計算</h1>
+        <p>「あと何日？」も「何日間ある？」もすぐ分かります</p>
+    </header>
+
+    <div class="card">
+        <h2>🎯 目標の日まであと何日？</h2>
+        <label for="target">目標の日</label>
+        <input type="date" id="target">
+        <div class="result" id="result-target">日付を選んでください</div>
+    </div>
+
+    <div class="card">
+        <h2>↔️ 2つの日付の間は何日？</h2>
+        <label for="from">開始日</label>
+        <input type="date" id="from">
+        <label for="to">終了日</label>
+        <input type="date" id="to">
+        <div class="result" id="result-between">日付を選んでください</div>
+    </div>
+
+    <div class="ad-slot">
+        <script src="https://adm.shinobi.jp/s/8883b8c96c219279b7215cf3521e8aed"></script>
+    </div>
+
+    <footer>
+        <p><a href="index.html">← みんなの便利ツールへもどる</a>　|　<a href="../index.html">運営サイト一覧</a></p>
+        <p>&copy; 2026 Block Surprise <a href="../privacy.html">プライバシーポリシー</a></p>
+    </footer>
+</div>
+
+<script>
+    function parseDate(value) {
+        if (!value) return null;
+        const parts = value.split('-').map(Number);
+        return new Date(parts[0], parts[1] - 1, parts[2]);
+    }
+    function todayDate() {
+        const now = new Date();
+        return new Date(now.getFullYear(), now.getMonth(), now.getDate());
+    }
+    function diffDays(a, b) {
+        return Math.round((b - a) / 86400000);
+    }
+    function formatDate(d) {
+        const week = ['日', '月', '火', '水', '木', '金', '土'][d.getDay()];
+        return `${d.getFullYear()}年${d.getMonth() + 1}月${d.getDate()}日（${week}）`;
+    }
+
+    const targetEl = document.getElementById('target');
+    const resultTarget = document.getElementById('result-target');
+    function calcTarget() {
+        const target = parseDate(targetEl.value);
+        if (!target) { resultTarget.innerHTML = "日付を選んでください"; return; }
+        const diff = diffDays(todayDate(), target);
+        if (diff > 0) {
+            resultTarget.innerHTML = `あと ${diff} 日<small>${formatDate(target)} まで</small>`;
+        } else if (diff === 0) {
+            resultTarget.innerHTML = `今日です！<small>${formatDate(target)}</small>`;
+        } else {
+            resultTarget.innerHTML = `${Math.abs(diff)} 日過ぎました<small>${formatDate(target)} から</small>`;
+        }
+    }
+    targetEl.addEventListener('change', calcTarget);
+    targetEl.addEventListener('input', calcTarget);
+
+    const fromEl = document.getElementById('from');
+    const toEl = document.getElementById('to');
+    const resultBetween = document.getElementById('result-between');
+    function calcBetween() {
+        const from = parseDate(fromEl.value);
+        const to = parseDate(toEl.value);
+        if (!from || !to) { resultBetween.innerHTML = "日付を選んでください"; return; }
+        const diff = diffDays(from, to);
+        if (diff >= 0) {
+            resultBetween.innerHTML = `${diff} 日間<small>両日を含むと ${diff + 1} 日です</small>`;
+        } else {
+            resultBetween.innerHTML = `${Math.abs(diff)} 日間<small>終了日が開始日より前になっています（両日を含むと ${Math.abs(diff) + 1} 日）</small>`;
+        }
+    }
+    [fromEl, toEl].forEach((el) => {
+        el.addEventListener('change', calcBetween);
+        el.addEventListener('input', calcBetween);
+    });
+
+    // 開始日の初期値は今日
+    const t = todayDate();
+    const iso = `${t.getFullYear()}-${String(t.getMonth() + 1).padStart(2, '0')}-${String(t.getDate()).padStart(2, '0')}`;
+    fromEl.value = iso;
+</script>
+</body>
+</html>
